@@ -1,0 +1,20 @@
+language: cpp
+sudo: required
+dist: trusty
+before_install:
+  - sudo apt-get install mg
+  - sudo apt-get install build-essential protobuf-compiler python \
+    libprotobuf-dev libcurl4-openssl-dev libboost-all-dev \
+    libncurses5-dev libjemalloc-dev wget m4 g++
+  
+# Enable C++ support
+language: cpp
+
+# Compiler selection
+compiler:
+  - gcc
+
+# Build steps
+script:
+  - ./configure --allow-fetch
+  - make -j8
