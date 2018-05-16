@@ -3,6 +3,9 @@ sudo: required
 dist: trusty
 os:
 - linux
+notifications:
+  email:
+    - rebirthdb-dev@googlegroups.com
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install mg
