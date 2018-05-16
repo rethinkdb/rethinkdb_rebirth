@@ -1,7 +1,10 @@
 language: cpp
 sudo: required
 dist: trusty
+os:
+- linux
 before_install:
+  - sudo apt-get -qq update
   - sudo apt-get install mg
   - sudo apt-get install build-essential protobuf-compiler python \
     libprotobuf-dev libcurl4-openssl-dev libboost-all-dev \
