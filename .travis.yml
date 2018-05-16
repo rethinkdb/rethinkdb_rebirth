@@ -6,9 +6,9 @@ os:
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install mg
-  - sudo apt-get install build-essential protobuf-compiler python \
-    libprotobuf-dev libcurl4-openssl-dev libboost-all-dev \
-    libncurses5-dev libjemalloc-dev wget m4 g++
+  - sudo apt-get install build-essential protobuf-compiler python
+  - sudo apt-get install libprotobuf-dev libcurl4-openssl-dev libboost-all-dev
+  - sudo apt-get install libncurses5-dev libjemalloc-dev wget m4 g++
   
 # Enable C++ support
 language: cpp
