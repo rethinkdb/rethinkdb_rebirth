@@ -139,11 +139,6 @@ configure_unixlike () {
         require_dep $bin
         check_bin $bin
     done
-    check_admin_deps
-    for bin in $optional_bin_deps; do
-        optional_dep $bin
-        check_bin $bin
-    done
     build_try_lib_paths
     for lib in $optional_libs; do
         check_lib $lib optional
@@ -209,7 +204,6 @@ configure_windows () {
     fetch_pkg bluebird
     require_dep browserify
     fetch_bin browserify
-    check_admin_deps
     optional Python
     check_bin python
 }
@@ -1275,15 +1269,6 @@ check_cxx11 () {
     if $can_show; then
         show_no "C++11"
     fi
-}
-
-check_admin_deps () {
-    require "web UI dependencies"
-    local version
-    version=$(pkg version admin-deps)
-    add_fetch admin-deps
-    macro "GULP"         "\$(abspath \$(SUPPORT_BUILD_DIR)/admin-deps_$version/bin/gulp)"
-    macro "GULP_BIN_DEP" "\$(SUPPORT_BUILD_DIR)/admin-deps_$version/bin/gulp"
 }
 
 check_vs_bin () {

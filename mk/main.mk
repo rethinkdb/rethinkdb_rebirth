@@ -41,16 +41,10 @@ include $(TOP)/drivers/python/build.mk
 # JavaScript driver
 include $(TOP)/drivers/javascript/build.mk
 
-# Build the web assets
-include $(TOP)/admin/build.mk
-
 else # Windows
 
 # Clients drivers
 include $(TOP)/drivers/build.mk
-
-# Build the web assets
-include $(TOP)/admin/build.mk
 
 # Building the rethinkdb executable
 include $(TOP)/src/build.mk
