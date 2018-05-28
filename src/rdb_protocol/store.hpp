@@ -338,6 +338,20 @@ public:
             signal_t *interruptor)
             THROWS_ONLY(interrupted_exc_t);
 
+    // Compression Management Methods
+    void compression_initialize()
+            THROWS_ONLY(interrupted_exc_t);
+
+    void compression_fetch(
+            std::map<std::pair<std::uint16_t, char>, std::uint16_t> *dictionary);
+
+    void compression_set(
+            std::map<std::pair<std::uint16_t, char>, std::uint16_t> &dictionary_out);
+
+    void set_compression_dict_internal(
+            std::map<std::pair<std::uint16_t, char>, std::uint16_t> &dictionary,
+            buf_lock_t *compression_block);
+
 private:
     // Helper function to clear out a secondary index that has been
     // marked as deleted and drop it at the end. To be run in a coroutine.

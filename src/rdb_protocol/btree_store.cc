@@ -9,6 +9,7 @@
 #include "btree/operations.hpp"
 #include "btree/reql_specific.hpp"
 #include "btree/secondary_operations.hpp"
+#include "btree/compression_operations.hpp"
 #include "buffer_cache/alt.hpp"
 #include "buffer_cache/cache_balancer.hpp"
 #include "clustering/administration/issues/outdated_index.hpp"
@@ -661,6 +662,68 @@ sindex_name_t compute_sindex_deletion_name(uuid_u sindex_uuid) {
     sindex_name_t result("_DEL_" + uuid_to_str(sindex_uuid));
     result.being_deleted = true;
     return result;
+}
+
+void store_t::compression_initialize()
+        THROWS_ONLY(interrupted_exc_t) {
+    scoped_ptr_t<real_superblock_t> superblock;
+    scoped_ptr_t<txn_t> txn;
+    compression_t compression;
+    get_btree_superblock_and_txn_for_writing(general_cache_conn.get(),
+        &write_superblock_acq_semaphore, write_access_t::write, 1,
+        write_durability_t::HARD, &superblock, &txn);
+    buf_lock_t compression_block(superblock->expose_buf(),
+                            superblock->get_compression_dict_block_id(),
+                            access_t::write);
+
+    superblock->release();
+
+    compression.superblock = compression_block.block_id();
+    compression.dictionary = new std::map<std::pair<std::uint16_t, char>, std::uint16_t>();
+
+    compression_dict_superblock_t compression_superblock(std::move(compression_block));
+    btree_slice_t::init_compression_dict_superblock(&compression_superblock);
+
+    initialize_compression_dictionary(&compression_block, compression);
+
+    compression_block.reset_buf_lock();
+    txn->commit();
+}
+
+void store_t::compression_fetch(
+            std::map<std::pair<std::uint16_t, char>, std::uint16_t> *dictionary_out) {
+    scoped_ptr_t<real_superblock_t> superblock;
+    scoped_ptr_t<txn_t> txn;
+    get_btree_superblock_and_txn_for_writing(general_cache_conn.get(),
+        &write_superblock_acq_semaphore, write_access_t::write, 1,
+        write_durability_t::HARD, &superblock, &txn);
+    buf_lock_t compression_dict_block(superblock->expose_buf(),
+                            superblock->get_compression_dict_block_id(),
+                            access_t::write);
+    superblock->release();
+
+    compression_t compression;
+    get_compression_dictionary(&compression_dict_block,
+                         dictionary_out);
+
+    bool dictionary_not_null = dictionary_out ? true : false;
+    guarantee(dictionary_not_null, "Failed to get compression dictionary");
+
+    compression_dict_block.reset_buf_lock();
+    txn->commit();
+}
+
+void store_t::set_compression_dict_internal(
+            std::map<std::pair<std::uint16_t, char>, std::uint16_t> &dictionary,
+            buf_lock_t *compression_block) {
+    compression_t compression;
+
+    buf_lock_t sb_lock(compression_block, alt_create_t::create);
+    compression.superblock = sb_lock.block_id();
+    compression.dictionary = &dictionary;
+
+    ::set_compression_dictionary_value(compression_block,
+                        compression);
 }
 
 class clear_sindex_traversal_cb_t

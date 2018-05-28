@@ -7,8 +7,9 @@
 /* Most of the code in the `btree/` directory doesn't "know" about the format of the
 superblock; instead it manipulates the superblock using the abstract `superblock_t`. This
 file provides the concrete superblock implementation used for ReQL primary and sindex
-B-trees. It also provides functions for working with the secondary index block and the
-metainfo, which are unrelated to the B-tree but stored on the ReQL primary superblock. 
+B-trees. It also provides functions for working with the secondary index block,
+metainfo and compressiom, which are unrelated to the B-tree but stored on the ReQL 
+primary superblock. 
 
 `btree/secondary_operations.*` and `btree/reql_specific.*` are the only files in the
 `btree/` directory that know about ReQL-specific concepts such as metainfo and sindexes.
@@ -31,6 +32,8 @@ public:
     block_id_t get_stat_block_id();
 
     block_id_t get_sindex_block_id();
+
+    block_id_t get_compression_dict_block_id();
 
     buf_parent_t expose_buf() { return buf_parent_t(&sb_buf_); }
 
@@ -69,6 +72,27 @@ private:
     buf_lock_t sb_buf_;
 };
 
+/* `compression_dict_superblock_t` represents the superblock for the compression dictionary */
+class compression_dict_superblock_t : public superblock_t {
+public:
+    explicit compression_dict_superblock_t(buf_lock_t &&sb_buf);
+
+    void release();
+    buf_lock_t *get() { return &sb_buf_; }
+
+    block_id_t get_root_block_id();
+    void set_root_block_id(block_id_t new_root_block);
+
+    block_id_t get_stat_block_id();
+
+    block_id_t get_compression_block_id();
+
+    buf_parent_t expose_buf() { return buf_parent_t(&sb_buf_); }
+
+private:
+    buf_lock_t sb_buf_;
+};
+
 enum class index_type_t {
     PRIMARY,
     SECONDARY
@@ -82,11 +106,12 @@ class btree_slice_t : public home_thread_mixin_debug_only_t {
 public:
     // Initializes a superblock (presumably, a buf_lock_t constructed with
     // alt_create_t::create) for use with btrees, setting the initial value of the
-    // metainfo (with a single key/value pair). Not for use with sindex superblocks.
+    // metainfo (with a single key/value pair). Not for use with sindex or compression superblocks.
     static void init_real_superblock(real_superblock_t *superblock,
                                 const std::vector<char> &metainfo_key,
                                 const binary_blob_t &metainfo_value);
     static void init_sindex_superblock(sindex_superblock_t *superblock);
+    static void init_compression_dict_superblock(compression_dict_superblock_t *superblock);
 
     btree_slice_t(cache_t *cache,
                   perfmon_collection_t *parent,
