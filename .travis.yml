@@ -12,7 +12,7 @@ before_install:
   - sudo apt-get install build-essential protobuf-compiler python
   - sudo apt-get install libprotobuf-dev libcurl4-openssl-dev libboost-all-dev
   - sudo apt-get install libncurses5-dev libjemalloc-dev wget m4 g++
-  
+
 # Enable C++ support
 language: cpp
 
@@ -21,6 +21,10 @@ compiler:
   - gcc
 
 # Build steps
-script:
+install:
   - ./configure --allow-fetch
   - make -j8
+
+script:
+  - make test
+  - ./build/release/rethinkdb-unittest

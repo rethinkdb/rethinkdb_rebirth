@@ -67,17 +67,6 @@ its web UI also requires the web assets.
   `THREADED_COROUTINES=1` `NO_EVENTFD=1` `NO_EPOLL=1`
   `BUILD_PORTABLE=1` or `LEGACY_LINUX=1`
 
-
-Web assets
-----------
-
-* `make web-assets`: Build only the web assets.
-
-* The web assets are compiled into the executable. To speed up
-  development time and avoid rebuilding the executable, the
-  `--web-static-directory` option can be used. For example:
-  `build/release/rethinkdb --web-static-directory build/web_assets`
-
 Drivers
 -------
 
