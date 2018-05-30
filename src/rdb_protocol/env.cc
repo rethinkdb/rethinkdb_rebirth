@@ -48,15 +48,6 @@ extproc_pool_t *env_t::get_extproc_pool() {
     return rdb_ctx_->extproc_pool;
 }
 
-js_runner_t *env_t::get_js_runner() {
-    assert_thread();
-    extproc_pool_t *extproc_pool = get_extproc_pool();
-    if (!js_runner_.connected()) {
-        js_runner_.begin(extproc_pool, interruptor, limits());
-    }
-    return &js_runner_;
-}
-
 scoped_ptr_t<profile::trace_t> maybe_make_profile_trace(profile_bool_t profile) {
     return profile == profile_bool_t::PROFILE
         ? make_scoped<profile::trace_t>()

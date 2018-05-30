@@ -14,10 +14,12 @@
 #include "extproc/js_runner.hpp"
 #include "rdb_protocol/datum.hpp"
 
+struct rduk_env_t;
+
 class js_job_t {
 public:
-    js_job_t(extproc_pool_t *pool, signal_t *interruptor,
-             const ql::configured_limits_t &limits);
+    explicit js_job_t(
+        const ql::configured_limits_t &limits);
 
     js_result_t eval(const std::string &source);
     js_result_t call(js_id_t id, const std::vector<ql::datum_t> &args);
@@ -28,9 +30,8 @@ public:
     void worker_error();
 
 private:
-    static bool worker_fn(read_stream_t *stream_in, write_stream_t *stream_out);
 
-    extproc_job_t extproc_job;
+    scoped_ptr_t<rduk_env_t> duk_env;
     ql::configured_limits_t limits;
     DISABLE_COPYING(js_job_t);
 };

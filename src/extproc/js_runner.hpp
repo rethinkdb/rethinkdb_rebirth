@@ -32,21 +32,14 @@ class js_timeout_sentry_t;
 // A handle to a running "javascript evaluator" job.
 class js_runner_t : public home_thread_mixin_t {
 public:
-    js_runner_t();
+    // Starts the javascript environment in process
+    explicit js_runner_t(const ql::configured_limits_t &limits);
     ~js_runner_t();
-
-    bool connected() const;
 
     // Used for worker configuration
     struct req_config_t {
         uint64_t timeout_ms;
     };
-
-    void begin(extproc_pool_t *pool,
-               signal_t *interruptor,
-               const ql::configured_limits_t &limits);
-
-    void end();
 
     // Evalute JS source string to either a value or a function ID to call later
     js_result_t eval(const std::string &source,
