@@ -21,6 +21,7 @@ compiler:
   - gcc
 
 before_install:
+  - pip install --user cpp-coveralls
   - export CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS"
 
 # Build steps
