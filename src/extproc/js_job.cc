@@ -2,9 +2,10 @@
 #include "extproc/js_job.hpp"
 
 // TODO(grandquista)
-// static duk_bool_t rduk_exec_timeout_check(void *user_data);
+// static int rduk_exec_timeout_check(void *user_data);
 //
 // #define DUK_USE_EXEC_TIMEOUT_CHECK(user_data) rduk_exec_timeout_check(user_data)
+// #define DUK_USE_INTERRUPT_COUNTER
 
 #include <duktape.h>
 
@@ -19,8 +20,6 @@
 #include "rdb_protocol/pseudo_time.hpp"
 #include "rdb_protocol/configured_limits.hpp"
 #include "utils.hpp"
-
-const js_id_t MIN_ID = 1;
 
 // Picked from a hat.
 #define TO_JSON_RECURSION_LIMIT  500
@@ -40,13 +39,6 @@ void maybe_initialize_duk() {
         guarantee(rduk_root_ctx != nullptr);
     }
 }
-
-struct rduk_env_t {
-    js_id_t next_id = MIN_ID;
-    // The duk heap's stash map is used to access persistent values by
-    // js_id_t.  (That is duk's tool for keeping persistent values
-    // reachable by GC.)
-};
 
 static js_id_t remember_value(rduk_env_t *env, duk_context *ctx);
 static js_result_t rduk_eval(rduk_env_t *env, const std::string &source,
@@ -70,10 +62,10 @@ static void worker_fn();
 
 // The job_t runs in the context of the main rethinkdb process
 js_job_t::js_job_t(const ql::configured_limits_t &_limits) :
-    duk_env(new rduk_env_t), limits(_limits) { }
+    limits(_limits) { }
 
 js_result_t js_job_t::eval(const std::string &source) {
-    return run_eval(source, limits, duk_env.get());
+    return run_eval(source, limits, &duk_env);
 }
 
 js_result_t js_job_t::call(js_id_t id, const std::vector<ql::datum_t> &args) {

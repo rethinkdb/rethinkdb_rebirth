@@ -14,7 +14,14 @@
 #include "extproc/js_runner.hpp"
 #include "rdb_protocol/datum.hpp"
 
-struct rduk_env_t;
+const js_id_t MIN_ID = 1;
+
+struct rduk_env_t {
+    js_id_t next_id = MIN_ID;
+    // The duk heap's stash map is used to access persistent values by
+    // js_id_t.  (That is duk's tool for keeping persistent values
+    // reachable by GC.)
+};
 
 class js_job_t {
 public:
@@ -31,7 +38,7 @@ public:
 
 private:
 
-    scoped_ptr_t<rduk_env_t> duk_env;
+    rduk_env_t duk_env;
     ql::configured_limits_t limits;
     DISABLE_COPYING(js_job_t);
 };
