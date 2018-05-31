@@ -25,7 +25,7 @@ before_install:
 
 # Build steps
 install:
-  - ./configure --allow-fetch
+  - ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch
   - make -j3 && make test -j3
 
 script:
