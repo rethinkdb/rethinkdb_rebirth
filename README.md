@@ -3,6 +3,7 @@
 [RethinkDB](https://www.rethinkdb.com)
 ======================================
 
+[![Coverage Status](https://coveralls.io/repos/github/RebirthDB/rebirthdb/badge.svg?branch=next)](https://coveralls.io/github/RebirthDB/rebirthdb?branch=next)
 
 What is RethinkDB?
 ------------------
@@ -35,7 +36,7 @@ Or, get started right away with our ten-minute guide in these languages:
 * [**JavaScript**](https://rethinkdb.com/docs/guide/javascript/)
 * [**Python**](https://rethinkdb.com/docs/guide/python/)
 * [**Ruby**](https://rethinkdb.com/docs/guide/ruby/)
-* [**Java**](https://rethinkdb.com/docs/guide/java/) 
+* [**Java**](https://rethinkdb.com/docs/guide/java/)
 
 Besides our four official drivers, we also have many [third-party drivers](https://rethinkdb.com/docs/install-drivers/) supported by the RethinkDB community. Here's a few:
 
