@@ -61,3 +61,6 @@ last_tested_versions
 /.vscode
 
 /drivers/javascript/node_modules/
+
+# cmake artifacts
+/cmake-build-*
