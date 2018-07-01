@@ -382,12 +382,11 @@ build-clean:
 check-syntax:
 	$(RT_CXX) $(RT_CXXFLAGS) -c -o /dev/null $(patsubst %,$(CWD)/%,$(CHK_SOURCES))
 
-VENDORED_COMMIT := f2858e8cc5d984e4acc4133a51367f6bee33ddef
-VENDORED_REMOTE_REPO := https://github.com/srh/rethinkdb-vendored.git
+VENDORED_COMMIT := 7034f82bfe5e084f164f1ab08c4e9485c7f61b95
+VENDORED_REMOTE_REPO := https://github.com/RebirthDB/rebirthdb-vendored.git
 
 vendored:
 	$P GIT clone vendored
 	git clone --quiet $(VENDORED_REMOTE_REPO) vendored || true
 	git -C vendored checkout --quiet $(VENDORED_COMMIT) || \
 	  ( git -C vendored fetch --quiet && git -C vendored checkout --quiet $(VENDORED_COMMIT) )
-

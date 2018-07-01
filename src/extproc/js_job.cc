@@ -1,6 +1,12 @@
 // Copyright 2010-2014 RethinkDB, all rights reserved.
 #include "extproc/js_job.hpp"
 
+// TODO(grandquista)
+// static int rduk_exec_timeout_check(void *user_data);
+//
+// #define DUK_USE_EXEC_TIMEOUT_CHECK(user_data) rduk_exec_timeout_check(user_data)
+// #define DUK_USE_INTERRUPT_COUNTER
+
 #include <duktape.h>
 
 #include <stdint.h>
@@ -15,13 +21,11 @@
 #include "rdb_protocol/configured_limits.hpp"
 #include "utils.hpp"
 
-const js_id_t MIN_ID = 1;
-
 // Picked from a hat.
 #define TO_JSON_RECURSION_LIMIT  500
 
 // Returns an empty datum on error.
-ql::datum_t js_to_datum(duk_context *ctx,
+static ql::datum_t js_to_datum(duk_context *ctx,
                         const ql::configured_limits_t &limits,
                         std::string *err_out);
 
@@ -36,160 +40,54 @@ void maybe_initialize_duk() {
     }
 }
 
-struct rduk_env_t {
-    js_id_t next_id = MIN_ID;
-    // The duk heap's stash map is used to access persistent values by
-    // js_id_t.  (That is duk's tool for keeping persistent values
-    // reachable by GC.)
-};
-
-js_id_t remember_value(rduk_env_t *env, duk_context *ctx);
-js_result_t rduk_eval(rduk_env_t *env, const std::string &source,
+static js_id_t remember_value(rduk_env_t *env, duk_context *ctx);
+static js_result_t rduk_eval(rduk_env_t *env, const std::string &source,
                       const ql::configured_limits_t &limits);
-js_result_t rduk_call(js_id_t id, const std::vector<ql::datum_t> &args,
+static js_result_t rduk_call(js_id_t id, const std::vector<ql::datum_t> &args,
                       const ql::configured_limits_t &limits);
-void rduk_release(js_id_t id);
+static void rduk_release(js_id_t id);
 
-enum js_task_t {
-    TASK_EVAL,
-    TASK_CALL,
-    TASK_RELEASE,
-    TASK_EXIT
-};
+static js_result_t run_eval(
+        std::string source,
+        ql::configured_limits_t limits,
+        rduk_env_t *duk_env);
+static js_result_t run_call(
+        js_id_t id,
+        std::vector<ql::datum_t> args,
+        ql::configured_limits_t limits);
+static void run_release(js_id_t id);
+static void run_exit();
+
+static void worker_fn();
 
 // The job_t runs in the context of the main rethinkdb process
-js_job_t::js_job_t(extproc_pool_t *pool, signal_t *interruptor,
-                   const ql::configured_limits_t &_limits) :
-    extproc_job(pool, &worker_fn, interruptor), limits(_limits) { }
+js_job_t::js_job_t(const ql::configured_limits_t &_limits) :
+    limits(_limits) { }
 
 js_result_t js_job_t::eval(const std::string &source) {
-    js_task_t task = js_task_t::TASK_EVAL;
-    write_message_t wm;
-    wm.append(&task, sizeof(task));
-    serialize<cluster_version_t::LATEST_OVERALL>(&wm, source);
-    serialize<cluster_version_t::LATEST_OVERALL>(&wm, limits);
-    {
-        int res = send_write_message(extproc_job.write_stream(), &wm);
-        if (res != 0) {
-            throw extproc_worker_exc_t("failed to send data to the worker");
-        }
-    }
-
-    js_result_t result;
-    archive_result_t res
-        = deserialize<cluster_version_t::LATEST_OVERALL>(extproc_job.read_stream(),
-                                                         &result);
-    if (bad(res)) {
-        throw extproc_worker_exc_t(strprintf("failed to deserialize eval result from worker "
-                                             "(%s)", archive_result_as_str(res)));
-    }
-    return result;
+    return run_eval(source, limits, &duk_env);
 }
 
 js_result_t js_job_t::call(js_id_t id, const std::vector<ql::datum_t> &args) {
-    js_task_t task = js_task_t::TASK_CALL;
-    write_message_t wm;
-    wm.append(&task, sizeof(task));
-    serialize<cluster_version_t::LATEST_OVERALL>(&wm, id);
-    serialize<cluster_version_t::LATEST_OVERALL>(&wm, args);
-    serialize<cluster_version_t::LATEST_OVERALL>(&wm, limits);
-    {
-        int res = send_write_message(extproc_job.write_stream(), &wm);
-        if (res != 0) {
-            throw extproc_worker_exc_t("failed to send data to the worker");
-        }
-    }
-
-    js_result_t result;
-    archive_result_t res
-        = deserialize<cluster_version_t::LATEST_OVERALL>(extproc_job.read_stream(),
-                                                         &result);
-    if (bad(res)) {
-        throw extproc_worker_exc_t(strprintf("failed to deserialize call result from worker "
-                                             "(%s)", archive_result_as_str(res)));
-    }
-    return result;
+    return run_call(id, args, limits);
 }
 
 void js_job_t::release(js_id_t id) {
-    js_task_t task = js_task_t::TASK_RELEASE;
-    write_message_t wm;
-    wm.append(&task, sizeof(task));
-    serialize<cluster_version_t::LATEST_OVERALL>(&wm, id);
-    {
-        int res = send_write_message(extproc_job.write_stream(), &wm);
-        if (res != 0) {
-            throw extproc_worker_exc_t("failed to send data to the worker");
-        }
-    }
-
-    // Wait for a response so we don't flood the job with requests
-    bool dummy_result;
-    archive_result_t res
-        = deserialize<cluster_version_t::LATEST_OVERALL>(extproc_job.read_stream(),
-                                                         &dummy_result);
-    // dummy_result should always be true
-    if (bad(res) || !dummy_result) {
-        throw extproc_worker_exc_t(strprintf("failed to deserialize release result from worker "
-                                             "(%s)", archive_result_as_str(res)));
-    }
+    run_release(id);
 }
 
 void js_job_t::exit() {
-    js_task_t task = js_task_t::TASK_EXIT;
-    write_message_t wm;
-    wm.append(&task, sizeof(task));
-    {
-        int res = send_write_message(extproc_job.write_stream(), &wm);
-        if (res != 0) {
-            throw extproc_worker_exc_t("failed to send data to the worker");
-        }
-    }
-
-    // Wait for a response so we don't flood the job with requests
-    bool dummy_result;
-    archive_result_t res
-        = deserialize<cluster_version_t::LATEST_OVERALL>(extproc_job.read_stream(),
-                                                         &dummy_result);
-    // dummy_result should always be true
-    if (bad(res) || !dummy_result) {
-        throw extproc_worker_exc_t(strprintf("failed to deserialize exit result from worker "
-                                             "(%s)", archive_result_as_str(res)));
-    }
+    run_exit();
 }
 
 void js_job_t::worker_error() {
-    extproc_job.worker_error();
 }
 
-bool send_js_result(write_stream_t *stream_out, const js_result_t &js_result) {
-    write_message_t wm;
-    serialize<cluster_version_t::LATEST_OVERALL>(&wm, js_result);
-    int res = send_write_message(stream_out, &wm);
-    return res == 0;
-}
-
-bool send_dummy_result(write_stream_t *stream_out) {
-    write_message_t wm;
-    serialize<cluster_version_t::LATEST_OVERALL>(&wm, true);
-    int res = send_write_message(stream_out, &wm);
-    return res == 0;
-}
-
-bool run_eval(read_stream_t *stream_in,
-              write_stream_t *stream_out,
-              rduk_env_t *duk_env) {
-    std::string source;
-    ql::configured_limits_t limits;
-    {
-        archive_result_t res
-            = deserialize<cluster_version_t::LATEST_OVERALL>(stream_in,
-                                                             &source);
-        if (bad(res)) { return false; }
-        res = deserialize<cluster_version_t::LATEST_OVERALL>(stream_in,
-                                                             &limits);
-        if (bad(res)) { return false; }
-    }
+static js_result_t run_eval(
+        std::string source,
+        ql::configured_limits_t limits,
+        rduk_env_t *duk_env) {
+    worker_fn();
 
     js_result_t js_result;
     try {
@@ -200,23 +98,14 @@ bool run_eval(read_stream_t *stream_in,
         js_result = std::string("encountered an unknown exception");
     }
 
-    return send_js_result(stream_out, js_result);
+    return js_result;
 }
 
-bool run_call(read_stream_t *stream_in,
-              write_stream_t *stream_out) {
-    js_id_t id;
-    std::vector<ql::datum_t> args;
-    ql::configured_limits_t limits;
-    {
-        archive_result_t res
-            = deserialize<cluster_version_t::LATEST_OVERALL>(stream_in, &id);
-        if (bad(res)) { return false; }
-        res = deserialize<cluster_version_t::LATEST_OVERALL>(stream_in, &args);
-        if (bad(res)) { return false; }
-        res = deserialize<cluster_version_t::LATEST_OVERALL>(stream_in, &limits);
-        if (bad(res)) { return false; }
-    }
+static js_result_t run_call(
+        js_id_t id,
+        std::vector<ql::datum_t> args,
+        ql::configured_limits_t limits) {
+    worker_fn();
 
     js_result_t js_result;
     try {
@@ -227,69 +116,31 @@ bool run_call(read_stream_t *stream_in,
         js_result = std::string("encountered an unknown exception");
     }
 
-    return send_js_result(stream_out, js_result);
+    return js_result;
 }
 
-bool run_release(read_stream_t *stream_in,
-                 write_stream_t *stream_out) {
-    js_id_t id;
-    archive_result_t res = deserialize<cluster_version_t::LATEST_OVERALL>(stream_in,
-                                                                          &id);
-    if (bad(res)) { return false; }
+static void run_release(js_id_t id) {
+    worker_fn();
 
     rduk_release(id);
-    return send_dummy_result(stream_out);
 }
 
-bool run_exit(write_stream_t *stream_out) {
-    return send_dummy_result(stream_out);
+static void run_exit() {
+    worker_fn();
 }
 
-bool js_job_t::worker_fn(read_stream_t *stream_in, write_stream_t *stream_out) {
+static void worker_fn() {
     static uint64_t task_counter = 0;
-    bool running = true;
     maybe_initialize_duk();
-    rduk_env_t duk_env;
 
-    while (running) {
-        task_counter += 1;
-        js_task_t task;
-        int64_t read_size = sizeof(task);
-        {
-            int64_t res = force_read(stream_in, &task, read_size);
-            if (res != read_size) { return false; }
-        }
+    task_counter += 1;
 
-        switch (task) {
-        case TASK_EVAL:
-            if (!run_eval(stream_in, stream_out, &duk_env)) {
-                return false;
-            }
-            break;
-        case TASK_CALL:
-            if (!run_call(stream_in, stream_out)) {
-                return false;
-            }
-            break;
-        case TASK_RELEASE:
-            if (!run_release(stream_in, stream_out)) {
-                return false;
-            }
-            break;
-        case TASK_EXIT:
-            return run_exit(stream_out);
-        default:
-            return false;
-        }
-
-        if (task_counter % 128 == 0) {
-            // Have to call twice, per documentation, for objects with
-            // finalizers.  (Are there any?)
-            duk_gc(rduk_root_ctx, DUK_GC_COMPACT);
-            duk_gc(rduk_root_ctx, DUK_GC_COMPACT);
-        }
+    if (task_counter % 128 == 0) {
+        // Have to call twice, per documentation, for objects with
+        // finalizers.  (Are there any?)
+        duk_gc(rduk_root_ctx, DUK_GC_COMPACT);
+        duk_gc(rduk_root_ctx, DUK_GC_COMPACT);
     }
-    unreachable();
 }
 
 struct rduk_pop_exit {
@@ -311,7 +162,7 @@ struct rduk_pop_exit {
 
 
 
-js_result_t rduk_eval(rduk_env_t *env, const std::string &source,
+static js_result_t rduk_eval(rduk_env_t *env, const std::string &source,
                       const ql::configured_limits_t &limits) {
     duk_require_stack(rduk_root_ctx, 1);
     duk_push_thread_new_globalenv(rduk_root_ctx);
@@ -349,7 +200,7 @@ std::string id_prop_name(js_id_t id) {
 
 // With ctx's stack: [...] [value] -> [...] [value]
 // Puts value into the duk heap stash with property value js_id_t.
-js_id_t remember_value(rduk_env_t *env, duk_context *ctx) {
+static js_id_t remember_value(rduk_env_t *env, duk_context *ctx) {
     duk_require_stack(ctx, 2);
     duk_push_heap_stash(ctx);
     rduk_pop_exit pop_stash(ctx);
@@ -365,7 +216,7 @@ js_id_t remember_value(rduk_env_t *env, duk_context *ctx) {
     return id;
 }
 
-void push_find_value(duk_context *ctx, js_id_t id) {
+static void push_find_value(duk_context *ctx, js_id_t id) {
     duk_require_stack(ctx, 2);
     duk_push_heap_stash(ctx);
     rduk_pop_exit pop_stash(ctx);
@@ -379,7 +230,7 @@ void push_find_value(duk_context *ctx, js_id_t id) {
     pop_stash.adjust(-1);
 }
 
-bool push_js_from_datum(duk_context *ctx,
+static bool push_js_from_datum(duk_context *ctx,
                         const ql::datum_t &datum, std::string *err_out) {
     guarantee(datum.has());
 
@@ -454,7 +305,7 @@ bool push_js_from_datum(duk_context *ctx,
     }
 }
 
-js_result_t rduk_call(js_id_t id, const std::vector<ql::datum_t> &args,
+static js_result_t rduk_call(js_id_t id, const std::vector<ql::datum_t> &args,
                       const ql::configured_limits_t &limits) {
     duk_require_stack(rduk_root_ctx, 1);
     duk_push_thread_new_globalenv(rduk_root_ctx);
@@ -503,7 +354,7 @@ js_result_t rduk_call(js_id_t id, const std::vector<ql::datum_t> &args,
     return result;
 }
 
-void rduk_release(js_id_t id) {
+static void rduk_release(js_id_t id) {
     duk_push_heap_stash(rduk_root_ctx);
     rduk_pop_exit pop_stash(rduk_root_ctx);
 
@@ -514,7 +365,7 @@ void rduk_release(js_id_t id) {
     guarantee(res, "released non-present js val");
 }
 
-bool rduk_is_of_type(duk_context *ctx, const char *typ) {
+static bool rduk_is_of_type(duk_context *ctx, const char *typ) {
     duk_require_stack(ctx, 3);
     // stack: [...] [value]
     bool got_global = duk_get_global_string(ctx, typ);
@@ -533,7 +384,7 @@ bool rduk_is_of_type(duk_context *ctx, const char *typ) {
 // TODO: Is there a better way of detecting circular references than a recursion limit?
 // With ctx's stack: [...] [value] -> [...] [value]
 // Constructs a datum from value.
-ql::datum_t js_make_datum(duk_context *ctx,
+static ql::datum_t js_make_datum(duk_context *ctx,
                           int recursion_limit,
                           const ql::configured_limits_t &limits,
                           std::string *err_out) {
@@ -644,9 +495,8 @@ ql::datum_t js_make_datum(duk_context *ctx,
     return result;
 }
 
-ql::datum_t js_to_datum(duk_context *ctx,
+static ql::datum_t js_to_datum(duk_context *ctx,
                         const ql::configured_limits_t &limits,
                         std::string *err_out) {
     return js_make_datum(ctx, TO_JSON_RECURSION_LIMIT, limits, err_out);
 }
-

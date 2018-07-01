@@ -14,10 +14,19 @@
 #include "extproc/js_runner.hpp"
 #include "rdb_protocol/datum.hpp"
 
+const js_id_t MIN_ID = 1;
+
+struct rduk_env_t {
+    js_id_t next_id = MIN_ID;
+    // The duk heap's stash map is used to access persistent values by
+    // js_id_t.  (That is duk's tool for keeping persistent values
+    // reachable by GC.)
+};
+
 class js_job_t {
 public:
-    js_job_t(extproc_pool_t *pool, signal_t *interruptor,
-             const ql::configured_limits_t &limits);
+    explicit js_job_t(
+        const ql::configured_limits_t &limits);
 
     js_result_t eval(const std::string &source);
     js_result_t call(js_id_t id, const std::vector<ql::datum_t> &args);
@@ -28,9 +37,8 @@ public:
     void worker_error();
 
 private:
-    static bool worker_fn(read_stream_t *stream_in, write_stream_t *stream_out);
 
-    extproc_job_t extproc_job;
+    rduk_env_t duk_env;
     ql::configured_limits_t limits;
     DISABLE_COPYING(js_job_t);
 };

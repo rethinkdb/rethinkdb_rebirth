@@ -39,7 +39,7 @@ private:
         config.timeout_ms = timeout_ms;
 
         try {
-            js_result_t result = env->env->get_js_runner()->eval(source, config);
+            js_result_t result = js_runner_t(env->env->limits()).eval(source, config);
             return scoped_ptr_t<val_t>(
                     boost::apply_visitor(js_result_visitor_t(source, timeout_ms, this),
                                          result));
