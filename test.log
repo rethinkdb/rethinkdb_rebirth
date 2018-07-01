@@ -1,0 +1,1033 @@
+[==========] Running 341 tests from 73 test cases.
+[----------] Global test environment set-up.
+[----------] 5 tests from DatumTest
+[ RUN      ] DatumTest.NumericSerialization
+[       OK ] DatumTest.NumericSerialization (0 ms)
+[ RUN      ] DatumTest.LegacyDeserialization
+[       OK ] DatumTest.LegacyDeserialization (0 ms)
+[ RUN      ] DatumTest.ObjectSerialization
+[       OK ] DatumTest.ObjectSerialization (0 ms)
+[ RUN      ] DatumTest.ArraySerialization
+[       OK ] DatumTest.ArraySerialization (0 ms)
+[ RUN      ] DatumTest.OffsetScaling
+[       OK ] DatumTest.OffsetScaling (4 ms)
+[----------] 5 tests from DatumTest (4 ms total)
+
+[----------] 23 tests from LeafNodeTest
+[ RUN      ] LeafNodeTest.Offsets
+[       OK ] LeafNodeTest.Offsets (0 ms)
+[ RUN      ] LeafNodeTest.Reinserts
+[       OK ] LeafNodeTest.Reinserts (2 ms)
+[ RUN      ] LeafNodeTest.TenInserts
+[       OK ] LeafNodeTest.TenInserts (30 ms)
+[ RUN      ] LeafNodeTest.InsertRemove
+[       OK ] LeafNodeTest.InsertRemove (16 ms)
+[ RUN      ] LeafNodeTest.RandomOutOfOrder
+[       OK ] LeafNodeTest.RandomOutOfOrder (797 ms)
+[ RUN      ] LeafNodeTest.RandomOutOfOrderLowTstamp
+[       OK ] LeafNodeTest.RandomOutOfOrderLowTstamp (1913 ms)
+[ RUN      ] LeafNodeTest.RandomMerging
+[       OK ] LeafNodeTest.RandomMerging (410 ms)
+[ RUN      ] LeafNodeTest.RandomSplitting
+[       OK ] LeafNodeTest.RandomSplitting (180 ms)
+[ RUN      ] LeafNodeTest.DeletionTimestamp
+[       OK ] LeafNodeTest.DeletionTimestamp (1 ms)
+[ RUN      ] LeafNodeTest.ZeroZeroMerging
+[       OK ] LeafNodeTest.ZeroZeroMerging (0 ms)
+[ RUN      ] LeafNodeTest.ZeroOneMerging
+[       OK ] LeafNodeTest.ZeroOneMerging (0 ms)
+[ RUN      ] LeafNodeTest.OneZeroMerging
+[       OK ] LeafNodeTest.OneZeroMerging (0 ms)
+[ RUN      ] LeafNodeTest.OneOneMerging
+[       OK ] LeafNodeTest.OneOneMerging (0 ms)
+[ RUN      ] LeafNodeTest.SimpleMerging
+[       OK ] LeafNodeTest.SimpleMerging (7 ms)
+[ RUN      ] LeafNodeTest.MergingWithRemoves
+[       OK ] LeafNodeTest.MergingWithRemoves (4 ms)
+[ RUN      ] LeafNodeTest.MergingWithHugeEntries
+[       OK ] LeafNodeTest.MergingWithHugeEntries (0 ms)
+[ RUN      ] LeafNodeTest.MergingRegression4769
+[       OK ] LeafNodeTest.MergingRegression4769 (1 ms)
+[ RUN      ] LeafNodeTest.LevelingLeftToRight
+[       OK ] LeafNodeTest.LevelingLeftToRight (24 ms)
+[ RUN      ] LeafNodeTest.LevelingLeftToZero
+[       OK ] LeafNodeTest.LevelingLeftToZero (27 ms)
+[ RUN      ] LeafNodeTest.LevelingRightToLeft
+[       OK ] LeafNodeTest.LevelingRightToLeft (28 ms)
+[ RUN      ] LeafNodeTest.LevelingRightToZero
+[       OK ] LeafNodeTest.LevelingRightToZero (25 ms)
+[ RUN      ] LeafNodeTest.Splitting
+[       OK ] LeafNodeTest.Splitting (25 ms)
+[ RUN      ] LeafNodeTest.Fullness
+[       OK ] LeafNodeTest.Fullness (23 ms)
+[----------] 23 tests from LeafNodeTest (3513 ms total)
+
+[----------] 2 tests from ClusteringQuery
+[ RUN      ] ClusteringQuery.ReadWrite
+[       OK ] ClusteringQuery.ReadWrite (2 ms)
+[ RUN      ] ClusteringQuery.Failure
+[       OK ] ClusteringQuery.Failure (2 ms)
+[----------] 2 tests from ClusteringQuery (4 ms total)
+
+[----------] 2 tests from SizeofTest
+[ RUN      ] SizeofTest.Sizes
+[       OK ] SizeofTest.Sizes (0 ms)
+[ RUN      ] SizeofTest.SerBuffer
+[       OK ] SizeofTest.SerBuffer (0 ms)
+[----------] 2 tests from SizeofTest (0 ms total)
+
+[----------] 12 tests from DiskFormatTest
+[ RUN      ] DiskFormatTest.FlaggedOff64T
+[       OK ] DiskFormatTest.FlaggedOff64T (0 ms)
+[ RUN      ] DiskFormatTest.LbaShardMetablockT
+[       OK ] DiskFormatTest.LbaShardMetablockT (0 ms)
+[ RUN      ] DiskFormatTest.LbaMetablockMixinT
+[       OK ] DiskFormatTest.LbaMetablockMixinT (0 ms)
+[ RUN      ] DiskFormatTest.LbaEntryT
+[       OK ] DiskFormatTest.LbaEntryT (0 ms)
+[ RUN      ] DiskFormatTest.LbaExtentT
+[       OK ] DiskFormatTest.LbaExtentT (0 ms)
+[ RUN      ] DiskFormatTest.LbaSuperblockT
+[       OK ] DiskFormatTest.LbaSuperblockT (0 ms)
+[ RUN      ] DiskFormatTest.DataBlockManagerMetablockMixinT
+[       OK ] DiskFormatTest.DataBlockManagerMetablockMixinT (0 ms)
+[ RUN      ] DiskFormatTest.ExtentManagerMetablockMixinT
+[       OK ] DiskFormatTest.ExtentManagerMetablockMixinT (0 ms)
+[ RUN      ] DiskFormatTest.MetablockFilerangeChecksumListT
+[       OK ] DiskFormatTest.MetablockFilerangeChecksumListT (0 ms)
+[ RUN      ] DiskFormatTest.LogSerializerMetablockT
+[       OK ] DiskFormatTest.LogSerializerMetablockT (0 ms)
+[ RUN      ] DiskFormatTest.CrcMetablockT
+[       OK ] DiskFormatTest.CrcMetablockT (0 ms)
+[ RUN      ] DiskFormatTest.LogSerializerStaticConfigT
+[       OK ] DiskFormatTest.LogSerializerStaticConfigT (0 ms)
+[----------] 12 tests from DiskFormatTest (0 ms total)
+
+[----------] 4 tests from ServerIdTest
+[ RUN      ] ServerIdTest.Generate
+[       OK ] ServerIdTest.Generate (1 ms)
+[ RUN      ] ServerIdTest.PrintAndParse
+[       OK ] ServerIdTest.PrintAndParse (2 ms)
+[ RUN      ] ServerIdTest.Serialization
+[       OK ] ServerIdTest.Serialization (1 ms)
+[ RUN      ] ServerIdTest.NilId
+[       OK ] ServerIdTest.NilId (0 ms)
+[----------] 4 tests from ServerIdTest (4 ms total)
+
+[----------] 4 tests from CoroutinesTest
+[ RUN      ] CoroutinesTest.NotifyOrdered
+[       OK ] CoroutinesTest.NotifyOrdered (2 ms)
+[ RUN      ] CoroutinesTest.OnThreadOrdering
+[       OK ] CoroutinesTest.OnThreadOrdering (19 ms)
+[ RUN      ] CoroutinesTest.NotifyNow
+[       OK ] CoroutinesTest.NotifyNow (0 ms)
+[ RUN      ] CoroutinesTest.LotsOfCoroutines
+[       OK ] CoroutinesTest.LotsOfCoroutines (3765 ms)
+[----------] 4 tests from CoroutinesTest (3786 ms total)
+
+[----------] 7 tests from BTree
+[ RUN      ] BTree.Basics
+[       OK ] BTree.Basics (108 ms)
+[ RUN      ] BTree.WholeSmallFuzz
+[       OK ] BTree.WholeSmallFuzz (99 ms)
+[ RUN      ] BTree.WholeSmallFuzzRandomTS
+[       OK ] BTree.WholeSmallFuzzRandomTS (105 ms)
+[ RUN      ] BTree.WholeLargeFuzz
+[       OK ] BTree.WholeLargeFuzz (122 ms)
+[ RUN      ] BTree.WholeLargeFuzzRandomTS
+[       OK ] BTree.WholeLargeFuzzRandomTS (125 ms)
+[ RUN      ] BTree.RemoveInOrder
+[       OK ] BTree.RemoveInOrder (147 ms)
+[ RUN      ] BTree.RemoveRandomOrder
+[       OK ] BTree.RemoveRandomOrder (142 ms)
+[----------] 7 tests from BTree (850 ms total)
+
+[----------] 3 tests from ClusteringRegistration
+[ RUN      ] ClusteringRegistration.Register
+[       OK ] ClusteringRegistration.Register (206 ms)
+[ RUN      ] ClusteringRegistration.RegistrarDeath
+[       OK ] ClusteringRegistration.RegistrarDeath (207 ms)
+[ RUN      ] ClusteringRegistration.QuickDisconnect
+[       OK ] ClusteringRegistration.QuickDisconnect (107 ms)
+[----------] 3 tests from ClusteringRegistration (520 ms total)
+
+[----------] 3 tests from Rebalance
+[ RUN      ] Rebalance.Regression3020
+[       OK ] Rebalance.Regression3020 (1 ms)
+[ RUN      ] Rebalance.NoBalance
+[       OK ] Rebalance.NoBalance (0 ms)
+[ RUN      ] Rebalance.MaxKeyLength
+[       OK ] Rebalance.MaxKeyLength (0 ms)
+[----------] 3 tests from Rebalance (1 ms total)
+
+[----------] 16 tests from DiskConflictTest
+[ RUN      ] DiskConflictTest.WriteWriteConflict
+[       OK ] DiskConflictTest.WriteWriteConflict (0 ms)
+[ RUN      ] DiskConflictTest.WriteReadConflict
+[       OK ] DiskConflictTest.WriteReadConflict (0 ms)
+[ RUN      ] DiskConflictTest.ReadWriteConflict
+[       OK ] DiskConflictTest.ReadWriteConflict (0 ms)
+[ RUN      ] DiskConflictTest.NoSpuriousConflicts
+[       OK ] DiskConflictTest.NoSpuriousConflicts (0 ms)
+[ RUN      ] DiskConflictTest.NoReadReadConflict
+[       OK ] DiskConflictTest.NoReadReadConflict (0 ms)
+[ RUN      ] DiskConflictTest.WriteReadSubrange
+[       OK ] DiskConflictTest.WriteReadSubrange (0 ms)
+[ RUN      ] DiskConflictTest.WriteReadSuperrange
+[       OK ] DiskConflictTest.WriteReadSuperrange (0 ms)
+[ RUN      ] DiskConflictTest.ResizeResizeConflict
+[       OK ] DiskConflictTest.ResizeResizeConflict (0 ms)
+[ RUN      ] DiskConflictTest.WriteResizeIncreaseNonConflict
+[       OK ] DiskConflictTest.WriteResizeIncreaseNonConflict (0 ms)
+[ RUN      ] DiskConflictTest.WriteResizeDecreaseConflict
+[       OK ] DiskConflictTest.WriteResizeDecreaseConflict (0 ms)
+[ RUN      ] DiskConflictTest.ReadResizeNonConflict
+[       OK ] DiskConflictTest.ReadResizeNonConflict (0 ms)
+[ RUN      ] DiskConflictTest.ResizeWriteConflict
+[       OK ] DiskConflictTest.ResizeWriteConflict (0 ms)
+[ RUN      ] DiskConflictTest.ResizeReadConflict
+[       OK ] DiskConflictTest.ResizeReadConflict (0 ms)
+[ RUN      ] DiskConflictTest.ResizeSequenceConflict
+[       OK ] DiskConflictTest.ResizeSequenceConflict (1 ms)
+[ RUN      ] DiskConflictTest.MetaTest
+[       OK ] DiskConflictTest.MetaTest (0 ms)
+[ RUN      ] DiskConflictTest.FillBufsFromSource
+[       OK ] DiskConflictTest.FillBufsFromSource (0 ms)
+[----------] 16 tests from DiskConflictTest (1 ms total)
+
+[----------] 6 tests from CoroutineUtilsTest
+[ RUN      ] CoroutineUtilsTest.WithEnoughStackNoSpawn
+[       OK ] CoroutineUtilsTest.WithEnoughStackNoSpawn (0 ms)
+[ RUN      ] CoroutineUtilsTest.WithEnoughStackNonBlocking
+[       OK ] CoroutineUtilsTest.WithEnoughStackNonBlocking (1 ms)
+[ RUN      ] CoroutineUtilsTest.WithEnoughStackBlocking
+[       OK ] CoroutineUtilsTest.WithEnoughStackBlocking (7 ms)
+[ RUN      ] CoroutineUtilsTest.WithEnoughStackNoCoro
+[       OK ] CoroutineUtilsTest.WithEnoughStackNoCoro (0 ms)
+[ RUN      ] CoroutineUtilsTest.WithEnoughStackException
+[       OK ] CoroutineUtilsTest.WithEnoughStackException (1 ms)
+[ RUN      ] CoroutineUtilsTest.WithEnoughStackBenchmark
+Getting base line timings.
+Test 1: call_with_enough_stack without spawning: 0.014057 us overhead
+Test 2: call_with_enough_stack with spawning: 0.180742 us overhead
+Test 3: call_with_enough_stack with blocking: 3.991643 us overhead
+[       OK ] CoroutineUtilsTest.WithEnoughStackBenchmark (11226 ms)
+[----------] 6 tests from CoroutineUtilsTest (11235 ms total)
+
+[----------] 10 tests from RPCSemilatticeTest
+[ RUN      ] RPCSemilatticeTest.SingleMetadata
+[       OK ] RPCSemilatticeTest.SingleMetadata (2 ms)
+[ RUN      ] RPCSemilatticeTest.MetadataExchange
+[       OK ] RPCSemilatticeTest.MetadataExchange (3 ms)
+[ RUN      ] RPCSemilatticeTest.SyncFrom
+[       OK ] RPCSemilatticeTest.SyncFrom (2 ms)
+[ RUN      ] RPCSemilatticeTest.Watcher
+[       OK ] RPCSemilatticeTest.Watcher (1 ms)
+[ RUN      ] RPCSemilatticeTest.ViewControllerMultiThread
+[       OK ] RPCSemilatticeTest.ViewControllerMultiThread (9 ms)
+[ RUN      ] RPCSemilatticeTest.ViewController
+[       OK ] RPCSemilatticeTest.ViewController (1 ms)
+[ RUN      ] RPCSemilatticeTest.FieldViewMultiThread
+[       OK ] RPCSemilatticeTest.FieldViewMultiThread (3 ms)
+[ RUN      ] RPCSemilatticeTest.FieldView
+[       OK ] RPCSemilatticeTest.FieldView (3 ms)
+[ RUN      ] RPCSemilatticeTest.MemberViewMultiThread
+[       OK ] RPCSemilatticeTest.MemberViewMultiThread (4 ms)
+[ RUN      ] RPCSemilatticeTest.MemberView
+[       OK ] RPCSemilatticeTest.MemberView (1 ms)
+[----------] 10 tests from RPCSemilatticeTest (30 ms total)
+
+[----------] 18 tests from RDBProtocol
+[ RUN      ] RDBProtocol.SetupTeardown
+[       OK ] RDBProtocol.SetupTeardown (218 ms)
+[ RUN      ] RDBProtocol.OvershardedSetupTeardown
+[       OK ] RDBProtocol.OvershardedSetupTeardown (102 ms)
+[ RUN      ] RDBProtocol.GetSet
+[       OK ] RDBProtocol.GetSet (201 ms)
+[ RUN      ] RDBProtocol.OvershardedGetSet
+[       OK ] RDBProtocol.OvershardedGetSet (115 ms)
+[ RUN      ] RDBProtocol.SindexFuzzCreateDrop
+[       OK ] RDBProtocol.SindexFuzzCreateDrop (5022 ms)
+[ RUN      ] RDBProtocol.SindexCreateDrop
+[       OK ] RDBProtocol.SindexCreateDrop (267 ms)
+[ RUN      ] RDBProtocol.SindexRepeatedCreateDrop
+[       OK ] RDBProtocol.SindexRepeatedCreateDrop (3397 ms)
+[ RUN      ] RDBProtocol.OvershardedSindexCreateDrop
+[       OK ] RDBProtocol.OvershardedSindexCreateDrop (169 ms)
+[ RUN      ] RDBProtocol.SindexRename
+[       OK ] RDBProtocol.SindexRename (465 ms)
+[ RUN      ] RDBProtocol.OvershardedSindexRename
+[       OK ] RDBProtocol.OvershardedSindexRename (247 ms)
+[ RUN      ] RDBProtocol.SindexRepeatedRename
+[       OK ] RDBProtocol.SindexRepeatedRename (5191 ms)
+[ RUN      ] RDBProtocol.SindexList
+[       OK ] RDBProtocol.SindexList (1361 ms)
+[ RUN      ] RDBProtocol.OvershardedSindexList
+[       OK ] RDBProtocol.OvershardedSindexList (849 ms)
+[ RUN      ] RDBProtocol.OverSizedKeys
+[       OK ] RDBProtocol.OverSizedKeys (425 ms)
+[ RUN      ] RDBProtocol.OvershardedOverSizedKeys
+[       OK ] RDBProtocol.OvershardedOverSizedKeys (341 ms)
+[ RUN      ] RDBProtocol.MissingAttr
+[       OK ] RDBProtocol.MissingAttr (277 ms)
+[ RUN      ] RDBProtocol.OvershardedMissingAttr
+[       OK ] RDBProtocol.OvershardedMissingAttr (136 ms)
+[ RUN      ] RDBProtocol.ArtificialChangefeeds
+[       OK ] RDBProtocol.ArtificialChangefeeds (3 ms)
+[----------] 18 tests from RDBProtocol (18788 ms total)
+
+[----------] 2 tests from ClusteringBranch
+[ RUN      ] ClusteringBranch.ReadWrite
+[       OK ] ClusteringBranch.ReadWrite (104 ms)
+[ RUN      ] ClusteringBranch.Backfill
+[       OK ] ClusteringBranch.Backfill (1218 ms)
+[----------] 2 tests from ClusteringBranch (1322 ms total)
+
+[----------] 2 tests from LogMessageTest
+[ RUN      ] LogMessageTest.ParseFormat
+[       OK ] LogMessageTest.ParseFormat (1 ms)
+[ RUN      ] LogMessageTest.FileReverseReader
+[       OK ] LogMessageTest.FileReverseReader (215 ms)
+[----------] 2 tests from LogMessageTest (216 ms total)
+
+[----------] 14 tests from ClusteringRaft
+[ RUN      ] ClusteringRaft.Fuzzer
+[       OK ] ClusteringRaft.Fuzzer (30209 ms)
+[ RUN      ] ClusteringRaft.StorageRoundtrip
+Recursively removing directory /tmp/rdb_unittest.1yHKHx/tmp
+Recursively removing directory /tmp/rdb_unittest.1yHKHx
+In recursion: removing file '/tmp/rdb_unittest.1yHKHx/tmp'
+In recursion: removing file '/tmp/rdb_unittest.1yHKHx/metadata'
+In recursion: removing file '/tmp/rdb_unittest.1yHKHx'
+[       OK ] ClusteringRaft.StorageRoundtrip (142 ms)
+[ RUN      ] ClusteringRaft.StorageErase
+Recursively removing directory /tmp/rdb_unittest.yRagI3/tmp
+Recursively removing directory /tmp/rdb_unittest.yRagI3
+In recursion: removing file '/tmp/rdb_unittest.yRagI3/tmp'
+In recursion: removing file '/tmp/rdb_unittest.yRagI3/metadata'
+In recursion: removing file '/tmp/rdb_unittest.yRagI3'
+[       OK ] ClusteringRaft.StorageErase (124 ms)
+[ RUN      ] ClusteringRaft.StorageWriteCurrentTermAndVotedFor
+Recursively removing directory /tmp/rdb_unittest.4Re0UP/tmp
+Recursively removing directory /tmp/rdb_unittest.4Re0UP
+In recursion: removing file '/tmp/rdb_unittest.4Re0UP/tmp'
+In recursion: removing file '/tmp/rdb_unittest.4Re0UP/metadata'
+In recursion: removing file '/tmp/rdb_unittest.4Re0UP'
+[       OK ] ClusteringRaft.StorageWriteCurrentTermAndVotedFor (157 ms)
+[ RUN      ] ClusteringRaft.StorageWriteCommitIndex
+Recursively removing directory /tmp/rdb_unittest.6k3g7g/tmp
+Recursively removing directory /tmp/rdb_unittest.6k3g7g
+In recursion: removing file '/tmp/rdb_unittest.6k3g7g/tmp'
+In recursion: removing file '/tmp/rdb_unittest.6k3g7g/metadata'
+In recursion: removing file '/tmp/rdb_unittest.6k3g7g'
+[       OK ] ClusteringRaft.StorageWriteCommitIndex (145 ms)
+[ RUN      ] ClusteringRaft.StorageWriteLogReplaceTail
+Recursively removing directory /tmp/rdb_unittest.Ytbp4K/tmp
+Recursively removing directory /tmp/rdb_unittest.Ytbp4K
+In recursion: removing file '/tmp/rdb_unittest.Ytbp4K/tmp'
+In recursion: removing file '/tmp/rdb_unittest.Ytbp4K/metadata'
+In recursion: removing file '/tmp/rdb_unittest.Ytbp4K'
+[       OK ] ClusteringRaft.StorageWriteLogReplaceTail (148 ms)
+[ RUN      ] ClusteringRaft.StorageWriteLogAppendOne
+Recursively removing directory /tmp/rdb_unittest.1ckIsY/tmp
+Recursively removing directory /tmp/rdb_unittest.1ckIsY
+In recursion: removing file '/tmp/rdb_unittest.1ckIsY/tmp'
+In recursion: removing file '/tmp/rdb_unittest.1ckIsY/metadata'
+In recursion: removing file '/tmp/rdb_unittest.1ckIsY'
+[       OK ] ClusteringRaft.StorageWriteLogAppendOne (165 ms)
+[ RUN      ] ClusteringRaft.StorageWriteSnapshot
+Recursively removing directory /tmp/rdb_unittest.ISQepP/tmp
+Recursively removing directory /tmp/rdb_unittest.ISQepP
+In recursion: removing file '/tmp/rdb_unittest.ISQepP/tmp'
+In recursion: removing file '/tmp/rdb_unittest.ISQepP/metadata'
+In recursion: removing file '/tmp/rdb_unittest.ISQepP'
+[       OK ] ClusteringRaft.StorageWriteSnapshot (147 ms)
+[ RUN      ] ClusteringRaft.Basic
+[       OK ] ClusteringRaft.Basic (2678 ms)
+[ RUN      ] ClusteringRaft.Failover
+[       OK ] ClusteringRaft.Failover (14362 ms)
+[ RUN      ] ClusteringRaft.FailoverIsolated
+[       OK ] ClusteringRaft.FailoverIsolated (15108 ms)
+[ RUN      ] ClusteringRaft.MemberChange
+[       OK ] ClusteringRaft.MemberChange (16152 ms)
+[ RUN      ] ClusteringRaft.NonVoting
+[       OK ] ClusteringRaft.NonVoting (2260 ms)
+[ RUN      ] ClusteringRaft.Regression4234
+[       OK ] ClusteringRaft.Regression4234 (4949 ms)
+[----------] 14 tests from ClusteringRaft (86754 ms total)
+
+[----------] 25 tests from RPCConnectivityTest
+[ RUN      ] RPCConnectivityTest.StartStopMultiThread
+[       OK ] RPCConnectivityTest.StartStopMultiThread (110 ms)
+[ RUN      ] RPCConnectivityTest.StartStop
+[       OK ] RPCConnectivityTest.StartStop (107 ms)
+[ RUN      ] RPCConnectivityTest.MessageMultiThread
+[       OK ] RPCConnectivityTest.MessageMultiThread (205 ms)
+[ RUN      ] RPCConnectivityTest.Message
+[       OK ] RPCConnectivityTest.Message (215 ms)
+[ RUN      ] RPCConnectivityTest.UnreachablePeerMultiThread
+[       OK ] RPCConnectivityTest.UnreachablePeerMultiThread (414 ms)
+[ RUN      ] RPCConnectivityTest.UnreachablePeer
+[       OK ] RPCConnectivityTest.UnreachablePeer (405 ms)
+[ RUN      ] RPCConnectivityTest.LostPeerMultiThread
+[       OK ] RPCConnectivityTest.LostPeerMultiThread (207 ms)
+[ RUN      ] RPCConnectivityTest.LostPeer
+[       OK ] RPCConnectivityTest.LostPeer (205 ms)
+[ RUN      ] RPCConnectivityTest.OrderingMultiThread
+[       OK ] RPCConnectivityTest.OrderingMultiThread (211 ms)
+[ RUN      ] RPCConnectivityTest.Ordering
+[       OK ] RPCConnectivityTest.Ordering (216 ms)
+[ RUN      ] RPCConnectivityTest.GetConnectionsMultiThread
+[       OK ] RPCConnectivityTest.GetConnectionsMultiThread (210 ms)
+[ RUN      ] RPCConnectivityTest.GetConnections
+[       OK ] RPCConnectivityTest.GetConnections (212 ms)
+[ RUN      ] RPCConnectivityTest.StopMidJoinMultiThread
+[       OK ] RPCConnectivityTest.StopMidJoinMultiThread (7 ms)
+[ RUN      ] RPCConnectivityTest.StopMidJoin
+[       OK ] RPCConnectivityTest.StopMidJoin (4 ms)
+[ RUN      ] RPCConnectivityTest.BlobJoinMultiThread
+[       OK ] RPCConnectivityTest.BlobJoinMultiThread (215 ms)
+[ RUN      ] RPCConnectivityTest.BlobJoin
+[       OK ] RPCConnectivityTest.BlobJoin (219 ms)
+[ RUN      ] RPCConnectivityTest.Multiplexer
+[       OK ] RPCConnectivityTest.Multiplexer (203 ms)
+[ RUN      ] RPCConnectivityTest.BinaryDataMultiThread
+[       OK ] RPCConnectivityTest.BinaryDataMultiThread (214 ms)
+[ RUN      ] RPCConnectivityTest.BinaryData
+[       OK ] RPCConnectivityTest.BinaryData (205 ms)
+[ RUN      ] RPCConnectivityTest.PeerIDSemanticsMultiThread
+[       OK ] RPCConnectivityTest.PeerIDSemanticsMultiThread (1 ms)
+[ RUN      ] RPCConnectivityTest.PeerIDSemantics
+[       OK ] RPCConnectivityTest.PeerIDSemantics (1 ms)
+[ RUN      ] RPCConnectivityTest.CheckHeaders
+[       OK ] RPCConnectivityTest.CheckHeaders (412 ms)
+[ RUN      ] RPCConnectivityTest.DifferentVersion
+[       OK ] RPCConnectivityTest.DifferentVersion (409 ms)
+[ RUN      ] RPCConnectivityTest.DifferentArch
+[       OK ] RPCConnectivityTest.DifferentArch (414 ms)
+[ RUN      ] RPCConnectivityTest.CanonicalAddress
+[       OK ] RPCConnectivityTest.CanonicalAddress (111 ms)
+[----------] 25 tests from RPCConnectivityTest (5134 ms total)
+
+[----------] 9 tests from RPCMailboxTest
+[ RUN      ] RPCMailboxTest.MailboxStartStop
+[       OK ] RPCMailboxTest.MailboxStartStop (1 ms)
+[ RUN      ] RPCMailboxTest.MailboxMessageMultiThread
+[       OK ] RPCMailboxTest.MailboxMessageMultiThread (214 ms)
+[ RUN      ] RPCMailboxTest.MailboxMessage
+[       OK ] RPCMailboxTest.MailboxMessage (210 ms)
+[ RUN      ] RPCMailboxTest.DeadMailboxMultiThread
+[       OK ] RPCMailboxTest.DeadMailboxMultiThread (109 ms)
+[ RUN      ] RPCMailboxTest.DeadMailbox
+[       OK ] RPCMailboxTest.DeadMailbox (105 ms)
+[ RUN      ] RPCMailboxTest.MailboxAddressSemanticsMultiThread
+[       OK ] RPCMailboxTest.MailboxAddressSemanticsMultiThread (2 ms)
+[ RUN      ] RPCMailboxTest.MailboxAddressSemantics
+[       OK ] RPCMailboxTest.MailboxAddressSemantics (1 ms)
+[ RUN      ] RPCMailboxTest.TypedMailboxMultiThread
+[       OK ] RPCMailboxTest.TypedMailboxMultiThread (103 ms)
+[ RUN      ] RPCMailboxTest.TypedMailbox
+[       OK ] RPCMailboxTest.TypedMailbox (108 ms)
+[----------] 9 tests from RPCMailboxTest (854 ms total)
+
+[----------] 15 tests from PageTest
+[ RUN      ] PageTest.Control
+[       OK ] PageTest.Control (2 ms)
+[ RUN      ] PageTest.CreateDestroy
+[       OK ] PageTest.CreateDestroy (1 ms)
+[ RUN      ] PageTest.OneTxn
+[       OK ] PageTest.OneTxn (1 ms)
+[ RUN      ] PageTest.TwoIndependentTxn
+[       OK ] PageTest.TwoIndependentTxn (1 ms)
+[ RUN      ] PageTest.TwoIndependentTxnSwitch
+[       OK ] PageTest.TwoIndependentTxnSwitch (1 ms)
+[ RUN      ] PageTest.TwoSequentialTxnSwitch
+[       OK ] PageTest.TwoSequentialTxnSwitch (0 ms)
+[ RUN      ] PageTest.OneWriteAcq
+[       OK ] PageTest.OneWriteAcq (0 ms)
+[ RUN      ] PageTest.OneWriteAcqOneReadAcq
+[       OK ] PageTest.OneWriteAcqOneReadAcq (0 ms)
+[ RUN      ] PageTest.OneWriteAcqWait
+[       OK ] PageTest.OneWriteAcqWait (5 ms)
+[ RUN      ] PageTest.ReadAfterWrite
+[       OK ] PageTest.ReadAfterWrite (1 ms)
+[ RUN      ] PageTest.WriteWaitForFlush
+[       OK ] PageTest.WriteWaitForFlush (3 ms)
+[ RUN      ] PageTest.BiggerTest
+[       OK ] PageTest.BiggerTest (4 ms)
+[ RUN      ] PageTest.BiggerTestTightMemory
+[       OK ] PageTest.BiggerTestTightMemory (6 ms)
+[ RUN      ] PageTest.BiggerTestSuperTightMemory
+[       OK ] PageTest.BiggerTestSuperTightMemory (5 ms)
+[ RUN      ] PageTest.BiggerTestNoMemory
+[       OK ] PageTest.BiggerTestNoMemory (6 ms)
+[----------] 15 tests from PageTest (40 ms total)
+
+[----------] 1 test from PerfmonTest
+[ RUN      ] PerfmonTest.StddevComputation
+[       OK ] PerfmonTest.StddevComputation (0 ms)
+[----------] 1 test from PerfmonTest (0 ms total)
+
+[----------] 5 tests from HashRegionTest
+[ RUN      ] HashRegionTest.RegionJoinHashwise
+[       OK ] HashRegionTest.RegionJoinHashwise (0 ms)
+[ RUN      ] HashRegionTest.RegionJoinEmpty
+[       OK ] HashRegionTest.RegionJoinEmpty (0 ms)
+[ RUN      ] HashRegionTest.RegionJoinEmpties
+[       OK ] HashRegionTest.RegionJoinEmpties (0 ms)
+[ RUN      ] HashRegionTest.RegionJoin2D
+[       OK ] HashRegionTest.RegionJoin2D (0 ms)
+[ RUN      ] HashRegionTest.SpecialNonSquareRegionJoin
+[       OK ] HashRegionTest.SpecialNonSquareRegionJoin (0 ms)
+[----------] 5 tests from HashRegionTest (0 ms total)
+
+[----------] 3 tests from RDBInterrupt
+[ RUN      ] RDBInterrupt.GetOp
+[       OK ] RDBInterrupt.GetOp (22 ms)
+[ RUN      ] RDBInterrupt.TcpInterrupt
+[       OK ] RDBInterrupt.TcpInterrupt (332 ms)
+[ RUN      ] RDBInterrupt.HttpInterrupt
+[       OK ] RDBInterrupt.HttpInterrupt (5448 ms)
+[----------] 3 tests from RDBInterrupt (5802 ms total)
+
+[----------] 4 tests from FIFOEnforcer
+[ RUN      ] FIFOEnforcer.FIFOEnforcer
+[       OK ] FIFOEnforcer.FIFOEnforcer (32 ms)
+[ RUN      ] FIFOEnforcer.StateTransfer
+[       OK ] FIFOEnforcer.StateTransfer (0 ms)
+[ RUN      ] FIFOEnforcer.DummyEntry
+[       OK ] FIFOEnforcer.DummyEntry (1 ms)
+[ RUN      ] FIFOEnforcer.QueueEquivalence
+[       OK ] FIFOEnforcer.QueueEquivalence (29 ms)
+[----------] 4 tests from FIFOEnforcer (62 ms total)
+
+[----------] 1 test from ClusteringBackfill
+[ RUN      ] ClusteringBackfill.BackfillTest
+[       OK ] ClusteringBackfill.BackfillTest (1249 ms)
+[----------] 1 test from ClusteringBackfill (1249 ms total)
+
+[----------] 1 test from InternalNodeTest
+[ RUN      ] InternalNodeTest.Offsets
+[       OK ] InternalNodeTest.Offsets (0 ms)
+[----------] 1 test from InternalNodeTest (0 ms total)
+
+[----------] 1 test from PrintSecondary
+[ RUN      ] PrintSecondary.Mangle
+[       OK ] PrintSecondary.Mangle (0 ms)
+[----------] 1 test from PrintSecondary (0 ms total)
+
+[----------] 6 tests from PPrintTest
+[ RUN      ] PPrintTest.SimpleText
+[       OK ] PPrintTest.SimpleText (0 ms)
+[ RUN      ] PPrintTest.SimpleCond
+[       OK ] PPrintTest.SimpleCond (0 ms)
+[ RUN      ] PPrintTest.GroupedCond
+[       OK ] PPrintTest.GroupedCond (0 ms)
+[ RUN      ] PPrintTest.GroupedCondWithTail
+[       OK ] PPrintTest.GroupedCondWithTail (0 ms)
+[ RUN      ] PPrintTest.Nest
+[       OK ] PPrintTest.Nest (0 ms)
+[ RUN      ] PPrintTest.Involved
+[       OK ] PPrintTest.Involved (1 ms)
+[----------] 6 tests from PPrintTest (1 ms total)
+
+[----------] 1 test from RwlockTest
+[ RUN      ] RwlockTest.ReadAfterWrite
+[       OK ] RwlockTest.ReadAfterWrite (1 ms)
+[----------] 1 test from RwlockTest (1 ms total)
+
+[----------] 2 tests from ClusteringMinidir
+[ RUN      ] ClusteringMinidir.SinglePeer
+[       OK ] ClusteringMinidir.SinglePeer (826 ms)
+[ RUN      ] ClusteringMinidir.MultiPeer
+[       OK ] ClusteringMinidir.MultiPeer (417 ms)
+[----------] 2 tests from ClusteringMinidir (1243 ms total)
+
+[----------] 1 test from DBMTest
+[ RUN      ] DBMTest.ReadAheadInterval
+[       OK ] DBMTest.ReadAheadInterval (0 ms)
+[----------] 1 test from DBMTest (0 ms total)
+
+[----------] 4 tests from ClusteringBranchHistory
+[ RUN      ] ClusteringBranchHistory.IsAncestor
+[       OK ] ClusteringBranchHistory.IsAncestor (1 ms)
+[ RUN      ] ClusteringBranchHistory.CommonAncestor
+[       OK ] ClusteringBranchHistory.CommonAncestor (1 ms)
+[ RUN      ] ClusteringBranchHistory.CommonAncestorSplit
+[       OK ] ClusteringBranchHistory.CommonAncestorSplit (0 ms)
+[ RUN      ] ClusteringBranchHistory.CommonAncestorSameOrigin
+[       OK ] ClusteringBranchHistory.CommonAncestorSameOrigin (1 ms)
+[----------] 4 tests from ClusteringBranchHistory (3 ms total)
+
+[----------] 1 test from GeoBtree
+[ RUN      ] GeoBtree.OrderBtreeKeyRelativeToS2CellIdKeys
+[       OK ] GeoBtree.OrderBtreeKeyRelativeToS2CellIdKeys (15 ms)
+[----------] 1 test from GeoBtree (15 ms total)
+
+[----------] 2 tests from BTreeSindex
+[ RUN      ] BTreeSindex.LowLevelOps
+[       OK ] BTreeSindex.LowLevelOps (311 ms)
+[ RUN      ] BTreeSindex.BtreeStoreAPI
+[       OK ] BTreeSindex.BtreeStoreAPI (829 ms)
+[----------] 2 tests from BTreeSindex (1140 ms total)
+
+[----------] 4 tests from OptionsTest
+[ RUN      ] OptionsTest.CommandLineParsing
+[       OK ] OptionsTest.CommandLineParsing (0 ms)
+[ RUN      ] OptionsTest.CommandLineMissingParameter
+[       OK ] OptionsTest.CommandLineMissingParameter (0 ms)
+[ RUN      ] OptionsTest.ConfigFileParsing
+[       OK ] OptionsTest.ConfigFileParsing (0 ms)
+[ RUN      ] OptionsTest.ConfigFileMissingParameter
+[       OK ] OptionsTest.ConfigFileMissingParameter (1 ms)
+[----------] 4 tests from OptionsTest (1 ms total)
+
+[----------] 2 tests from RegionMap
+[ RUN      ] RegionMap.BasicSets
+[       OK ] RegionMap.BasicSets (0 ms)
+[ RUN      ] RegionMap.Mask
+[       OK ] RegionMap.Mask (0 ms)
+[----------] 2 tests from RegionMap (0 ms total)
+
+[----------] 1 test from LRUCacheTest
+[ RUN      ] LRUCacheTest.Basic
+[       OK ] LRUCacheTest.Basic (0 ms)
+[----------] 1 test from LRUCacheTest (0 ms total)
+
+[----------] 3 tests from Http
+[ RUN      ] Http.FormatTime
+[       OK ] Http.FormatTime (0 ms)
+[ RUN      ] Http.Encodings
+[       OK ] Http.Encodings (2 ms)
+[ RUN      ] Http.InterruptRoutingApp
+[       OK ] Http.InterruptRoutingApp (2 ms)
+[----------] 3 tests from Http (4 ms total)
+
+[----------] 1 test from GeoPrimitives
+[ RUN      ] GeoPrimitives.InExRadiusTest
+[       OK ] GeoPrimitives.InExRadiusTest (893 ms)
+[----------] 1 test from GeoPrimitives (893 ms total)
+
+[----------] 1 test from PrintfBufferTest
+[ RUN      ] PrintfBufferTest.Buffering
+[       OK ] PrintfBufferTest.Buffering (0 ms)
+[----------] 1 test from PrintfBufferTest (0 ms total)
+
+[----------] 2 tests from BtreeMetadata
+[ RUN      ] BtreeMetadata.MetadataTest
+Recursively removing directory /tmp/rdb_unittest.C8E33U/tmp
+Recursively removing directory /tmp/rdb_unittest.C8E33U
+In recursion: removing file '/tmp/rdb_unittest.C8E33U/tmp'
+In recursion: removing file '/tmp/rdb_unittest.C8E33U/metadata'
+In recursion: removing file '/tmp/rdb_unittest.C8E33U'
+[       OK ] BtreeMetadata.MetadataTest (126 ms)
+[ RUN      ] BtreeMetadata.ManyKeysBigValues
+Recursively removing directory /tmp/rdb_unittest.E4q2AC/tmp
+Recursively removing directory /tmp/rdb_unittest.E4q2AC
+In recursion: removing file '/tmp/rdb_unittest.E4q2AC/tmp'
+In recursion: removing file '/tmp/rdb_unittest.E4q2AC/metadata'
+In recursion: removing file '/tmp/rdb_unittest.E4q2AC'
+[       OK ] BtreeMetadata.ManyKeysBigValues (416 ms)
+[----------] 2 tests from BtreeMetadata (543 ms total)
+
+[----------] 3 tests from TimerTest
+[ RUN      ] TimerTest.TestApproximateWaitTimes
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5265366 vs 5000000
+failed to nap for 30ms
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5463880 vs 5000000
+failed to nap for 30ms
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5264922 vs 5000000
+failed to nap for 20ms
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5222626 vs 5000000
+failed to nap for 20ms
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5251690 vs 5000000
+failed to nap for 30ms
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5269236 vs 5000000
+failed to nap for 20ms
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5256607 vs 5000000
+failed to nap for 20ms
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5259342 vs 5000000
+failed to nap for 30ms
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5428681 vs 5000000
+failed to nap for 30ms
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5046594 vs 5000000
+failed to nap for 20ms
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5027190 vs 5000000
+failed to nap for 30ms
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5243293 vs 5000000
+failed to nap for 20ms
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5119490 vs 5000000
+failed to nap for 40ms
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5232506 vs 5000000
+failed to nap for 30ms
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5406377 vs 5000000
+failed to nap for 30ms
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5234023 vs 5000000
+failed to nap for 20ms
+src/unittest/timer_test.cc:39: Failure
+Expected: (llabs(error_ns)) < (max_error_ms * (1000LL * 1000LL)), actual: 5216066 vs 5000000
+failed to nap for 20ms
+src/unittest/timer_test.cc:57: Failure
+Expected: (sqrt(mse) / (1000LL * 1000LL)) < (max_average_error_ms), actual: 2.09832 vs 2
+Average timer error too high
+[  FAILED  ] TimerTest.TestApproximateWaitTimes (1390 ms)
+[ RUN      ] TimerTest.TestRepeatingTimer
+src/unittest/timer_test.cc:68: Failure
+Expected: (std::abs(diff - 30 * (1000LL * 1000LL) * count)) < (max_error_ms * (1000LL * 1000LL)), actual: 5265766 vs 5000000
+src/unittest/timer_test.cc:68: Failure
+Expected: (std::abs(diff - 30 * (1000LL * 1000LL) * count)) < (max_error_ms * (1000LL * 1000LL)), actual: 9779567 vs 5000000
+src/unittest/timer_test.cc:68: Failure
+Expected: (std::abs(diff - 30 * (1000LL * 1000LL) * count)) < (max_error_ms * (1000LL * 1000LL)), actual: 14378182 vs 5000000
+[  FAILED  ] TimerTest.TestRepeatingTimer (105 ms)
+[ RUN      ] TimerTest.TestChangeInterval
+src/unittest/timer_test.cc:86: Failure
+Expected: (std::abs(diff - expected[count] * (1000LL * 1000LL))) < (max_error_ms * (1000LL * 1000LL)), actual: 5639696 vs 5000000
+src/unittest/timer_test.cc:86: Failure
+Expected: (std::abs(diff - expected[count] * (1000LL * 1000LL))) < (max_error_ms * (1000LL * 1000LL)), actual: 10798289 vs 5000000
+[  FAILED  ] TimerTest.TestChangeInterval (81 ms)
+[----------] 3 tests from TimerTest (1576 ms total)
+
+[----------] 6 tests from UTF8ValidationTest
+[ RUN      ] UTF8ValidationTest.EmptyStrings
+[       OK ] UTF8ValidationTest.EmptyStrings (0 ms)
+[ RUN      ] UTF8ValidationTest.SimplePositives
+[       OK ] UTF8ValidationTest.SimplePositives (0 ms)
+[ RUN      ] UTF8ValidationTest.ValidSurrogates
+[       OK ] UTF8ValidationTest.ValidSurrogates (0 ms)
+[ RUN      ] UTF8ValidationTest.InvalidCharacters
+[       OK ] UTF8ValidationTest.InvalidCharacters (0 ms)
+[ RUN      ] UTF8ValidationTest.NullBytes
+[       OK ] UTF8ValidationTest.NullBytes (1 ms)
+[ RUN      ] UTF8ValidationTest.IllegalCharacters
+[       OK ] UTF8ValidationTest.IllegalCharacters (0 ms)
+[----------] 6 tests from UTF8ValidationTest (1 ms total)
+
+[----------] 9 tests from UTF8ValidationStressTest
+[ RUN      ] UTF8ValidationStressTest.CorrectString
+[       OK ] UTF8ValidationStressTest.CorrectString (0 ms)
+[ RUN      ] UTF8ValidationStressTest.FirstPossibleSequence
+[       OK ] UTF8ValidationStressTest.FirstPossibleSequence (0 ms)
+[ RUN      ] UTF8ValidationStressTest.LastPossibleSequence
+[       OK ] UTF8ValidationStressTest.LastPossibleSequence (0 ms)
+[ RUN      ] UTF8ValidationStressTest.MiscBoundaryConditions
+[       OK ] UTF8ValidationStressTest.MiscBoundaryConditions (0 ms)
+[ RUN      ] UTF8ValidationStressTest.ImpossibleBytes
+[       OK ] UTF8ValidationStressTest.ImpossibleBytes (0 ms)
+[ RUN      ] UTF8ValidationStressTest.OverlongSequences
+[       OK ] UTF8ValidationStressTest.OverlongSequences (0 ms)
+[ RUN      ] UTF8ValidationStressTest.UnexpectedContinuationBytes
+[       OK ] UTF8ValidationStressTest.UnexpectedContinuationBytes (0 ms)
+[ RUN      ] UTF8ValidationStressTest.LonelyStartCharacters
+[       OK ] UTF8ValidationStressTest.LonelyStartCharacters (0 ms)
+[ RUN      ] UTF8ValidationStressTest.MissingLastContinuationByte
+[       OK ] UTF8ValidationStressTest.MissingLastContinuationByte (0 ms)
+[----------] 9 tests from UTF8ValidationStressTest (0 ms total)
+
+[----------] 2 tests from UTF8CodepointIterationTest
+[ RUN      ] UTF8CodepointIterationTest.SimpleString
+[       OK ] UTF8CodepointIterationTest.SimpleString (0 ms)
+[ RUN      ] UTF8CodepointIterationTest.Zalgo
+[       OK ] UTF8CodepointIterationTest.Zalgo (0 ms)
+[----------] 2 tests from UTF8CodepointIterationTest (0 ms total)
+
+[----------] 6 tests from UTF8IterationTest
+[ RUN      ] UTF8IterationTest.SimpleString
+[       OK ] UTF8IterationTest.SimpleString (0 ms)
+[ RUN      ] UTF8IterationTest.SimpleStringNormalIteration
+[       OK ] UTF8IterationTest.SimpleStringNormalIteration (0 ms)
+[ RUN      ] UTF8IterationTest.SimpleCString
+[       OK ] UTF8IterationTest.SimpleCString (0 ms)
+[ RUN      ] UTF8IterationTest.SimpleStringRange
+[       OK ] UTF8IterationTest.SimpleStringRange (0 ms)
+[ RUN      ] UTF8IterationTest.EmptyString
+[       OK ] UTF8IterationTest.EmptyString (0 ms)
+[ RUN      ] UTF8IterationTest.Zalgo
+[       OK ] UTF8IterationTest.Zalgo (0 ms)
+[----------] 6 tests from UTF8IterationTest (0 ms total)
+
+[----------] 4 tests from RDBBtree
+[ RUN      ] RDBBtree.SindexPostConstruct
+[       OK ] RDBBtree.SindexPostConstruct (1203 ms)
+[ RUN      ] RDBBtree.SindexEraseRange
+[       OK ] RDBBtree.SindexEraseRange (1259 ms)
+[ RUN      ] RDBBtree.SindexInterruptionViaDrop
+[       OK ] RDBBtree.SindexInterruptionViaDrop (174 ms)
+[ RUN      ] RDBBtree.SindexInterruptionViaStoreDelete
+[       OK ] RDBBtree.SindexInterruptionViaStoreDelete (1148 ms)
+[----------] 4 tests from RDBBtree (3784 ms total)
+
+[----------] 6 tests from RPCDirectoryTest
+[ RUN      ] RPCDirectoryTest.OneNode
+[       OK ] RPCDirectoryTest.OneNode (102 ms)
+[ RUN      ] RPCDirectoryTest.ThreeNodes
+[       OK ] RPCDirectoryTest.ThreeNodes (106 ms)
+[ RUN      ] RPCDirectoryTest.Exchange
+[       OK ] RPCDirectoryTest.Exchange (110 ms)
+[ RUN      ] RPCDirectoryTest.Update
+[       OK ] RPCDirectoryTest.Update (214 ms)
+[ RUN      ] RPCDirectoryTest.MapUpdate
+[       OK ] RPCDirectoryTest.MapUpdate (321 ms)
+[ RUN      ] RPCDirectoryTest.DestructorRace
+[       OK ] RPCDirectoryTest.DestructorRace (2 ms)
+[----------] 6 tests from RPCDirectoryTest (855 ms total)
+
+[----------] 2 tests from VarintTest
+[ RUN      ] VarintTest.Success64
+[       OK ] VarintTest.Success64 (0 ms)
+[ RUN      ] VarintTest.RangeError
+[       OK ] VarintTest.RangeError (0 ms)
+[----------] 2 tests from VarintTest (0 ms total)
+
+[----------] 1 test from AuthKeyTest
+[ RUN      ] AuthKeyTest.TestEquals
+[       OK ] AuthKeyTest.TestEquals (0 ms)
+[----------] 1 test from AuthKeyTest (0 ms total)
+
+[----------] 3 tests from ClonePtrTest
+[ RUN      ] ClonePtrTest.MakeAndCopy
+[       OK ] ClonePtrTest.MakeAndCopy (0 ms)
+[ RUN      ] ClonePtrTest.BooleanConversion
+[       OK ] ClonePtrTest.BooleanConversion (0 ms)
+[ RUN      ] ClonePtrTest.Casting
+[       OK ] ClonePtrTest.Casting (0 ms)
+[----------] 3 tests from ClonePtrTest (0 ms total)
+
+[----------] 1 test from RangeMap
+[ RUN      ] RangeMap.RangeMap
+[       OK ] RangeMap.RangeMap (1 ms)
+[----------] 1 test from RangeMap (1 ms total)
+
+[----------] 6 tests from ClusteringContractCoordinator
+[ RUN      ] ClusteringContractCoordinator.AddReplica
+[       OK ] ClusteringContractCoordinator.AddReplica (1 ms)
+[ RUN      ] ClusteringContractCoordinator.RemoveReplica
+[       OK ] ClusteringContractCoordinator.RemoveReplica (1 ms)
+[ RUN      ] ClusteringContractCoordinator.ChangePrimary
+[       OK ] ClusteringContractCoordinator.ChangePrimary (2 ms)
+[ RUN      ] ClusteringContractCoordinator.Split
+[       OK ] ClusteringContractCoordinator.Split (3 ms)
+[ RUN      ] ClusteringContractCoordinator.Failover
+[       OK ] ClusteringContractCoordinator.Failover (1 ms)
+[ RUN      ] ClusteringContractCoordinator.FailoverSplit
+[       OK ] ClusteringContractCoordinator.FailoverSplit (2 ms)
+[----------] 6 tests from ClusteringContractCoordinator (10 ms total)
+
+[----------] 1 test from BtreeMetainfo
+[ RUN      ] BtreeMetainfo.MetainfoTest
+[       OK ] BtreeMetainfo.MetainfoTest (113 ms)
+[----------] 1 test from BtreeMetainfo (113 ms total)
+
+[----------] 1 test from WriteMessageTest
+[ RUN      ] WriteMessageTest.Variant
+[       OK ] WriteMessageTest.Variant (0 ms)
+[----------] 1 test from WriteMessageTest (0 ms total)
+
+[----------] 3 tests from SerializerTest
+[ RUN      ] SerializerTest.CreateConstructDestroy
+[       OK ] SerializerTest.CreateConstructDestroy (1 ms)
+[ RUN      ] SerializerTest.AddDeleteRepeatedly
+[       OK ] SerializerTest.AddDeleteRepeatedly (34 ms)
+[ RUN      ] SerializerTest.AddDeleteRepeatedlyWithIndex
+[       OK ] SerializerTest.AddDeleteRepeatedlyWithIndex (148 ms)
+[----------] 3 tests from SerializerTest (183 ms total)
+
+[----------] 3 tests from UuidTest
+[ RUN      ] UuidTest.UuidToStr
+[       OK ] UuidTest.UuidToStr (0 ms)
+[ RUN      ] UuidTest.StrToUuid
+[       OK ] UuidTest.StrToUuid (0 ms)
+[ RUN      ] UuidTest.Sha1
+[       OK ] UuidTest.Sha1 (0 ms)
+[----------] 3 tests from UuidTest (0 ms total)
+
+[----------] 2 tests from ClusteringContractExecutor
+[ RUN      ] ClusteringContractExecutor.SimpleTests
+[       OK ] ClusteringContractExecutor.SimpleTests (1500 ms)
+[ RUN      ] ClusteringContractExecutor.HandOverSafety
+[       OK ] ClusteringContractExecutor.HandOverSafety (308 ms)
+[----------] 2 tests from ClusteringContractExecutor (1816 ms total)
+
+[----------] 2 tests from GeoIndexes
+[ RUN      ] GeoIndexes.GetNearest
+[       OK ] GeoIndexes.GetNearest (3556 ms)
+[ RUN      ] GeoIndexes.GetIntersecting
+[       OK ] GeoIndexes.GetIntersecting (4838 ms)
+[----------] 2 tests from GeoIndexes (8394 ms total)
+
+[----------] 1 test from BlobTest
+[ RUN      ] BlobTest.AllTests
+[       OK ] BlobTest.AllTests (562 ms)
+[----------] 1 test from BlobTest (562 ms total)
+
+[----------] 3 tests from DiskBackedQueue
+[ RUN      ] DiskBackedQueue.ManyInts
+[       OK ] DiskBackedQueue.ManyInts (116 ms)
+[ RUN      ] DiskBackedQueue.BigVals
+[       OK ] DiskBackedQueue.BigVals (801 ms)
+[ RUN      ] DiskBackedQueue.Concurrent
+[       OK ] DiskBackedQueue.Concurrent (6221 ms)
+[----------] 3 tests from DiskBackedQueue (7138 ms total)
+
+[----------] 1 test from CrossThreadWatchable
+[ RUN      ] CrossThreadWatchable.CrossThreadWatchableTest
+[       OK ] CrossThreadWatchable.CrossThreadWatchableTest (5 ms)
+[----------] 1 test from CrossThreadWatchable (5 ms total)
+
+[----------] 1 test from HTTPEscaping
+[ RUN      ] HTTPEscaping.HTTPEscaping
+[       OK ] HTTPEscaping.HTTPEscaping (0 ms)
+[----------] 1 test from HTTPEscaping (0 ms total)
+
+[----------] 8 tests from ExtProc
+[ RUN      ] ExtProc.SimpleJob
+[       OK ] ExtProc.SimpleJob (4 ms)
+[ RUN      ] ExtProc.TalkativeJob
+[       OK ] ExtProc.TalkativeJob (7 ms)
+[ RUN      ] ExtProc.MultiJob
+[       OK ] ExtProc.MultiJob (3243 ms)
+[ RUN      ] ExtProc.CrashedJob
+[       OK ] ExtProc.CrashedJob (12 ms)
+[ RUN      ] ExtProc.HangingJob
+[       OK ] ExtProc.HangingJob (110 ms)
+[ RUN      ] ExtProc.CorruptJob
+[       OK ] ExtProc.CorruptJob (8 ms)
+[ RUN      ] ExtProc.InterruptJobByUser
+[       OK ] ExtProc.InterruptJobByUser (6 ms)
+[ RUN      ] ExtProc.InterruptJobByPool
+[       OK ] ExtProc.InterruptJobByPool (5 ms)
+[----------] 8 tests from ExtProc (3396 ms total)
+
+[----------] 9 tests from JSProc
+[ RUN      ] JSProc.EvalTimeout
+[       OK ] JSProc.EvalTimeout (18 ms)
+[ RUN      ] JSProc.CallTimeout
+[       OK ] JSProc.CallTimeout (16 ms)
+[ RUN      ] JSProc.LiteralNumber
+[       OK ] JSProc.LiteralNumber (5 ms)
+[ RUN      ] JSProc.LiteralString
+[       OK ] JSProc.LiteralString (6 ms)
+[ RUN      ] JSProc.EvalAndCall
+[       OK ] JSProc.EvalAndCall (6 ms)
+[ RUN      ] JSProc.BrokenFunction
+[       OK ] JSProc.BrokenFunction (6 ms)
+[ RUN      ] JSProc.InvalidFunction
+[       OK ] JSProc.InvalidFunction (6 ms)
+[ RUN      ] JSProc.InfiniteRecursionFunction
+[       OK ] JSProc.InfiniteRecursionFunction (9 ms)
+[ RUN      ] JSProc.Passthrough
+[       OK ] JSProc.Passthrough (199 ms)
+[----------] 9 tests from JSProc (274 ms total)
+
+[----------] 2 tests from BignumTest
+[ RUN      ] BignumTest.TestGetUint64
+[       OK ] BignumTest.TestGetUint64 (0 ms)
+[ RUN      ] BignumTest.TestCountLowZeroBits
+[       OK ] BignumTest.TestCountLowZeroBits (0 ms)
+[----------] 2 tests from BignumTest (0 ms total)
+
+[----------] 5 tests from ContextSwitchingTest
+[ RUN      ] ContextSwitchingTest.ContextRefSemantics
+[       OK ] ContextSwitchingTest.ContextRefSemantics (0 ms)
+[ RUN      ] ContextSwitchingTest.CreateArtificialStack
+[       OK ] ContextSwitchingTest.CreateArtificialStack (1 ms)
+[ RUN      ] ContextSwitchingTest.SwitchToContextRepeatedly
+[       OK ] ContextSwitchingTest.SwitchToContextRepeatedly (0 ms)
+[ RUN      ] ContextSwitchingTest.SwitchBetweenContexts
+[       OK ] ContextSwitchingTest.SwitchBetweenContexts (0 ms)
+[ RUN      ] ContextSwitchingTest.UncaughtException
+[       OK ] ContextSwitchingTest.UncaughtException (10 ms)
+[----------] 5 tests from ContextSwitchingTest (12 ms total)
+
+[----------] 1 test from BarrierTest
+[ RUN      ] BarrierTest.OneThousandTest
+[       OK ] BarrierTest.OneThousandTest (9 ms)
+[----------] 1 test from BarrierTest (9 ms total)
+
+[----------] 1 test from OptionalTest
+[ RUN      ] OptionalTest.Test
+[       OK ] OptionalTest.Test (0 ms)
+[----------] 1 test from OptionalTest (0 ms total)
+
+[----------] 5 tests from UtilsTest
+[ RUN      ] UtilsTest.BeginsWithMinus
+[       OK ] UtilsTest.BeginsWithMinus (0 ms)
+[ RUN      ] UtilsTest.StrtofooStrict
+[       OK ] UtilsTest.StrtofooStrict (0 ms)
+[ RUN      ] UtilsTest.TimeLocal
+[       OK ] UtilsTest.TimeLocal (1 ms)
+[ RUN      ] UtilsTest.TimeUTC
+[       OK ] UtilsTest.TimeUTC (0 ms)
+[ RUN      ] UtilsTest.IPAddress
+src/unittest/utils_test.cc:129: Failure
+Value of: ips.size()
+  Actual: 2
+Expected: static_cast<size_t>(1)
+Which is: 1
+[  FAILED  ] UtilsTest.IPAddress (2 ms)
+[----------] 5 tests from UtilsTest (3 ms total)
+
+[----------] 1 test from BtreeUtilsTest
+[ RUN      ] BtreeUtilsTest.SizedStrcmp
+[       OK ] BtreeUtilsTest.SizedStrcmp (0 ms)
+[----------] 1 test from BtreeUtilsTest (0 ms total)
+
+[----------] 1 test from StlUtilsTest
+[ RUN      ] StlUtilsTest.SplitString
+[       OK ] StlUtilsTest.SplitString (0 ms)
+[----------] 1 test from StlUtilsTest (0 ms total)
+
+[----------] 12 tests from RDBBackfill
+[ RUN      ] RDBBackfill.DenseChanges
+[       OK ] RDBBackfill.DenseChanges (2183 ms)
+[ RUN      ] RDBBackfill.SparseChanges
+[       OK ] RDBBackfill.SparseChanges (1362 ms)
+[ RUN      ] RDBBackfill.LargeValues
+[       OK ] RDBBackfill.LargeValues (2059 ms)
+[ RUN      ] RDBBackfill.VeryLargeValues
+[       OK ] RDBBackfill.VeryLargeValues (27756 ms)
+[ RUN      ] RDBBackfill.SmallValues
+[       OK ] RDBBackfill.SmallValues (648 ms)
+[ RUN      ] RDBBackfill.LargeTable
+[       OK ] RDBBackfill.LargeTable (13869 ms)
+[ RUN      ] RDBBackfill.EmptyTable
+[       OK ] RDBBackfill.EmptyTable (470 ms)
+[ RUN      ] RDBBackfill.NearEmptyTable
+[       OK ] RDBBackfill.NearEmptyTable (464 ms)
+[ RUN      ] RDBBackfill.FillItemQueue
+[       OK ] RDBBackfill.FillItemQueue (2620 ms)
+[ RUN      ] RDBBackfill.FillPreItemQueue
+[       OK ] RDBBackfill.FillPreItemQueue (520 ms)
+[ RUN      ] RDBBackfill.PreemptOften
+[       OK ] RDBBackfill.PreemptOften (842 ms)
+[ RUN      ] RDBBackfill.FillBothQueuesAndPreemptOften
+[       OK ] RDBBackfill.FillBothQueuesAndPreemptOften (3429 ms)
+[----------] 12 tests from RDBBackfill (56222 ms total)
+
+[----------] Global test environment tear-down
+[==========] 341 tests from 73 test cases ran. (228370 ms total)
+[  PASSED  ] 337 tests.
+[  FAILED  ] 4 tests, listed below:
+[  FAILED  ] TimerTest.TestApproximateWaitTimes
+[  FAILED  ] TimerTest.TestRepeatingTimer
+[  FAILED  ] TimerTest.TestChangeInterval
+[  FAILED  ] UtilsTest.IPAddress
+
+ 4 FAILED TESTS
+  YOU HAVE 2 DISABLED TESTS
+

@@ -60,9 +60,9 @@ else
 endif
 
 .PHONY: generate
-generate: generate-web-assets-cc generate-headers
+generate: generate-headers
 
 .PHONY: test
-test: $(BUILD_DIR)/rethinkdb $(BUILD_DIR)/rethinkdb-unittest web-assets rb-driver py-driver
+test: $(BUILD_DIR)/rethinkdb $(BUILD_DIR)/rethinkdb-unittest
 	$P RUN-TESTS
-	MAKEFLAGS= $(TOP)/test/run -b $(BUILD_DIR)
+	# MAKEFLAGS= $(TOP)/test/run -b $(BUILD_DIR)
