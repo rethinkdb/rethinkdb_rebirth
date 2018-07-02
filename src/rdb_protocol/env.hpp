@@ -71,10 +71,6 @@ public:
 
     extproc_pool_t *get_extproc_pool();
 
-    // Returns js_runner, but first calls js_runner->begin() if it hasn't
-    // already been called.
-    js_runner_t *get_js_runner();
-
     reql_cluster_interface_t *reql_cluster_interface();
 
     std::string get_reql_http_proxy();
@@ -162,8 +158,6 @@ private:
     uint32_t evals_since_yield_;
 
     rdb_context_t *const rdb_ctx_;
-
-    js_runner_t js_runner_;
 
     eval_callback_t *eval_callback_;
 

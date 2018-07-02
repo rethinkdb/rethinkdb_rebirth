@@ -120,7 +120,7 @@ scoped_ptr_t<val_t> js_func_t::call(
         js_result_t result;
 
         try {
-            result = env->get_js_runner()->call(js_source, args, config);
+            result = js_runner_t(env->limits()).call(js_source, args, config);
         } catch (const extproc_worker_exc_t &e) {
             rfail(base_exc_t::INTERNAL,
                   "Javascript query `%s` caused a crash in a worker process.",

@@ -21,7 +21,7 @@ include $(TOP)/mk/lib.mk
 # The default goal
 real-default-goal: $(DEFAULT_GOAL)
 
-# Paths, build rules, packaging, drivers, ...
+# Paths, build rules, packaging, ...
 include $(TOP)/mk/paths.mk
 
 # Download and build internal tools like v8 and gperf
@@ -35,22 +35,7 @@ ifeq (Windows,$(OS))
 # Windows build
 include $(TOP)/mk/windows.mk
 
-# Python driver
-include $(TOP)/drivers/python/build.mk
-
-# JavaScript driver
-include $(TOP)/drivers/javascript/build.mk
-
-# Build the web assets
-include $(TOP)/admin/build.mk
-
 else # Windows
-
-# Clients drivers
-include $(TOP)/drivers/build.mk
-
-# Build the web assets
-include $(TOP)/admin/build.mk
 
 # Building the rethinkdb executable
 include $(TOP)/src/build.mk
@@ -70,14 +55,14 @@ clean: build-clean
 ifeq (Windows,$(OS))
   all: windows-all
 else
-  # Build the drivers and executable
-  all: $(TOP)/src/all $(TOP)/drivers/all
+  # Build the executable
+  all: $(TOP)/src/all
 endif
 
 .PHONY: generate
-generate: generate-web-assets-cc generate-headers
+generate: generate-headers
 
 .PHONY: test
-test: $(BUILD_DIR)/rethinkdb $(BUILD_DIR)/rethinkdb-unittest web-assets rb-driver py-driver
+test: $(BUILD_DIR)/rethinkdb $(BUILD_DIR)/rethinkdb-unittest
 	$P RUN-TESTS
-	MAKEFLAGS= $(TOP)/test/run -b $(BUILD_DIR)
+	# MAKEFLAGS= $(TOP)/test/run -b $(BUILD_DIR)

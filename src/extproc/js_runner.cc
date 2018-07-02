@@ -46,14 +46,8 @@ private:
 //  easily clear it all and replace it
 class js_runner_t::job_data_t {
 public:
-    job_data_t(extproc_pool_t *pool, signal_t *interruptor,
-               const ql::configured_limits_t &limits) :
-        combined_interruptor(interruptor, js_timeout.get_signal()),
-        js_job(pool, &combined_interruptor, limits) { }
-
-    explicit job_data_t(extproc_pool_t *pool,
-                        const ql::configured_limits_t &limits) :
-        js_job(pool, js_timeout.get_signal(), limits) { }
+    explicit job_data_t(const ql::configured_limits_t &limits) :
+        js_job(limits) { }
 
     struct func_info_t {
         explicit func_info_t(js_id_t _id) :
@@ -69,44 +63,27 @@ public:
     js_job_t js_job;
 };
 
-js_runner_t::js_runner_t() { }
+js_runner_t::js_runner_t(
+        const ql::configured_limits_t &limits) {
+    assert_thread();
+    job_data.init(new job_data_t(limits));
+}
 
 js_runner_t::~js_runner_t() {
     assert_thread();
     if (job_data.has()) {
-        end();
-    }
-}
-
-void js_runner_t::end() {
-    assert_thread();
-    // Have the worker job exit its loop - if anything fails,
-    //  don't worry, the worker will be cleaned up
-    try {
-        for (auto it = job_data->id_cache.begin();
-             it != job_data->id_cache.end(); ++it) {
-            job_data->js_job.release(it->second.id);
+        // Have the worker job exit its loop - if anything fails,
+        //  don't worry, the worker will be cleaned up
+        try {
+            for (auto it = job_data->id_cache.begin();
+                 it != job_data->id_cache.end(); ++it) {
+                job_data->js_job.release(it->second.id);
+            }
+            job_data->js_job.exit();
+        } catch (...) {
+            // Do nothing
         }
-        job_data->js_job.exit();
-    } catch (...) {
-        // Do nothing
-    }
-    job_data.reset();
-}
-
-bool js_runner_t::connected() const {
-    assert_thread();
-    return job_data.has();
-}
-
-// Starts the javascript function in the worker process
-void js_runner_t::begin(extproc_pool_t *pool, signal_t *interruptor,
-                        const ql::configured_limits_t &limits) {
-    assert_thread();
-    if (interruptor == nullptr) {
-        job_data.init(new job_data_t(pool, limits));
-    } else {
-        job_data.init(new job_data_t(pool, interruptor, limits));
+        job_data.reset();
     }
 }
 
