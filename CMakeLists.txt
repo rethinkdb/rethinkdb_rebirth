@@ -1354,13 +1354,6 @@ add_custom_command(TARGET rebirthdb-unittest
         COMMENT "Regenerating configuration for updated link flags")
 
 
-##########################################################################################
-######################                     ALL                    ########################
-##########################################################################################
-
-add_custom_target(default)
-add_dependencies(default rebirthdb rebirthdb-unittest)
-
 set(GDB_FUNCTIONS_INPUT ${PROJECT_SOURCE_DIR}/scripts/${GDB_FUNCTIONS_NAME})
 set(GDB_FUNCTIONS_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${GDB_FUNCTIONS_NAME})
 configure_file(${GDB_FUNCTIONS_INPUT} ${GDB_FUNCTIONS_OUTPUT} COPYONLY)
