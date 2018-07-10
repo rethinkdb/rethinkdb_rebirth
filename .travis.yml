@@ -9,6 +9,7 @@ notifications:
 
 matrix:
   include:
+    #### Make Build
     # Enable C++ support
     - language: cpp
       before_install:
@@ -31,14 +32,13 @@ matrix:
         - make test
         - ./build/release/rethinkdb-unittest
 
+    #### CMake Build
     # Enable C++ support
     - language: cpp
       before_install:
         - sudo apt-get -qq update
-        - sudo apt-get install mg
-        - sudo apt-get install build-essential protobuf-compiler python
-        - sudo apt-get install libprotobuf-dev libcurl4-openssl-dev libboost-all-dev
-        - sudo apt-get install libncurses5-dev libjemalloc-dev wget m4 g++
+        - sudo apt-get install build-essential python wget curl m4 git ccache
+        - ./cmake/scripts/install-cmake-3.10.3.sh
 
       # Compiler selection
       compiler:
@@ -46,9 +46,10 @@ matrix:
 
       # Build steps
       install:
-        - ./configure --allow-fetch
-        - make -j8
+        - mkdir cmake-build-release
+        - cd cmake-build-release
+        - cmake -DCMAKE_BUILD_TYPE=Release ..
+        - cmake --build . --target rebirthdb-unittest -- -j 8 ..
 
       script:
-        - make test
-        - ./build/release/rethinkdb-unittest
+        - ./rebirthdb-unittest

@@ -2,7 +2,7 @@ include(ExternalProject)
 
 set(boost_VERSION "1.60.0")
 string(REGEX REPLACE "\\." "_" boost_VERSION_UNDERSCORED ${boost_VERSION})
-set(boost_URL "http://sourceforge.net/projects/boost/files/boost/${boost_VERSION}/boost_${boost_VERSION_UNDERSCORED}.tar.bz2")
+set(boost_URL "https://tenet.dl.sourceforge.net/project/boost/boost/${boost_VERSION}/boost_${boost_VERSION_UNDERSCORED}.tar.bz2")
 set(boost_SHA1 "7f56ab507d3258610391b47fef6b11635861175a")
 set(boost_CONFIGURE_COMMAND ./bootstrap.sh)
 set(boost_BUILD_COMMAND ./b2)

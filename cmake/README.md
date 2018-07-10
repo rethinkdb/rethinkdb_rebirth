@@ -10,7 +10,7 @@ The following instructions are specific to Ubuntu 14.04 and are yet
 #### 1. Get the build dependencies
 
 ```bash
-sudo apt-get install build-essential python wget m4 git ccache
+sudo apt-get install build-essential python wget curl m4 git ccache
 ```
 
 #### 2. Install cmake 3.10.3
@@ -18,7 +18,7 @@ sudo apt-get install build-essential python wget m4 git ccache
 wget https://cmake.org/files/v3.10/cmake-3.10.3.tar.gz
 tar -xzvf cmake-3.10.3.tar.gz
 cd cmake-3.10.3/
-./configure
+./bootstrap -- -DCMAKE_BUILD_TYPE:STRING=Release
 make
 sudo make install
 ```
@@ -51,8 +51,7 @@ git checkout cmake
 Create a `cmake-build-debug` directory for **debug** builds and `cmake-build-release` 
 directory for **release** builds.
 ```bash
-mkdir cmake-build-debug
-mkdir cmake-build-release
+mkdir cmake-build-debug cmake-build-release
 ```
 
 #### 5. Generate the cmake build trees and build the RebirthDB binaries
