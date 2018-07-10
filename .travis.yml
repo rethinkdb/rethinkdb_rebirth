@@ -38,7 +38,6 @@ matrix:
       before_install:
         - sudo apt-get -qq update
         - sudo apt-get install build-essential python wget curl m4 git ccache
-        - ./cmake/scripts/install-cmake-3.10.3.sh
 
       # Compiler selection
       compiler:
