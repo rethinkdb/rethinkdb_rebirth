@@ -1,7 +1,57 @@
 cmake_minimum_required(VERSION 3.10)
+
+# Use ccache if it's installed to speed up repeated builds
+find_program(CCACHE_PROGRAM ccache)
+if (CCACHE_PROGRAM)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+endif()
+
 project(rebirthdb)
 
+option(VERBOSE "Build with verbose output" OFF)
+option(DEPENDS_DEBUG_MODE "Print list of dependencies after configuration" OFF)
+
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_VERBOSE_MAKEFILE ${VERBOSE})
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+set_property(GLOBAL PROPERTY GLOBAL_DEPENDS_DEBUG_MODE ${DEPENDS_DEBUG_MODE})
+
+include(defaults)
+include(boost)
+include(zlib)
+include(protobuf)
+include(re2)
+include(duktape)
+include(libidn)
+include(jemalloc)
+include(openssl)
+include(curl)
+include(gtest)
+
+include(util/touch_static_libs)
+
+add_definitions(${ADD_CFLAGS}
+        -DPRODUCT_NAME="${PRODUCT_NAME}"
+        -DRETHINKDB_VERSION="${RETHINKDB_VERSION}"
+        -DENABLE_TLS
+        -DRAPIDJSON_HAS_STDSTRING   # Enable RapidJSON std::string functions
+        -DRAPIDJSON_PARSE_DEFAULT_FLAGS=kParseFullPrecisionFlag # Enable RapidJSON std::string functions
+        -D_FILE_OFFSET_BITS=64  # Force 64-bit off_t size on Linux
+        -D__STDC_LIMIT_MACROS
+        -D__STDC_FORMAT_MACROS
+        )
+
+include_directories(${boost_INCLUDE_DIR})
+include_directories(${zlib_INCLUDE_DIR})
+include_directories(${re2_INCLUDE_DIR})
+include_directories(${protobuf_INCLUDE_DIRS})
+include_directories(${proto_INCLUDE_DIR})
+include_directories(${duktape_INCLUDE_DIR})
+include_directories(${libidn_INCLUDE_DIR})
+include_directories(${jemalloc_INCLUDE_DIRS})
+include_directories(${openssl_INCLUDE_DIRS})
+include_directories(${curl_INCLUDE_DIR})
+include_directories(${gtest_INCLUDE_DIRS})
 
 include_directories(src)
 include_directories(src/arch)
@@ -11,8 +61,6 @@ include_directories(src/arch/io/timer)
 include_directories(src/arch/runtime)
 include_directories(src/arch/runtime/event_queue)
 include_directories(src/arch/runtime/system_event)
-include_directories(src/arch/windows_stub)
-include_directories(src/arch/windows_stub/sys)
 include_directories(src/btree)
 include_directories(src/buffer_cache)
 include_directories(src/cjson)
@@ -50,7 +98,6 @@ include_directories(src/pprint)
 include_directories(src/rapidjson)
 include_directories(src/rapidjson/error)
 include_directories(src/rapidjson/internal)
-include_directories(src/rapidjson/msinttypes)
 include_directories(src/rdb_protocol)
 include_directories(src/rdb_protocol/artificial_table)
 include_directories(src/rdb_protocol/datum_stream)
@@ -60,7 +107,6 @@ include_directories(src/rdb_protocol/geo/s2)
 include_directories(src/rdb_protocol/geo/s2/base)
 include_directories(src/rdb_protocol/geo/s2/strings)
 include_directories(src/rdb_protocol/geo/s2/util/coding)
-include_directories(src/rdb_protocol/geo/s2/util/endian)
 include_directories(src/rdb_protocol/geo/s2/util/hash)
 include_directories(src/rdb_protocol/geo/s2/util/math)
 include_directories(src/rdb_protocol/geo/s2/util/math/exactfloat)
@@ -78,7 +124,22 @@ include_directories(src/serializer/log)
 include_directories(src/serializer/log/lba)
 include_directories(src/unittest)
 
-add_executable(rebirthdb
+if (${MSVC} OR ${WIN32})
+    include_directories(src/arch/windows_stub)
+    include_directories(src/arch/windows_stub/sys)
+    include_directories(src/rapidjson/msinttypes)
+    include_directories(src/rdb_protocol/geo/s2/util/endian)
+endif()
+
+
+set(rebirthdb_SOURCES)
+
+list(APPEND rebirthdb_SOURCES
+        ${PROTO_SRC}
+        ${PROTO_HDR}
+        ${duktape_SRC})
+
+list(APPEND rebirthdb_SOURCES
         src/arch/io/disk/accounting.cc
         src/arch/io/disk/accounting.hpp
         src/arch/io/disk/conflict_resolving.cc
@@ -149,8 +210,6 @@ add_executable(rebirthdb
         src/arch/runtime/thread_pool.cc
         src/arch/runtime/thread_pool.hpp
         src/arch/windows_stub/sys/uio.h
-        src/arch/windows_stub/pthread.cc
-        src/arch/windows_stub/pthread.h
         src/arch/windows_stub/unistd.h
         src/arch/address.cc
         src/arch/address.hpp
@@ -694,7 +753,6 @@ add_executable(rebirthdb
         src/rapidjson/internal/strfunc.h
         src/rapidjson/internal/strtod.h
         src/rapidjson/msinttypes/inttypes.h
-        src/rapidjson/msinttypes/stdint.h
         src/rapidjson/allocators.h
         src/rapidjson/document.h
         src/rapidjson/encodedstream.h
@@ -766,7 +824,6 @@ add_executable(rebirthdb
         src/rdb_protocol/geo/s2/util/coding/coder.h
         src/rdb_protocol/geo/s2/util/coding/varint.cc
         src/rdb_protocol/geo/s2/util/coding/varint.h
-        src/rdb_protocol/geo/s2/util/endian/endian.h
         src/rdb_protocol/geo/s2/util/hash/hash_jenkins_lookup2.h
         src/rdb_protocol/geo/s2/util/math/exactfloat/exactfloat.cc
         src/rdb_protocol/geo/s2/util/math/exactfloat/exactfloat.h
@@ -1053,6 +1110,126 @@ add_executable(rebirthdb
         src/serializer/translator.cc
         src/serializer/translator.hpp
         src/serializer/types.hpp
+        src/activity_logger.cc
+        src/activity_logger.hpp
+        src/assignment_sentry.hpp
+        src/backtrace.cc
+        src/backtrace.hpp
+        src/debug.cc
+        src/debug.hpp
+        src/do_on_thread.hpp
+        src/errors.cc
+        src/errors.hpp
+        src/logger.hpp
+        src/main.cc
+        src/math.cc
+        src/math.hpp
+        src/memory_utils.cc
+        src/memory_utils.hpp
+        src/paths.cc
+        src/paths.hpp
+        src/protocol_api.cc
+        src/protocol_api.hpp
+        src/random.cc
+        src/random.hpp
+        src/repli_timestamp.cc
+        src/repli_timestamp.hpp
+        src/rethinkdb_backtrace.cc
+        src/rethinkdb_backtrace.hpp
+        src/stl_utils.cc
+        src/stl_utils.hpp
+        src/stl_utils.tcc
+        src/store_subview.hpp
+        src/store_view.hpp
+        src/thread_local.hpp
+        src/threading.cc
+        src/threading.hpp
+        src/time.cc
+        src/time.hpp
+        src/timestamps.cc
+        src/timestamps.hpp
+        src/utils.cc
+        src/utils.hpp
+        src/valgrind.hpp
+        src/version.hpp)
+
+if (${MSVC} OR ${WIN32})
+    list(APPEND rebirthdb_SOURCES
+            src/arch/windows_stub/pthread.cc
+            src/arch/windows_stub/pthread.h
+            src/rapidjson/msinttypes/stdint.h
+            src/rdb_protocol/geo/s2/util/endian/endian.h
+            src/windows.hpp)
+endif()
+
+
+
+##########################################################################################
+###########################            REBIRTHDB              ############################
+##########################################################################################
+
+add_executable(rebirthdb ${rebirthdb_SOURCES})
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
+set(rebirthdb_EXTERNAL_LIBRARIES)
+list(APPEND rebirthdb_EXTERNAL_LIBRARIES
+        ${re2_STATIC_LIBRARIES}
+        ${zlib_STATIC_LIBRARIES}
+        ${gotten_zlib_LINK_FLAGS}
+        ${curl_STATIC_LIBRARIES}
+        ${gotten_curl_LINK_FLAGS}
+        ${protobuf_STATIC_LIBRARIES}
+        Threads::Threads
+        ${jemalloc_STATIC_LIBRARIES}
+        ${gotten_jemalloc_LINK_FLAGS})
+
+if (${UNIX} AND NOT ${APPLE})
+    list(APPEND rebirthdb_EXTERNAL_LIBRARIES rt)
+endif()
+
+list(APPEND rebirthdb_EXTERNAL_LIBRARIES
+        "-rdynamic"    # -rdynamic is necessary so that backtrace_symbols() works properly
+        ${openssl_STATIC_LIBRARIES}
+        ${gotten_openssl_LINK_FLAGS})
+
+target_link_libraries(rebirthdb ${rebirthdb_EXTERNAL_LIBRARIES})
+
+set(rebirthdb_EXTERNAL_DEPENDENCIES)
+list(APPEND rebirthdb_EXTERNAL_DEPENDENCIES
+        boost
+        zlib_copy_headers_to_destination
+        protobuf
+        re2
+        duktape
+        libidn
+        jemalloc
+        openssl
+        curl
+        gtest)
+
+add_dependencies(curl openssl zlib)
+
+add_dependencies(rebirthdb
+        ${rebirthdb_EXTERNAL_DEPENDENCIES})
+
+# Regenerate configuration after compilation, just before linking
+# so that cmake's links.txt is generated correctly
+add_custom_command(TARGET rebirthdb
+        PRE_LINK
+        COMMAND ${CMAKE_COMMAND} .
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Regenerating configuration for updated link flags")
+
+
+
+
+##########################################################################################
+######################           REBIRTHDB UNITTESTS              ########################
+##########################################################################################
+
+set(rebirthdb_unittest_SOURCES
         src/unittest/archive_test.cc
         src/unittest/auth_key_test.cc
         src/unittest/barrier_test.cc
@@ -1146,47 +1323,44 @@ add_executable(rebirthdb
         src/unittest/utf8.cc
         src/unittest/utils_test.cc
         src/unittest/uuid_test.cc
-        src/unittest/varint_test.cc
-        src/activity_logger.cc
-        src/activity_logger.hpp
-        src/assignment_sentry.hpp
-        src/backtrace.cc
-        src/backtrace.hpp
-        src/debug.cc
-        src/debug.hpp
-        src/do_on_thread.hpp
-        src/errors.cc
-        src/errors.hpp
-        src/logger.hpp
-        src/main.cc
-        src/math.cc
-        src/math.hpp
-        src/memory_utils.cc
-        src/memory_utils.hpp
-        src/paths.cc
-        src/paths.hpp
-        src/protocol_api.cc
-        src/protocol_api.hpp
-        src/random.cc
-        src/random.hpp
-        src/repli_timestamp.cc
-        src/repli_timestamp.hpp
-        src/rethinkdb_backtrace.cc
-        src/rethinkdb_backtrace.hpp
-        src/stl_utils.cc
-        src/stl_utils.hpp
-        src/stl_utils.tcc
-        src/store_subview.hpp
-        src/store_view.hpp
-        src/thread_local.hpp
-        src/threading.cc
-        src/threading.hpp
-        src/time.cc
-        src/time.hpp
-        src/timestamps.cc
-        src/timestamps.hpp
-        src/utils.cc
-        src/utils.hpp
-        src/valgrind.hpp
-        src/version.hpp
-        src/windows.hpp)
+        src/unittest/varint_test.cc)
+set(rebirthdb_SOURCES_NOMAIN ${rebirthdb_SOURCES})
+
+list(REMOVE_ITEM rebirthdb_SOURCES_NOMAIN src/main.cc)
+
+set(rebirthdb_unittest_SOURCES
+        ${rebirthdb_SOURCES_NOMAIN}
+        ${rebirthdb_unittest_SOURCES})
+
+set(rebirthdb_unittest_EXTERNAL_LIBRARIES
+        ${rebirthdb_EXTERNAL_LIBRARIES}
+        ${gtest_STATIC_LIBRARIES})
+
+set(rebirthdb_unittest_EXTERNAL_DEPENDENCIES
+        ${rebirthdb_EXTERNAL_DEPENDENCIES})
+
+add_executable(rebirthdb-unittest ${rebirthdb_unittest_SOURCES})
+
+target_link_libraries(rebirthdb-unittest ${rebirthdb_unittest_EXTERNAL_LIBRARIES})
+
+add_dependencies(rebirthdb-unittest ${rebirthdb_unittest_EXTERNAL_DEPENDENCIES})
+
+# Regenerate configuration after compilation, just before linking
+# so that cmake's links.txt is generated correctly
+add_custom_command(TARGET rebirthdb-unittest
+        PRE_LINK
+        COMMAND ${CMAKE_COMMAND} .
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Regenerating configuration for updated link flags")
+
+
+##########################################################################################
+######################                     ALL                    ########################
+##########################################################################################
+
+add_custom_target(default)
+add_dependencies(default rebirthdb rebirthdb-unittest)
+
+set(GDB_FUNCTIONS_INPUT ${PROJECT_SOURCE_DIR}/scripts/${GDB_FUNCTIONS_NAME})
+set(GDB_FUNCTIONS_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${GDB_FUNCTIONS_NAME})
+configure_file(${GDB_FUNCTIONS_INPUT} ${GDB_FUNCTIONS_OUTPUT} COPYONLY)
