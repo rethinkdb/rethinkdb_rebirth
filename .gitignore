@@ -15,9 +15,6 @@ last_tested_versions
 /mk/gen/*
 /build
 
-/drivers/ruby/coverage/*
-/drivers/ruby/Gemfile.lock
-
 /src/quickrun_rethinkdb
 /src/debug_rethinkdb
 /src/eavesdrop_rethinkdb
@@ -59,5 +56,3 @@ last_tested_versions
 *.xml
 *.iml
 /.vscode
-
-/drivers/javascript/node_modules/
