@@ -63,7 +63,7 @@ cd cmake-build-debug
 cmake -DCMAKE_BUILD_TYPE=Debug -DVERBOSE=ON -DDEPENDS_DEBUG_MODE=ON ..
 ```
 - `-DVERBOSE=ON` will generate verbose makefiles and run the build in verbose mode.
-- `-DDEPENDS_DEBUG_MODE=OFF` will print the dependency list of the project's different dependencies
+- `-DDEPENDS_DEBUG_MODE=ON` will print the dependency list of the project's different dependencies
 at the end of the configuration stage.
 
 Both options are `OFF` by default.
