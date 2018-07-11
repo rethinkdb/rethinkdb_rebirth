@@ -56,3 +56,5 @@ last_tested_versions
 *.xml
 *.iml
 /.vscode
+
+*.log
