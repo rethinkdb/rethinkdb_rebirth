@@ -5,7 +5,6 @@
 BUILD_ROOT_DIR := $(TOP)/build
 PACKAGING_DIR := $(TOP)/packaging
 PACKAGES_DIR := $(BUILD_ROOT_DIR)/packages
-JS_BUILD_DIR := $(TOP)/build/drivers/javascript
 SUPPORT_SRC_DIR := $(TOP)/external
 SUPPORT_BUILD_DIR := $(BUILD_ROOT_DIR)/external
 SUPPORT_LOG_DIR := $(SUPPORT_BUILD_DIR)
@@ -71,9 +70,6 @@ PROTO_DIR := $(BUILD_ROOT_DIR)/proto
 DEP_DIR := $(BUILD_DIR)/dep
 OBJ_DIR := $(BUILD_DIR)/obj
 
-WEB_ASSETS_DIR_NAME := web_assets
-WEB_ASSETS_BUILD_DIR := $(BUILD_ROOT_DIR)/$(WEB_ASSETS_DIR_NAME)
-
 ##### To rebuild when Makefiles change
 
 ifeq ($(IGNORE_MAKEFILE_CHANGES),1)
@@ -81,13 +77,3 @@ ifeq ($(IGNORE_MAKEFILE_CHANGES),1)
 else
   MAKEFILE_DEPENDENCY = $(filter %Makefile,$(MAKEFILE_LIST)) $(filter %.mk,$(MAKEFILE_LIST))
 endif
-
-##### Paths occasionally left undefined by the configure script
-
-NPM ?= false
-NPM_BIN_DEP ?= requires-missing-npm
-COFFEE_BIN_DEP ?= requires-missing-coffee
-BROWSERIFY_BIN_DEP ?= requires-missing-browserify
-
-requires-missing-%:
-	$(error '$*' is required but was not found)

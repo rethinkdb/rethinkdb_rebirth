@@ -56,14 +56,6 @@ analyze: $(SOURCES)
 	$P CLANG-ANALYZE
 	clang --analyze $(RT_CXXFLAGS) $(SOURCES)
 
-coffeelint:
-	$P COFFEELINT ""
-	-coffeelint -f $(TOP)/scripts/coffeelint.json -r $(TOP)/admin/
-
-style: coffeelint
-	$P CHECK-STYLE ""
-	$(TOP)/scripts/check_style.sh
-
 showdefines:
 	$P SHOW-DEFINES ""
 	$(RT_CXX) $(RT_CXXFLAGS) -m32 -E -dM - < /dev/null

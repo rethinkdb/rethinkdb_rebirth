@@ -67,17 +67,6 @@ its web UI also requires the web assets.
   `THREADED_COROUTINES=1` `NO_EVENTFD=1` `NO_EPOLL=1`
   `BUILD_PORTABLE=1` or `LEGACY_LINUX=1`
 
-Drivers
--------
-
-* `make ruby-driver`: Build the Ruby driver
-
-* `make python-driver`: Build the Python driver.
-
-* `make js-driver`: Build the JavaScript driver.
-
-* `make drivers`: Build all the drivers.
-
 Test
 ---
 
