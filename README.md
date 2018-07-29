@@ -60,7 +60,7 @@ First install some dependencies.  For example, on Ubuntu or Debian:
 
     sudo apt-get install build-essential protobuf-compiler python \
         libprotobuf-dev libcurl4-openssl-dev libboost-all-dev \
-        libncurses5-dev libjemalloc-dev wget m4 g++
+        libncurses5-dev libjemalloc-dev libssl-dev wget m4 g++
 
 Generally, you will need
 
@@ -72,6 +72,7 @@ Generally, you will need
 * Python 2
 * libcurl
 * libcrypto (OpenSSL)
+* libssl-dev
 
 Then, to build:
 
