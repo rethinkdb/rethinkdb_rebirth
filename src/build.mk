@@ -1,4 +1,33 @@
-# Copyright 2010-2013 RethinkDB, all rights reserved.
+# Copyright 2018-present RebirthDB
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+# this file except in compliance with the License. You may obtain a copy of the
+# License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed
+# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+# CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+#
+# This file incorporates work covered by the following copyright:
+#
+#     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+#     others and used with permission or subject to their respective license
+#     agreements.
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
 
 ##### Build parameters
 
@@ -247,8 +276,11 @@ SERVER_UNIT_TEST_OBJS := $(SERVER_NOMAIN_OBJS) $(OBJ_DIR)/unittest/main.o
 
 ##### Version number handling
 
-RT_CXXFLAGS += -DRETHINKDB_VERSION=\"$(RETHINKDB_VERSION)\"
-RT_CXXFLAGS += -DRETHINKDB_CODE_VERSION=\"$(RETHINKDB_CODE_VERSION)\"
+RT_CXXFLAGS += -DREBIRTHDB_VERSION=\"$(REBIRTHDB_VERSION)\"
+RT_CXXFLAGS += -DREBIRTHDB_CODE_VERSION=\"$(REBIRTHDB_CODE_VERSION)\"
+
+##### Server executable name handling
+RT_CXXFLAGS += -DSERVER_EXEC_NAME=\"$(SERVER_EXEC_NAME)\"
 
 ##### Build targets
 
@@ -278,10 +310,10 @@ $(TOP)/src/rpc/semilattice/joins/macros.hpp $(TOP)/src/rpc/serialize_macros.hpp:
 
 generate-headers: $(TOP)/src/rpc/semilattice/joins/macros.hpp $(TOP)/src/rpc/serialize_macros.hpp
 
-.PHONY: rethinkdb
-rethinkdb: $(BUILD_DIR)/$(SERVER_EXEC_NAME)
+.PHONY: rebirthdb
+rebirthdb: $(BUILD_DIR)/$(SERVER_EXEC_NAME)
 
-RETHINKDB_DEPENDENCIES_LIBS := $(MALLOC_LIBS_DEP) $(PROTOBUF_LIBS_DEP) $(RE2_LIBS_DEP) $(Z_LIBS_DEP) $(CURL_LIBS_DEP) $(CRYPTO_LIBS_DEP) $(SSL_LIBS_DEP)
+REBIRTHDB_DEPENDENCIES_LIBS := $(MALLOC_LIBS_DEP) $(PROTOBUF_LIBS_DEP) $(RE2_LIBS_DEP) $(Z_LIBS_DEP) $(CURL_LIBS_DEP) $(CRYPTO_LIBS_DEP) $(SSL_LIBS_DEP)
 
 MAYBE_CHECK_STATIC_MALLOC =
 ifeq ($(STATIC_MALLOC),1) # if the allocator is statically linked
@@ -301,7 +333,7 @@ ifneq (1,$(SYMBOLS))
   endif
 endif
 
-$(BUILD_DIR)/$(SERVER_EXEC_NAME): $(SERVER_EXEC_OBJS) | $(BUILD_DIR)/. $(RETHINKDB_DEPENDENCIES_LIBS)
+$(BUILD_DIR)/$(SERVER_EXEC_NAME): $(SERVER_EXEC_OBJS) | $(BUILD_DIR)/. $(REBIRTHDB_DEPENDENCIES_LIBS)
 	$P LD $@
 	$(RT_CXX) $(SERVER_EXEC_OBJS) $(RT_LDFLAGS) -o $(BUILD_DIR)/$(SERVER_EXEC_NAME) $(LD_OUTPUT_FILTER)
 	$(MAYBE_CHECK_STATIC_MALLOC)
@@ -325,7 +357,7 @@ $(SERVER_UNIT_TEST_OBJS): RT_CXXFLAGS := $(filter-out -Wswitch-default,$(RT_CXXF
 
 $(SERVER_UNIT_TEST_OBJS): | $(GTEST_INCLUDE_DEP)
 
-$(BUILD_DIR)/$(SERVER_UNIT_TEST_NAME): $(SERVER_UNIT_TEST_OBJS) $(GTEST_LIBS_DEP) | $(BUILD_DIR)/. $(RETHINKDB_DEPENDENCIES_LIBS)
+$(BUILD_DIR)/$(SERVER_UNIT_TEST_NAME): $(SERVER_UNIT_TEST_OBJS) $(GTEST_LIBS_DEP) | $(BUILD_DIR)/. $(REBIRTHDB_DEPENDENCIES_LIBS)
 	$P LD $@
 	$(RT_CXX) $(SERVER_UNIT_TEST_OBJS) $(RT_LDFLAGS) $(GTEST_LIBS) -o $@ $(LD_OUTPUT_FILTER)
 

@@ -15,13 +15,13 @@ last_tested_versions
 /mk/gen/*
 /build
 
-/src/quickrun_rethinkdb
-/src/debug_rethinkdb
-/src/eavesdrop_rethinkdb
+/src/quickrun_rebirthdb
+/src/debug_rebirthdb
+/src/eavesdrop_rebirthdb
 /src/eavesdrop_memcache
 /src/eavesdrop
 /src/eavesdrop_debug
-/src/valgrind_rethinkdb
+/src/valgrind_rebirthdb
 /src/spin_up_clusters.py
 /src/.clang_complete
 /src/find_replace.sh
@@ -30,8 +30,8 @@ last_tested_versions
 
 /packaging/ami/build-ami-files/static-web
 
-/**/rethinkdb_data
-/**/rethinkdb_metadata
+/**/rebirthdb_data
+/**/rebirthdb_metadata
 
 /scripts/netrecord/netrecord
 /scripts/cluster_directory_*
@@ -41,7 +41,7 @@ last_tested_versions
 /test/performance/run/
 
 /test/results
-/**/.rethinkdbTestTemp-*
+/**/.rebirthdbTestTemp-*
 /**/run
 /test_results.*
 

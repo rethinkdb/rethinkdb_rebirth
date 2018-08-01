@@ -1,5 +1,35 @@
 #!/usr/bin/env bash
-# Copyright 2010-2015 RethinkDB, all rights reserved.
+
+# Copyright 2018-present RebirthDB
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+# this file except in compliance with the License. You may obtain a copy of the
+# License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed
+# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+# CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+#
+# This file incorporates work covered by the following copyright:
+#
+#     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+#     others and used with permission or subject to their respective license
+#     agreements.
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
 
 # This script detects the build settings local to the local build
 # environment and saves them in the config.mk file.
@@ -335,7 +365,7 @@ gtest:Google Test'
 # Output of --help
 show_help () {
     cat <<EOF
-Configure a RethinkDB build from source
+Configure a RebirthDB build from source
 
 Usage: $0 [arguments]
 
@@ -540,7 +570,7 @@ boolvar () {
     fi
 }
 
-# Find a C++ compiler that rethinkdb supports
+# Find a C++ compiler that rebirthdb supports
 check_cxx () {
     require "C++ Compiler"
     local force_CXX
@@ -1121,7 +1151,7 @@ EOF
           -std=c++11 -o "$tmpfile.out" 1>"$tmpfile.log" 2>&1;
         $tmpfile.out)
     then
-       error "You seem to be using a version of Clang with a bug that may affect Rethink DB. Please upgrade Clang or specify a different compiler."
+       error "You seem to be using a version of Clang with a bug that may affect Rebirth DB. Please upgrade Clang or specify a different compiler."
     fi
 }
 

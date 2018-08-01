@@ -1,4 +1,34 @@
-// Copyright 2010-2014 RethinkDB, all rights reserved.
+// Copyright 2018-present RebirthDB
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+// this file except in compliance with the License. You may obtain a copy of the
+// License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software distributed
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations under the License.
+//
+// This file incorporates work covered by the following copyright:
+//
+//     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+//     others and used with permission or subject to their respective license
+//     agreements.
+//
+//     Licensed under the Apache License, Version 2.0 (the "License");
+//     you may not use this file except in compliance with the License.
+//     You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+//     Unless required by applicable law or agreed to in writing, software
+//     distributed under the License is distributed on an "AS IS" BASIS,
+//     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//     See the License for the specific language governing permissions and
+//     limitations under the License.
+
 #include "extproc/http_job.hpp"
 
 #include <ctype.h>
@@ -19,7 +49,7 @@
 #include "rapidjson/error/en.h"
 #include "rdb_protocol/env.hpp"
 
-#define RETHINKDB_USER_AGENT (SOFTWARE_NAME_STRING "/" RETHINKDB_VERSION)
+#define REBIRTHDB_USER_AGENT (SOFTWARE_NAME_STRING "/" REBIRTHDB_VERSION)
 
 void parse_header(const std::string &header,
                   http_result_t *res_out);
@@ -522,7 +552,7 @@ void set_default_opts(CURL *curl_handle,
     exc_setopt(curl_handle, CURLOPT_PROTOCOLS,
                CURLPROTO_HTTP | CURLPROTO_HTTPS, "PROTOCOLS");
 
-    exc_setopt(curl_handle, CURLOPT_USERAGENT, RETHINKDB_USER_AGENT, "USER AGENT");
+    exc_setopt(curl_handle, CURLOPT_USERAGENT, REBIRTHDB_USER_AGENT, "USER AGENT");
 
     // Setting this to an empty string makes libcurl enable all supported encodings.
     // Normally this is gzip and deflate, though on Windows some of these might not

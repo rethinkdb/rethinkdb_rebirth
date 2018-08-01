@@ -30,7 +30,7 @@ install:
   - make -j3 && make test -j3
 
 script:
-  - ./build/release/rethinkdb-unittest
+  - ./build/release/rebirthdb-unittest
 
 after_success:
   - coveralls --gcov-options '\-lp'

@@ -1,7 +1,7 @@
-The RethinkDB build system
+The RebirthDB Build System
 ==========================
 
-To build RethinkDB, run:
+To build RebirthDB, run:
 
 ```
 ./configure --allow-fetch
@@ -39,7 +39,7 @@ Server
 The server may depend on some of the fetched dependencies. Accessing
 its web UI also requires the web assets.
 
-* `make rethinkdb`: Only build the server executable.
+* `make rebirthdb`: Only build the server executable.
 
 * `make tags`, `make etags`: Generate tag files used by vim and emacs.
 
@@ -47,11 +47,6 @@ its web UI also requires the web assets.
   or flags.
 
 * `./configure --ccache`: Speed up repeated builds using `ccache`.
-
-* RethinkDB employees can use `./configure CXX=recc` to speed up the
-  build. The executable, in `newton:/usr/local/bin/recc`, wraps both
-  `ccache` and `distcc` to distribute the build across our server
-  infrastructure and cache the result.
 
 * There is a `check-syntax` target that can be used with emacs'
   flymake-mode.
@@ -96,7 +91,7 @@ Installation
 
 * `./configure --prefix`: Set the prefix folder used by `make install`.
 
-* `make install`: Install RethinkDB to the prefix. If the `DESTDIR`
+* `make install`: Install RebirthDB to the prefix. If the `DESTDIR`
   variable is passed, install the files there. If `STRIP_ON_INSTALL=1`
   is passed, also strip the executable.
 
@@ -105,9 +100,7 @@ Installation
 
 Packaging
 ---
-
-Packaging is usually automated by the BuildBot instance running on
-`dr-doom:8010` in our intranet.
+* `make build-deb`: Build a debian binary
 
 * `make build-deb-src UBUNTU_RELEASE=<name> PACKAGE_BUILD_NUMBER=<n>`:
   Build a package for the given Ubuntu version.
@@ -140,7 +133,7 @@ itself.
 * `make dump-db` or `make -p`: Dump the `make` database.
 
 * `make command-line`: Print the real `make` command line used to
-  build RethinkDB. On some old, unpatched versions of GNU make this is
+  build RebirthDB. On some old, unpatched versions of GNU make this is
   required to use `-j`.
 
 * `make debug-count`: Debug the count feature.
@@ -150,6 +143,6 @@ It usually looks like this:
 
 ```
 OVERRIDE_GOALS ?= default-goal=<default target for this directory>
-TOP := <relative path to the top of the rethinkdb source tree>
+TOP := <relative path to the top of the rebirthdb source tree>
 include $(TOP)/Makefile
 ```

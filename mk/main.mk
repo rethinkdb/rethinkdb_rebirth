@@ -1,6 +1,35 @@
-# Copyright 2010-2013 RethinkDB, all rights reserved.
+# Copyright 2018-present RebirthDB
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+# this file except in compliance with the License. You may obtain a copy of the
+# License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed
+# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+# CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+#
+# This file incorporates work covered by the following copyright:
+#
+#     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+#     others and used with permission or subject to their respective license
+#     agreements.
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
 
-# This is the main file that controls the rethinkdb build process.
+# This is the main file that controls the rebirthdb build process.
 # It is run by the top-level Makefile
 #
 # The actual build rules are located in mk/*.mk and **/build.mk
@@ -37,7 +66,7 @@ include $(TOP)/mk/windows.mk
 
 else # Windows
 
-# Building the rethinkdb executable
+# Building the rebirthdb executable
 include $(TOP)/src/build.mk
 
 # Packaging for deb, osx, ...
@@ -63,6 +92,6 @@ endif
 generate: generate-headers
 
 .PHONY: test
-test: $(BUILD_DIR)/rethinkdb $(BUILD_DIR)/rethinkdb-unittest
+test: $(BUILD_DIR)/rebirthdb $(BUILD_DIR)/rebirthdb-unittest
 	$P RUN-TESTS
 	# MAKEFLAGS= $(TOP)/test/run -b $(BUILD_DIR)

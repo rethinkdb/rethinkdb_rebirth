@@ -1,4 +1,34 @@
-// Copyright 2010-2015 RethinkDB, all rights reserved.
+// Copyright 2018-present RebirthDB
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+// this file except in compliance with the License. You may obtain a copy of the
+// License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software distributed
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations under the License.
+//
+// This file incorporates work covered by the following copyright:
+//
+//     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+//     others and used with permission or subject to their respective license
+//     agreements.
+//
+//     Licensed under the Apache License, Version 2.0 (the "License");
+//     you may not use this file except in compliance with the License.
+//     You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+//     Unless required by applicable law or agreed to in writing, software
+//     distributed under the License is distributed on an "AS IS" BASIS,
+//     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//     See the License for the specific language governing permissions and
+//     limitations under the License.
+
 #ifndef UTILS_HPP_
 #define UTILS_HPP_
 
@@ -112,9 +142,9 @@ static inline std::string time2str(const time_t &t) {
 #endif
 
 #ifndef NDEBUG
-#define RETHINKDB_VERSION_STR "rethinkdb " RETHINKDB_VERSION " (debug)" " (" COMPILER_STR ")"
+#define REBIRTHDB_VERSION_STR SERVER_EXEC_NAME " " REBIRTHDB_VERSION " (debug)" " (" COMPILER_STR ")"
 #else
-#define RETHINKDB_VERSION_STR "rethinkdb " RETHINKDB_VERSION " (" COMPILER_STR ")"
+#define REBIRTHDB_VERSION_STR SERVER_EXEC_NAME " " REBIRTHDB_VERSION " (" COMPILER_STR ")"
 #endif
 
 #define ANY_PORT 0

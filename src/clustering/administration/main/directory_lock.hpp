@@ -47,8 +47,8 @@ private:
 class directory_missing_exc_t : public std::exception {
 public:
     explicit directory_missing_exc_t(const base_path_t &path) {
-        info = strprintf("The directory '%s' does not exist, run 'rethinkdb create -d \"%s\"' and try again.",
-                         path.path().c_str(), path.path().c_str());
+        info = strprintf("The directory '%s' does not exist, run '%s create -d \"%s\"' and try again.",
+                         path.path().c_str(), SERVER_EXEC_NAME, path.path().c_str());
     }
     ~directory_missing_exc_t() throw () { }
     const char *what() const throw () {

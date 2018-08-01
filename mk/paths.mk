@@ -1,4 +1,33 @@
-# Copyright 2010-2013 RethinkDB, all rights reserved.
+# Copyright 2018-present RebirthDB
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+# this file except in compliance with the License. You may obtain a copy of the
+# License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed
+# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+# CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+#
+# This file incorporates work covered by the following copyright:
+#
+#     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+#     others and used with permission or subject to their respective license
+#     agreements.
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
 
 # This makefile defines paths that are needed by the other Makefiles
 
@@ -59,7 +88,7 @@ ifeq ($(BUILD_DIR),)
 endif
 BUILD_DIR_ABS = $(realpath $(BUILD_DIR))
 
-GDB_FUNCTIONS_NAME := rethinkdb-gdb.py
+GDB_FUNCTIONS_NAME := rebirthdb-gdb.py
 
 PACKAGE_NAME := $(VANILLA_PACKAGE_NAME)
 SERVER_UNIT_TEST_NAME := $(SERVER_EXEC_NAME)-unittest

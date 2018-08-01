@@ -1,12 +1,12 @@
-<img style="width:100%;" src="/github-banner.png">
+<img style="width:100%;" src="images/github-banner.jpeg">
 
-[RethinkDB](https://www.rethinkdb.com)
-======================================
+RebirthDB
+=========
 
 [![Build Status](https://travis-ci.org/RebirthDB/rebirthdb.svg?branch=next)](https://travis-ci.org/RebirthDB/rebirthdb)
 [![Coverage Status](https://coveralls.io/repos/github/RebirthDB/rebirthdb/badge.svg?branch=next)](https://coveralls.io/github/RebirthDB/rebirthdb?branch=next)
 
-What is RethinkDB?
+What is RebirthDB?
 ------------------
 
 * **Open-source** database for building realtime web applications
@@ -14,11 +14,14 @@ What is RethinkDB?
 * **Distributed** database that is easy to scale
 * **High availability** database with automatic failover and robust fault tolerance
 
-RethinkDB is the first open-source scalable database built for realtime applications. It exposes a new database access model -- instead of polling for changes, the developer can tell the database to continuously push updated query results to applications in realtime. RethinkDB allows developers to build scalable realtime apps in a fraction of the time with less effort.
+RebirthDB is a community-developed fork of [RethinkDB](https://github.com/rethinkdb/rethinkdb) which was the first 
+open-source scalable database built for realtime applications. It exposes a new database access model -- instead of
+polling for changes, the developer can tell the database to continuously push updated query results to applications 
+in realtime. RebirthDB allows developers to build scalable realtime apps in a fraction of the time with less effort.
 
 To learn more, check out [rethinkdb.com](https://rethinkdb.com).
 
-Not sure what types of projects RethinkDB can help you build? Here are a few examples:
+Not sure what types of projects RethinkDB and now RebirthDB can help you build? Here are a few examples:
 
 * Build a [realtime liveblog](https://rethinkdb.com/blog/rethinkdb-pubnub/) with RethinkDB and PubNub
 * Create a [collaborative photo sharing whiteboard](https://www.youtube.com/watch?v=pdPRp3UxL_s)
@@ -30,28 +33,30 @@ Not sure what types of projects RethinkDB can help you build? Here are a few exa
 Quickstart
 ----------
 
-For a thirty-second RethinkDB quickstart, check out  [rethinkdb.com/docs/quickstart](https://www.rethinkdb.com/docs/quickstart).
+For a thirty-second RethinkDB quickstart (which can easily be applied to RebirthDB), check out  [rethinkdb.com/docs/quickstart](https://www.rethinkdb.com/docs/quickstart).
 
-Or, get started right away with our ten-minute guide in these languages:
+Or, get started right away with the RethinkDB ten-minute guide in these languages:
 
 * [**JavaScript**](https://rethinkdb.com/docs/guide/javascript/)
 * [**Python**](https://rethinkdb.com/docs/guide/python/)
 * [**Ruby**](https://rethinkdb.com/docs/guide/ruby/)
 * [**Java**](https://rethinkdb.com/docs/guide/java/)
 
-Besides our four official drivers, we also have many [third-party drivers](https://rethinkdb.com/docs/install-drivers/) supported by the RethinkDB community. Here's a few:
+Here are RebirthDB's drivers:
 
-* **C#/.NET:** [RethinkDb.Driver](https://github.com/bchavez/RethinkDb.Driver), [rethinkdb-net](https://github.com/mfenniak/rethinkdb-net)
-* **C++:** [librethinkdbxx](https://github.com/AtnNn/librethinkdbxx)
-* **Clojure:** [clj-rethinkdb](https://github.com/apa512/clj-rethinkdb)
-* **Elixir:** [rethinkdb-elixir](https://github.com/hamiltop/rethinkdb-elixir)
-* **Go:** [GoRethink](https://github.com/dancannon/gorethink)
-* **Haskell:** [haskell-rethinkdb](https://github.com/atnnn/haskell-rethinkdb)
-* **PHP:** [php-rql](https://github.com/danielmewes/php-rql)
-* **Rust:** [reql](https://github.com/rust-rethinkdb/reql)
-* **Scala:** [rethink-scala](https://github.com/kclay/rethink-scala)
+* **Elixir** - [rebirthdb-elixir](https://github.com/RebirthDB/rebirthdb-elixir)
+* **Go** - [rebirthdb-go](https://github.com/RebirthDB/rebirthdb-go)
+* **Haskell** - [rebirthdb-haskell](https://github.com/RebirthDB/rebirthdb-haskell)
+* **Java** - [rebirthdb-java](https://github.com/RebirthDB/rebirthdb-java)
+* **JavaScript** - [rebirthdb-js](https://github.com/RebirthDB/rebirthdb-js)
+* **Lua** - [rebirthdb-lua](https://github.com/RebirthDB/rebirthdb-lua)
+* **PHP** - [rebirthdb-php](https://github.com/RebirthDB/rebirthdb-php)
+* **Python** - [rebirthdb-python](https://github.com/RebirthDB/rebirthdb-python)
+* **Ruby** - [rebirthdb-ruby](https://github.com/RebirthDB/rebirthdb-ruby)
+* **Rust** - [rebirthdb-rs](https://github.com/RebirthDB/rebirthdb-rs)
+* **TypeScript** - [rebirthdb-ts](https://github.com/RebirthDB/rebirthdb-ts)
 
-Looking to explore what else RethinkDB offers or the specifics of ReQL? Check out [our RethinkDB docs](https://rethinkdb.com/docs/) and [ReQL API](https://rethinkdb.com/api/).
+Looking to explore what else RethinkDB offers or the specifics of ReQL? Check out [the RethinkDB docs](https://rethinkdb.com/docs/) and [ReQL API](https://rethinkdb.com/api/).
 
 Building
 --------
@@ -83,29 +88,32 @@ Then, to build:
     # or run make -j4 DEBUG=1
 
     sudo make install
-    # or run ./build/debug_clang/rethinkdb
+    # or run ./build/debug_clang/rebirthdb
 
 
 Need help?
 ----------
 
-A great place to start is [rethinkdb.com/community](https://rethinkdb.com/community). Here you can find out how to ask us questions, reach out to us, or [report an issue](https://github.com/rethinkdb/rethinkdb/issues). You'll be able to find all the places we frequent online and at which conference or meetups you might be able to meet us next.
-
-If you need help right now, you can also find us [on Slack](http://slack.rethinkdb.com/), [Twitter](https://twitter.com/rethinkdb), or IRC at [#rethinkdb](irc://chat.freenode.net/#rethinkdb) on Freenode.
-
-**Join us now:** <a href="http://slack.rethinkdb.com/"><img valign="middle"  src="http://slack.rethinkdb.com/badge.svg"></a>
+Find us at [Spectrum](https://spectrum.chat/rebirthdb) and on [Twitter](https://twitter.com/rebirthdb). You can also
+[report an issue](https://github.com/rebirthdb/rebirthdb/issues).
 
 Contributing
 ------------
 
-RethinkDB was built by a dedicated team, but it wouldn't have been possible without the support and contributions of hundreds of people from all over the world. We could use your help too! Check out our [contributing guidelines](CONTRIBUTING.md) to get started.
-
-Donors
-------
-
-* [DNSimple](https://dnsimple.com) provides DNS services for the RethinkDB project.
-* [ZeroTier](https://www.zerotier.com) sponsored the development of per-table configurable write aggregation including the ability to set write delay to infinite to create a memory-only table ([PR #6392](https://github.com/rethinkdb/rethinkdb/pull/6392))
+RethinkDB was built by a dedicated team, but it wouldn't have been possible without the support and contributions of 
+hundreds of people from all over the world. 
+ 
+RebirthDB is currently being developed by a growing and dedicated community. We could use your help too!
+Check out our [contributing guidelines](CONTRIBUTING.md) to get started.
 
 Where's the changelog?
 ----------------------
 We keep [a list of changes and feature explanations here](NOTES.md).
+
+Donors
+------
+* The development of data compression and RebirthDB's new art is sponsored by [AIDAX](http://www.aidaxbi.com/):<br>
+[![AIDAX](images/sponsors/AIDAX_logo_whole.png)](http://www.aidaxbi.com/)
+
+* Our test infrastructure is sponsored by [DigitalOcean](https://www.digitalocean.com/):<br>
+<a href="https://www.digitalocean.com/"> <img src="https://opensource.nyc3.digitaloceanspaces.com/attribution/assets/SVG/DO_Logo_horizontal_blue.svg" width="500px"></a>
