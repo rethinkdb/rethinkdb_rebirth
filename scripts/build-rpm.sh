@@ -56,7 +56,7 @@ getent passwd rebirthdb >/dev/null || \
     --comment "RebirthDB Daemon" rebirthdb
 EOF
 
-    test -n "${NOCONFIGURE:-}" || ./configure --static all --fetch all --prefix=/usr --sysconfdir=/etc --localstatedir=/var
+    test -n "${NOCONFIGURE:-}" || ./configure --allow-fetch --prefix=/usr --sysconfdir=/etc --localstatedir=/var
 
     `make command-line` install DESTDIR=$RPM_ROOT BUILD_PORTABLE=1 SPLIT_SYMBOLS=1
 
