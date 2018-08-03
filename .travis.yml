@@ -9,17 +9,6 @@ notifications:
   email:
   - rebirthdb-dev@googlegroups.com
 
-before_install:
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-  - sudo apt-get -qq update
-  - sudo apt-get -y install docker-ce build-essential
-  - ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch
-  - make dist
-  - tar xvzf build/packages/rebirthdb-$(eval "./scripts/gen-version.sh").tgz -C docker/trusty --strip-components=1
-  - cd docker/trusty
-  - docker build .
-
 jobs:
   include:
     - stage: Unit Tests
