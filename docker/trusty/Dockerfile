@@ -9,20 +9,21 @@ RUN apt-get -qq update && \
     apt-get -y install wget m4 git debhelper libssl-dev python-pip && \
     pip install --user cpp-coveralls
 
+VOLUME ["/rebirthdb"]
+
 # Add files.
-ADD . /root/rebirthdb
+ADD . /rebirthdb
 
 # Set ARGs
 ARG CXX_FLAGS
 
 # Set environment variables.
-ENV HOME /root
 ENV CXX_FLAGS $CXX_FLAGS
 
 # Define working directory.
-WORKDIR /root/rebirthdb
+WORKDIR /rebirthdb
 
-RUN cd /root/rebirthdb && \
+RUN cd /rebirthdb && \
     ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
     make -j $(($(eval "nproc") + 1)) && make test -j $(($(eval "nproc") + 1))
 

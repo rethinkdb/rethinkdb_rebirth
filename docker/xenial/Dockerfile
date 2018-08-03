@@ -13,20 +13,21 @@ RUN apt-get -qq update && \
     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60 --slave /usr/bin/g++ g++ /usr/bin/g++-5 && \
     pip install --user cpp-coveralls
 
+VOLUME ["/rebirthdb"]
+
 # Add files.
-ADD . /root/rebirthdb
+ADD . /rebirthdb
 
 # Set ARGs
 ARG CXX_FLAGS
 
 # Set environment variables.
-ENV HOME /root
 ENV CXX_FLAGS $CXX_FLAGS
 
 # Define working directory.
-WORKDIR /root/rebirthdb
+WORKDIR /rebirthdb
 
-RUN cd /root/rebirthdb && \
+RUN cd /rebirthdb && \
     ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
     make -j $(($(eval "nproc") + 1)) && make test -j $(($(eval "nproc") + 1))
 
