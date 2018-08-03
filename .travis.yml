@@ -1,36 +1,69 @@
 language: cpp
 sudo: required
-dist: trusty
 os:
 - linux
 env:
-  - EXTRA_CXX_FLAGS -fprofile-arcs -ftest-coverage
+- EXTRA_CXX_FLAGS -fprofile-arcs -ftest-coverage
 notifications:
   email:
-    - rebirthdb-dev@googlegroups.com
-before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install mg
-  - sudo apt-get install build-essential protobuf-compiler python
-  - sudo apt-get install libprotobuf-dev libcurl4-openssl-dev libboost-all-dev
-  - sudo apt-get install libncurses5-dev libjemalloc-dev wget m4
-  - pip install --user cpp-coveralls
+  - rebirthdb-dev@googlegroups.com
 
-# Compiler selection
-compiler:
-  - gcc
+jobs:
+  include:
+    - stage: Tests
+      name: "Unit Tests"
+      - dist: trusty
+        name: "Ubuntu Trusty Unit Tests"
 
-before_install:
-  - pip install --user cpp-coveralls
-  - export CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS"
+        before_install:
+          - sudo apt-get -qq update
+          - sudo apt-get install mg
+          - sudo apt-get install build-essential protobuf-compiler python
+          - sudo apt-get install libprotobuf-dev libcurl4-openssl-dev libboost-all-dev
+          - sudo apt-get install libncurses5-dev libjemalloc-dev wget m4
+          - pip install --user cpp-coveralls
+          - export CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS"
 
-# Build steps
-install:
-  - ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch
-  - make -j3 && make test -j3
+        # Compiler selection
+        compiler:
+          - gcc
 
-script:
-  - ./build/release/rebirthdb-unittest
 
-after_success:
-  - coveralls --gcov-options '\-lp'
+        # Build steps
+        install:
+          - ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch
+          - make -j3 && make test -j3
+
+        script:
+          - ./build/release/rebirthdb-unittest
+
+        after_success:
+          - coveralls --gcov-options '\-lp'
+
+      - dist: xenial
+        name: "Ubuntu Xenial Unit Tests"
+
+        before_install:
+        - sudo apt-get -qq update
+        - sudo apt-get install mg
+        - sudo apt-get install build-essential protobuf-compiler python
+        - sudo apt-get install libprotobuf-dev libcurl4-openssl-dev libboost-all-dev
+        - sudo apt-get install libncurses5-dev libjemalloc-dev wget m4
+        - pip install --user cpp-coveralls
+        - export CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS"
+
+        # Compiler selection
+        compiler:
+        - gcc
+
+
+        # Build steps
+        install:
+        - ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch
+        - make -j3 && make test -j3
+
+        script:
+        - ./build/release/rebirthdb-unittest
+
+        after_success:
+        - coveralls --gcov-options '\-lp'
