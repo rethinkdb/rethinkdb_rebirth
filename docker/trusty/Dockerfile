@@ -26,5 +26,5 @@ RUN cd /root/rebirthdb && \
     ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
     make -j $(($(eval "nproc") + 1)) && make test -j $(($(eval "nproc") + 1))
 
-# Define default command.
-CMD ["bash"]
+# Define entry point.
+ENTRYPOINT [ "/bin/bash", "-c", "./build/release/rebirthdb-unittest" ]
