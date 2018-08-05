@@ -1,15 +1,11 @@
 sudo: true
 dist: trusty
-language: cpp
 env:
   global:
     - EXTRA_CXX_FLAGS -fprofile-arcs -ftest-coverage
   matrix:
     - DISTRIBUTION=trusty
     - DISTRIBUTION=xenial
-notifications:
-  email:
-  - rebirthdb-dev@googlegroups.com
 
 jobs:
   include:
@@ -19,10 +15,10 @@ jobs:
         - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
         - sudo apt-get -qq update
         - sudo apt-get -y install docker-ce build-essential
+      script:
         - ./configure CXXFLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" --allow-fetch
         - make dist
         - tar xvzf build/packages/rebirthdb-$(eval "./scripts/gen-version.sh").tgz -C docker/$DISTRIBUTION --strip-components=1
-      script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - cd docker/$DISTRIBUTION
         - docker build -t rebirthdb-$DISTRIBUTION --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
@@ -49,3 +45,7 @@ jobs:
           make build-deb -j5 UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0"
 
 
+language: cpp
+notifications:
+  email:
+  - rebirthdb-dev@googlegroups.com
