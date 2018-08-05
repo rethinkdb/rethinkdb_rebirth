@@ -12,8 +12,9 @@ jobs:
   include:
     - stage: Build Base Docker Images
       env:
-        - DISTRIBUTION=trusty
-        - DISTRIBUTION=xenial
+        matrix:
+          - DISTRIBUTION=trusty
+          - DISTRIBUTION=xenial
       install:
         - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
         - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -32,8 +33,9 @@ jobs:
 
     - stage: Unit Tests
       env:
-          - DISTRIBUTION=trusty
-          - DISTRIBUTION=xenial
+        matrix:
+            - DISTRIBUTION=trusty
+            - DISTRIBUTION=xenial
       script:
         - |
           docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \ 
@@ -46,8 +48,9 @@ jobs:
     
     - stage: Package RebirthDB
       env:
-        - DISTRIBUTION=trusty
-        - DISTRIBUTION=xenial
+        matrix:
+          - DISTRIBUTION=trusty
+          - DISTRIBUTION=xenial
       language: cpp
       script: 
         - |
