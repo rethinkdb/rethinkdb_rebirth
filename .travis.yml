@@ -6,10 +6,14 @@ env:
   matrix:
     - DISTRIBUTION=trusty
     - DISTRIBUTION=xenial
+notifications:
+  email:
+  - rebirthdb-dev@googlegroups.com
 
 jobs:
   include:
     - stage: Build Base Docker Images
+      language: cpp
       install:
         - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
         - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -27,6 +31,7 @@ jobs:
         - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
 
     - stage: Unit Tests
+      language: cpp
       script:
         - |
           docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \ 
@@ -38,14 +43,9 @@ jobs:
         - coveralls --gcov-options '\-lp'
     
     - stage: Package RebirthDB
+      language: cpp
       script: 
         - |
           docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \
           "./configure --allow-fetch && \
           make build-deb -j5 UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0"
-
-
-language: cpp
-notifications:
-  email:
-  - rebirthdb-dev@googlegroups.com
