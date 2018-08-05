@@ -29,7 +29,7 @@ jobs:
         - docker build -t rebirthdb-trusty --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
 
       script:
-        - docker run rebirthdb-trusty /bin/bash -c "./data/build/release/rebirthdb-unittest" 
+        - docker run rebirthdb-trusty /bin/bash -c "./build/release/rebirthdb-unittest" 
 
       after_success:
         - coveralls --gcov-options '\-lp'
@@ -51,7 +51,7 @@ jobs:
         - docker build -t rebirthdb-xenial --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
 
       script:
-      - docker run rebirthdb-xenial /bin/bash -c "./data/build/release/rebirthdb-unittest"
+      - docker run rebirthdb-xenial /bin/bash -c "./build/release/rebirthdb-unittest"
 
       after_success:
       - coveralls --gcov-options '\-lp'
