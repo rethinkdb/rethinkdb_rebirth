@@ -53,7 +53,7 @@ matrix:
       script:
         - |
           docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \ 
-          "./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
+          "pwd && ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
           make test -j $(($(eval "nproc") + 1)) && \
           ./build/release/rebirthdb-unittest && \
           coveralls --gcov-options '\-lp'"
@@ -65,7 +65,7 @@ matrix:
       script:
         - |
           docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \ 
-          "./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
+          "pwd && ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
           make test -j $(($(eval "nproc") + 1)) && \
           ./build/release/rebirthdb-unittest && \
           coveralls --gcov-options '\-lp'"
