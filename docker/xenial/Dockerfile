@@ -25,13 +25,5 @@ ENV CXX_FLAGS $CXX_FLAGS
 # Define working directory.
 WORKDIR /rebirthdb
 
-# Build rebirthdb and rebirthdb-unittests
-RUN cd /rebirthdb && \
-    ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
-    make -j $(($(eval "nproc") + 1)) && make test -j $(($(eval "nproc") + 1))
-
-# Define volume
-VOLUME ["/data"]
-
 # Define the default command
 CMD [ "/bin/bash" ]

@@ -1,20 +1,17 @@
-sudo: required
+sudo: true
 language: cpp
 dist: trusty
-services:
-  - docker
 env:
-- EXTRA_CXX_FLAGS -fprofile-arcs -ftest-coverage
+  - EXTRA_CXX_FLAGS -fprofile-arcs -ftest-coverage
+  - DISTRIBUTION=trusty
+  - DISTRIBUTION=xenial
 notifications:
   email:
   - rebirthdb-dev@googlegroups.com
 
 jobs:
   include:
-    - stage: Unit Tests
-      dist: trusty
-      name: "Ubuntu Trusty Unit Tests"
-      
+    - stage: Build Base Docker Images
       before_install:
         - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
         - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -22,36 +19,30 @@ jobs:
         - sudo apt-get -y install docker-ce build-essential
         - ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch
         - make dist
-        - tar xvzf build/packages/rebirthdb-$(eval "./scripts/gen-version.sh").tgz -C docker/trusty --strip-components=1
-      
-      install:  
-        - cd docker/trusty
-        - docker build -t rebirthdb-trusty --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
-
+        - tar xvzf build/packages/rebirthdb-$(eval "./scripts/gen-version.sh").tgz -C docker/$DISTRIBUTION --strip-components=1
+      install: true
       script:
-        - docker run rebirthdb-trusty /bin/bash -c "./build/release/rebirthdb-unittest" 
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - cd docker/$DISTRIBUTION
+        - docker build -t rebirthdb-$DISTRIBUTION --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
+        - docker images
+        - docker tag rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
+        - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
 
+    - stage: Unit Tests
+      script:
+        - docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c 
+        " ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && 
+          make test -j $(($(eval "nproc") + 1)) &&
+          ./build/release/rebirthdb-unittest &&
+          coveralls --gcov-options '\-lp'"
       after_success:
         - coveralls --gcov-options '\-lp'
+    
+    - stage: Package RebirthDB
+      script: 
+        - docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c 
+        " ./configure --allow-fetch && 
+          make build-deb -j5 UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0"
 
-    - dist: trusty
-      name: "Ubuntu Xenial Unit Tests"
 
-      before_install:
-        - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-        - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-        - sudo apt-get -qq update
-        - sudo apt-get -y install docker-ce build-essential
-        - ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch
-        - make dist
-        - tar xvzf build/packages/rebirthdb-$(eval "./scripts/gen-version.sh").tgz -C docker/xenial --strip-components=1
-        
-      install:  
-        - cd docker/xenial
-        - docker build -t rebirthdb-xenial --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
-
-      script:
-      - docker run rebirthdb-xenial /bin/bash -c "./build/release/rebirthdb-unittest"
-
-      after_success:
-      - coveralls --gcov-options '\-lp'
