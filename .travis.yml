@@ -10,42 +10,42 @@ notifications:
 
 matrix:
   include:
-    # - stage: Build Base Docker Images
-    #   name: Trusty Base Image 
-    #   env: DISTRIBUTION=trusty
-    #   install:
-    #     - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    #     - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    #     - sudo apt-get -qq update
-    #     - sudo apt-get -y install docker-ce build-essential
-    #   script:
-    #     - ./configure CXXFLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" --allow-fetch
-    #     - make dist
-    #     - tar xvzf build/packages/rebirthdb-$(eval "./scripts/gen-version.sh").tgz -C docker/$DISTRIBUTION --strip-components=1
-    #     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    #     - cd docker/$DISTRIBUTION
-    #     - docker build -t rebirthdb-$DISTRIBUTION --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
-    #     - docker images
-    #     - docker tag rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
-    #     - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
+    - stage: Build Base Docker Images
+      name: Trusty Base Image 
+      env: DISTRIBUTION=trusty
+      install:
+        - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+        - sudo apt-get -qq update
+        - sudo apt-get -y install docker-ce build-essential
+      script:
+        - ./configure CXXFLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" --allow-fetch
+        - make dist
+        - tar xvzf build/packages/rebirthdb-$(eval "./scripts/gen-version.sh").tgz -C docker/$DISTRIBUTION --strip-components=1
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - cd docker/$DISTRIBUTION
+        - docker build -t rebirthdb-$DISTRIBUTION --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
+        - docker images
+        - docker tag rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
+        - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
 
-    # - name: Xenial Base Image
-    #   env: DISTRIBUTION=xenial
-    #   install:
-    #     - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    #     - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    #     - sudo apt-get -qq update
-    #     - sudo apt-get -y install docker-ce build-essential
-    #   script:
-    #     - ./configure CXXFLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" --allow-fetch
-    #     - make dist
-    #     - tar xvzf build/packages/rebirthdb-$(eval "./scripts/gen-version.sh").tgz -C docker/$DISTRIBUTION --strip-components=1
-    #     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    #     - cd docker/$DISTRIBUTION
-    #     - docker build -t rebirthdb-$DISTRIBUTION --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
-    #     - docker images
-    #     - docker tag rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
-    #     - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
+    - name: Xenial Base Image
+      env: DISTRIBUTION=xenial
+      install:
+        - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+        - sudo apt-get -qq update
+        - sudo apt-get -y install docker-ce build-essential
+      script:
+        - ./configure CXXFLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" --allow-fetch
+        - make dist
+        - tar xvzf build/packages/rebirthdb-$(eval "./scripts/gen-version.sh").tgz -C docker/$DISTRIBUTION --strip-components=1
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - cd docker/$DISTRIBUTION
+        - docker build -t rebirthdb-$DISTRIBUTION --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
+        - docker images
+        - docker tag rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
+        - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
 
     - stage: Unit Tests
       name: Trusty Unit Tests
