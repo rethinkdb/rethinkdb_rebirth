@@ -25,5 +25,7 @@ ENV CXX_FLAGS $CXX_FLAGS
 # Define working directory.
 WORKDIR /rebirthdb
 
+VOLUME [ "/rebirthdb" ]
+
 # Define the default command
 CMD [ "/bin/sh" ]
