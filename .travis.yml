@@ -1,11 +1,9 @@
 sudo: true
 dist: trusty
+language: cpp
 env:
   global:
-    - EXTRA_CXX_FLAGS -fprofile-arcs -ftest-coverage
-  matrix:
-    - DISTRIBUTION=trusty
-    - DISTRIBUTION=xenial
+    - EXTRA_CXX_FLAGS -fprofile-arcs -ftest-coverage    
 notifications:
   email:
   - rebirthdb-dev@googlegroups.com
@@ -13,7 +11,9 @@ notifications:
 jobs:
   include:
     - stage: Build Base Docker Images
-      language: cpp
+      env:
+        - DISTRIBUTION=trusty
+        - DISTRIBUTION=xenial
       install:
         - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
         - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -31,7 +31,9 @@ jobs:
         - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
 
     - stage: Unit Tests
-      language: cpp
+      env:
+          - DISTRIBUTION=trusty
+          - DISTRIBUTION=xenial
       script:
         - |
           docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \ 
@@ -43,6 +45,9 @@ jobs:
         - coveralls --gcov-options '\-lp'
     
     - stage: Package RebirthDB
+      env:
+        - DISTRIBUTION=trusty
+        - DISTRIBUTION=xenial
       language: cpp
       script: 
         - |
