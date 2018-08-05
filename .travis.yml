@@ -51,7 +51,7 @@ matrix:
       name: Trusty Unit Tests
       env: DISTRIBUTION=trusty
       script:
-        - docker run -it --name rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION sh
+        - docker run -d --name rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION sh -c "ping -i 30 0.0.0.0"
         - |
           docker exec rebirthdb-$DISTRIBUTION sh -c "\ 
           ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
@@ -64,7 +64,7 @@ matrix:
     - name: Xenial Unit Tests
       env: DISTRIBUTION=xenial
       script:
-        - docker run -it --name rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION sh
+        - docker run -d --name rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION sh -c "ping -i 30 0.0.0.0"
         - |
           docker exec rebirthdb-$DISTRIBUTION sh -c "\ 
           ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
@@ -78,21 +78,39 @@ matrix:
       name: Trusty Packaging
       env: DISTRIBUTION=trusty
       script:
-        - docker run -it --name rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION sh 
+        - docker run -d --name rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION sh -c "ping -i 30 0.0.0.0"
         - |
           docker exec rebirthdb-$DISTRIBUTION sh -c \
           "./configure --allow-fetch && \
           make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0"
+      before_deploy:
         - sudo mkdir /rebirthdb/package
         - docker cp rebirthdb-$DISTRIBUTION:/rebirthdb/build/packages/*.deb /rebirthdb/package
+      deploy:
+        provider: bintray
+        file: "docker/$DISTRIBUTION/descriptor.json"
+        user: "$BINTRAY_USER"
+        key: "$BINTRAY_API_KEY"
+        skip_cleanup: true # to upload artifacts created during the build
+        on: 
+          all_branches: true
       
     - name: Xenial Packaging
       env: DISTRIBUTION=xenial
       script: 
-        - docker run -it --name rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION sh
+        - docker run -d --name rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION sh -c "ping -i 30 0.0.0.0"
         - |
           docker exec rebirthdb-$DISTRIBUTION sh -c \
           "./configure --allow-fetch && \
           make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0"
+      before_deploy:
         - sudo mkdir /rebirthdb/package
         - docker cp rebirthdb-$DISTRIBUTION:/rebirthdb/build/packages/*.deb /rebirthdb/package
+      deploy:
+        provider: bintray
+        file: "docker/$DISTRIBUTION/descriptor.json"
+        user: "$BINTRAY_USER"
+        key: "$BINTRAY_API_KEY"
+        skip_cleanup: true # to upload artifacts created during the build
+        on: 
+          all_branches: true
