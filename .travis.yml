@@ -52,7 +52,7 @@ matrix:
       env: DISTRIBUTION=trusty
       script:
         - |
-          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c "\ 
+          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION sh -c "\ 
           ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
           make test -j $(($(eval "nproc") + 1)) && \
           ./build/release/rebirthdb-unittest && \
@@ -64,7 +64,7 @@ matrix:
       env: DISTRIBUTION=xenial
       script:
         - |
-          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c "\ 
+          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION sh -c "\ 
           ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
           make test -j $(($(eval "nproc") + 1)) && \
           ./build/release/rebirthdb-unittest && \
@@ -77,7 +77,7 @@ matrix:
       env: DISTRIBUTION=trusty
       script: 
         - |
-          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \
+          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION sh -c \
           "./configure --allow-fetch && \
           make build-deb -j5 UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0"
       
@@ -85,6 +85,6 @@ matrix:
       env: DISTRIBUTION=xenial
       script: 
         - |
-          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \
+          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION sh -c \
           "./configure --allow-fetch && \
           make build-deb -j5 UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0"

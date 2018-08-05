@@ -22,4 +22,4 @@ ENV CXX_FLAGS $CXX_FLAGS
 WORKDIR /rebirthdb
 
 # Define the default command
-CMD [ "/bin/bash" ]
+CMD [ "/bin/sh" ]
