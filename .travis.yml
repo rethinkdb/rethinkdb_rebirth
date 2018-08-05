@@ -31,18 +31,20 @@ jobs:
 
     - stage: Unit Tests
       script:
-        - docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c 
-        " ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && 
-          make test -j $(($(eval "nproc") + 1)) &&
-          ./build/release/rebirthdb-unittest &&
+        - |
+          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \ 
+          "./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
+          make test -j $(($(eval "nproc") + 1)) && \
+          ./build/release/rebirthdb-unittest && \
           coveralls --gcov-options '\-lp'"
       after_success:
         - coveralls --gcov-options '\-lp'
     
     - stage: Package RebirthDB
       script: 
-        - docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c 
-        " ./configure --allow-fetch && 
+        - |
+          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \
+          "./configure --allow-fetch && \
           make build-deb -j5 UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0"
 
 
