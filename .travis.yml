@@ -2,7 +2,6 @@ sudo: true
 language: cpp
 dist: trusty
 env:
-  - EXTRA_CXX_FLAGS -fprofile-arcs -ftest-coverage
   - DISTRIBUTION=trusty
   - DISTRIBUTION=xenial
 notifications:
@@ -17,14 +16,14 @@ jobs:
         - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
         - sudo apt-get -qq update
         - sudo apt-get -y install docker-ce build-essential
-        - ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch
+        - ./configure CXXFLAGS="$CXX_FLAGS -fprofile-arcs -ftest-coverage" --allow-fetch
         - make dist
         - tar xvzf build/packages/rebirthdb-$(eval "./scripts/gen-version.sh").tgz -C docker/$DISTRIBUTION --strip-components=1
       install: true
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - cd docker/$DISTRIBUTION
-        - docker build -t rebirthdb-$DISTRIBUTION --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
+        - docker build -t rebirthdb-$DISTRIBUTION --build-arg CXX_FLAGS="$CXX_FLAGS -fprofile-arcs -ftest-coverage" .
         - docker images
         - docker tag rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
         - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
