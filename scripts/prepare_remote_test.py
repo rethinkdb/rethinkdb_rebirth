@@ -46,8 +46,12 @@ class DropletSetup(object):
         #for line in std_out.readlines():
         #    print(line.replace('\n', ''))
 
+        has_err = False
         for line in std_err.readlines():
+            has_err = True
             print(line.replace('\n', ''))
+
+        if has_err:
             raise Exception('Script execution failed')
 
     def _generate_ssh_key(self):
@@ -79,7 +83,10 @@ class DropletSetup(object):
 
         self._wait_for_droplet()
 
-    def connect(self):
+    def __enter__(self):
+        """
+        Connect to DigitalOcean instance with forever retry.
+        """
         self._print_info('connecting to droplet')
         try:
             self.ssh_client.connect(
@@ -92,7 +99,8 @@ class DropletSetup(object):
             self._print_info(str(exc))
             self._print_info('reconnecting')
             sleep(3)
-            self.connect()
+            return self.__enter__()
+        return self
 
     def install_rebirthdb(self):
         self._print_info('getting rebirthdb')
@@ -112,7 +120,10 @@ class DropletSetup(object):
         os.environ["REBIRTHDB_HOST"] = self.droplet.ip_address
         check_call([script, ' '.join(script_arguments)])
 
-    def cleanup(self):
+    def __exit__(self, *args):
+        """
+        Cleanup DigitalOcean instance connection.
+        """
         self._print_info('destroying droplet')
         self.droplet.destroy()
 
@@ -132,15 +143,10 @@ def main():
 
     setup.create_droplet()
 
-    try:
-        setup.connect()
+    with setup:
         setup.install_rebirthdb()
         setup.start_rebirthdb()
         setup.run_script(script, script_arguments)
-    except Exception as exc:
-        print(str(exc))
-    finally:
-        setup.cleanup()
 
 
 if __name__ == '__main__':
