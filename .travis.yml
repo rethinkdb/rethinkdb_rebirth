@@ -64,7 +64,7 @@ matrix:
         - ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch
         - make -j $(($(nproc) + 1)) && make test -j $(($(nproc) + 1))
       script:
-        - ./build/release/rethinkdb-unittest
+        - ./build/release/rebirthdb-unittest
       after_success:
         - coveralls --gcov-options '\-lp'
 
@@ -85,7 +85,9 @@ matrix:
           "pwd && ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
           make test -j $(($(nproc) + 1)) && \
           ./build/release/rebirthdb-unittest"
-    
+
+    # We use `travis_wait 30` in the script sections below because the commands may take long before giving output
+    # That is, when building the binary packages
     - stage: Packaging and Deployment
       name: Trusty Packaging and Deployment (Docker)
       env: DISTRIBUTION=trusty
@@ -93,6 +95,7 @@ matrix:
         - sudo mkdir /rebirthdb_packages
       script: 
         - |
+          travis_wait 30 \
           docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base \
           /bin/bash -c "./configure --allow-fetch && \
           make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0 && \
@@ -112,6 +115,7 @@ matrix:
       - sudo mkdir /rebirthdb_packages
       script:
       - |
+        travis_wait 30 \
         docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base \
         /bin/bash -c "./configure --allow-fetch && \
         make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0 && \

@@ -26,7 +26,7 @@
     },
 
     "files": [
-        {"includePattern": "/rebirthdb_packages/(.*\\.deb)", "uploadPattern": "pool/main/r/rebirthdb/$1",
+        {"includePattern": "/rebirthdb_packages/(rebirthdb_.*\\.deb)", "uploadPattern": "pool/main/r/rebirthdb/$1",
             "matrixParams": {
                 "deb_distribution": "trusty",
                 "deb_component": "main",
