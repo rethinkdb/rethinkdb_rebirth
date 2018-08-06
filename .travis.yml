@@ -90,7 +90,7 @@ matrix:
       name: Trusty Packaging and Deployment (Docker)
       env: DISTRIBUTION=trusty
       before_script:
-        - mkdir /rebirthdb_packages
+        - sudo mkdir /rebirthdb_packages
       script: 
         - |
           docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base \
@@ -109,7 +109,7 @@ matrix:
     - name: Xenial Packaging and Deployment (Docker)
       env: DISTRIBUTION=xenial
       before_script:
-      - mkdir /rebirthdb_packages
+      - sudo mkdir /rebirthdb_packages
       script:
       - |
         docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base \
