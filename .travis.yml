@@ -3,14 +3,14 @@ dist: trusty
 language: cpp
 env:
   global:
-    - EXTRA_CXX_FLAGS -fprofile-arcs -ftest-coverage  
+    - EXTRA_CXX_FLAGS -fprofile-arcs -ftest-coverage
 notifications:
   email:
   - rebirthdb-dev@googlegroups.com
 
 matrix:
   include:
-    - stage: Build Base Docker Images
+    - stage: Building Base Images
       name: Trusty Base Image
       env: DISTRIBUTION=trusty
       install:
@@ -24,10 +24,10 @@ matrix:
         - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - cd docker/$DISTRIBUTION
-        - docker build -t rebirthdb-$DISTRIBUTION --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
+        - docker build -t rebirthdb-$DISTRIBUTION-base --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
         - docker images
-        - docker tag rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
-        - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
+        - docker tag rebirthdb-$DISTRIBUTION-base $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
+        - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
 
     - name: Xenial Base Image
       env: DISTRIBUTION=xenial
@@ -42,47 +42,60 @@ matrix:
         - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - cd docker/$DISTRIBUTION
-        - docker build -t rebirthdb-$DISTRIBUTION --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
+        - docker build -t rebirthdb-$DISTRIBUTION-base --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
         - docker images
-        - docker tag rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
-        - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION
+        - docker tag rebirthdb-$DISTRIBUTION-base $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
+        - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
 
-    - stage: Unit Tests
-      name: Trusty Unit Tests
+    - stage: Unit Testing
+      # We use the tests on the Trusty VM as our baseline, and then to generate the coverage results.
+      name: Trusty Unit Tests (VM)
       env: DISTRIBUTION=trusty
+      compiler: gcc
+      before_install:
+        - sudo apt-get -qq update
+        - sudo apt-get install mg
+        - sudo apt-get install build-essential protobuf-compiler python
+        - sudo apt-get install libprotobuf-dev libcurl4-openssl-dev libboost-all-dev
+        - sudo apt-get install libncurses5-dev libjemalloc-dev wget m4
+        - pip install --user cpp-coveralls
+        - export CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS"
+      install:
+        - ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch
+        - make -j $(($(nproc) + 1)) && make test -j $(($(nproc) + 1))
       script:
-        - |
-          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \
-          "pwd && ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
-          make test -j $(($(nproc) + 1)) && \
-          ./build/release/rebirthdb-unittest && \
-          coveralls --gcov-options '\-lp'"
+        - ./build/release/rethinkdb-unittest
       after_success:
         - coveralls --gcov-options '\-lp'
 
-    - name: Xenial Unit Tests
+    - name: Trusty Unit Tests (Docker)
+      env: DISTRIBUTION=trusty
+      script:
+        - |
+          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base /bin/bash -c \
+          "pwd && ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
+          make test -j $(($(nproc) + 1)) && \
+          ./build/release/rebirthdb-unittest"
+
+    - name: Xenial Unit Tests (Docker)
       env: DISTRIBUTION=xenial
       script:
         - |
-          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \
+          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base /bin/bash -c \
           "pwd && ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
           make test -j $(($(nproc) + 1)) && \
-          ./build/release/rebirthdb-unittest && \
-          coveralls --gcov-options '\-lp'"
-      after_success:
-        - coveralls --gcov-options '\-lp'
+          ./build/release/rebirthdb-unittest"
     
-    - stage: Package RebirthDB
+    - stage: Packaging
       name: Trusty Packaging
       env: DISTRIBUTION=trusty
+      install:
+        - sudo mkdir /rebirthdb
       script: 
         - |
-          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \
+          docker run -v /rebirthdb:/rebirthdb $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base /bin/bash -c \
           "./configure --allow-fetch && \
           make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0"
-      before_deploy:
-        - sudo mkdir /rebirthdb/package
-        - docker cp rebirthdb-$DISTRIBUTION:/rebirthdb/build/packages/*.deb /rebirthdb/package
       deploy:
         provider: bintray
         file: "docker/$DISTRIBUTION/descriptor.json"
@@ -94,14 +107,13 @@ matrix:
       
     - name: Xenial Packaging
       env: DISTRIBUTION=xenial
-      script: 
-        - |
-          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \
-          "./configure --allow-fetch && \
-          make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0"
-      before_deploy:
-        - sudo mkdir /rebirthdb/package
-        - docker cp rebirthdb-$DISTRIBUTION:/rebirthdb/build/packages/*.deb /rebirthdb/package
+      install:
+      - sudo mkdir /rebirthdb
+      script:
+      - |
+        docker run -v /rebirthdb:/rebirthdb $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base /bin/bash -c \
+        "./configure --allow-fetch && \
+        make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0"
       deploy:
         provider: bintray
         file: "docker/$DISTRIBUTION/descriptor.json"
