@@ -11,6 +11,7 @@ from subprocess import check_call
 DROPLET_NAME = 'test-{uuid}'.format(uuid=str(uuid.uuid4()))
 SSH_KEY_NAME = 'key-{name}'.format(name=DROPLET_NAME)
 DROPLET_STATUS_COMPLETED = 'completed'
+BINTRAY_USERNAME = os.getenv('BINTRAY_USERNAME')
 
 
 class DropletSetup(object):
@@ -95,8 +96,8 @@ class DropletSetup(object):
 
     def install_rebirthdb(self):
         self._print_info('getting rebirthdb')
-        self._execute_command('source /etc/lsb-release && echo "deb https://dl.bintray.com/floydkots/apt $DISTRIB_CODENAME main" | tee /etc/apt/sources.list.d/rebirthdb.list')
-        self._execute_command('wget -qO- https://dl.bintray.com/floydkots/keys/pubkey.gpg | apt-key add -')
+        self._execute_command('source /etc/lsb-release && echo "deb https://dl.bintray.com/{username}/apt $DISTRIB_CODENAME main" | tee /etc/apt/sources.list.d/rebirthdb.list'.format(username=BINTRAY_USERNAME))
+        self._execute_command('wget -qO- https://dl.bintray.com/{username}/keys/pubkey.gpg | apt-key add -'.format(username=BINTRAY_USERNAME))
 
         self._print_info('installing rebirthdb')
         self._execute_command('apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y rebirthdb')
