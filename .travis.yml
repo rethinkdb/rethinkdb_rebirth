@@ -11,7 +11,7 @@ notifications:
 matrix:
   include:
     - stage: Building Base Images
-      name: Trusty Base Image
+      name: Trusty Base Image (Docker)
       env: DISTRIBUTION=trusty
       install:
         - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -29,7 +29,7 @@ matrix:
         - docker tag rebirthdb-$DISTRIBUTION-base $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
         - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
 
-    - name: Xenial Base Image
+    - name: Xenial Base Image (Docker)
       env: DISTRIBUTION=xenial
       install:
         - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -86,16 +86,17 @@ matrix:
           make test -j $(($(nproc) + 1)) && \
           ./build/release/rebirthdb-unittest"
     
-    - stage: Packaging
-      name: Trusty Packaging
+    - stage: Packaging and Deployment
+      name: Trusty Packaging and Deployment (Docker)
       env: DISTRIBUTION=trusty
-      install:
-        - sudo mkdir /rebirthdb
+      before_script:
+        - mkdir /rebirthdb_packages
       script: 
         - |
-          docker run -v /rebirthdb:/rebirthdb $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base /bin/bash -c \
-          "./configure --allow-fetch && \
-          make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0"
+          docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base \
+          /bin/bash -c "./configure --allow-fetch && \
+          make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0 && \
+          cp build/packages/*.deb /rebirthdb_packages"
       deploy:
         provider: bintray
         file: "docker/$DISTRIBUTION/descriptor.json"
@@ -105,15 +106,16 @@ matrix:
         on:
           all_branches: true
       
-    - name: Xenial Packaging
+    - name: Xenial Packaging and Deployment (Docker)
       env: DISTRIBUTION=xenial
-      install:
-      - sudo mkdir /rebirthdb
+      before_script:
+      - mkdir /rebirthdb_packages
       script:
       - |
-        docker run -v /rebirthdb:/rebirthdb $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base /bin/bash -c \
-        "./configure --allow-fetch && \
-        make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0"
+        docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base \
+        /bin/bash -c "./configure --allow-fetch && \
+        make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0 && \
+        cp build/packages/*.deb /rebirthdb_packages"
       deploy:
         provider: bintray
         file: "docker/$DISTRIBUTION/descriptor.json"
