@@ -41,7 +41,8 @@ class DropletSetup(object):
 
     def _execute_command(self, command):
         self._print_info('executing {command}'.format(command=command))
-        _, _, std_err = self.ssh_client.exec_command(command)
+        std_in, _, std_err = self.ssh_client.exec_command(command)
+        std_in.close()
 
         #for line in std_out.readlines():
         #    print(line.replace('\n', ''))
