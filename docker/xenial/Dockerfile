@@ -25,7 +25,9 @@ ENV CXX_FLAGS $CXX_FLAGS
 # Define working directory.
 WORKDIR /rebirthdb
 
-VOLUME [ "/rebirthdb" ]
+# Set volume.
+# Build artifacts are written to /rebirthdb/build/ while Unittests write to /tmp
+VOLUME [ "/rebirthdb", "/tmp" ]
 
 # Define the default command
-CMD [ "/bin/sh" ]
+CMD [ "/bin/bash" ]

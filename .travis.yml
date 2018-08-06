@@ -11,7 +11,7 @@ notifications:
 matrix:
   include:
     - stage: Build Base Docker Images
-      name: Trusty Base Image 
+      name: Trusty Base Image
       env: DISTRIBUTION=trusty
       install:
         - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -21,7 +21,7 @@ matrix:
       script:
         - ./configure CXXFLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" --allow-fetch
         - make dist
-        - tar xvzf build/packages/rebirthdb-$(eval "./scripts/gen-version.sh").tgz -C docker/$DISTRIBUTION --strip-components=1
+        - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - cd docker/$DISTRIBUTION
         - docker build -t rebirthdb-$DISTRIBUTION --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
@@ -39,7 +39,7 @@ matrix:
       script:
         - ./configure CXXFLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" --allow-fetch
         - make dist
-        - tar xvzf build/packages/rebirthdb-$(eval "./scripts/gen-version.sh").tgz -C docker/$DISTRIBUTION --strip-components=1
+        - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - cd docker/$DISTRIBUTION
         - docker build -t rebirthdb-$DISTRIBUTION --build-arg CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" .
@@ -51,10 +51,9 @@ matrix:
       name: Trusty Unit Tests
       env: DISTRIBUTION=trusty
       script:
-        - docker run -d --name rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION sh -c "ping -i 30 0.0.0.0"
         - |
-          docker exec rebirthdb-$DISTRIBUTION sh -c "\ 
-          ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
+          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \
+          "pwd && ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
           make test -j $(($(nproc) + 1)) && \
           ./build/release/rebirthdb-unittest && \
           coveralls --gcov-options '\-lp'"
@@ -64,10 +63,9 @@ matrix:
     - name: Xenial Unit Tests
       env: DISTRIBUTION=xenial
       script:
-        - docker run -d --name rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION sh -c "ping -i 30 0.0.0.0"
         - |
-          docker exec rebirthdb-$DISTRIBUTION sh -c "\ 
-          ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
+          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \
+          "pwd && ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
           make test -j $(($(nproc) + 1)) && \
           ./build/release/rebirthdb-unittest && \
           coveralls --gcov-options '\-lp'"
@@ -77,10 +75,9 @@ matrix:
     - stage: Package RebirthDB
       name: Trusty Packaging
       env: DISTRIBUTION=trusty
-      script:
-        - docker run -d --name rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION sh -c "ping -i 30 0.0.0.0"
+      script: 
         - |
-          docker exec rebirthdb-$DISTRIBUTION sh -c \
+          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \
           "./configure --allow-fetch && \
           make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0"
       before_deploy:
@@ -92,15 +89,14 @@ matrix:
         user: "$BINTRAY_USER"
         key: "$BINTRAY_API_KEY"
         skip_cleanup: true # to upload artifacts created during the build
-        on: 
+        on:
           all_branches: true
       
     - name: Xenial Packaging
       env: DISTRIBUTION=xenial
       script: 
-        - docker run -d --name rebirthdb-$DISTRIBUTION $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION sh -c "ping -i 30 0.0.0.0"
         - |
-          docker exec rebirthdb-$DISTRIBUTION sh -c \
+          docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION /bin/bash -c \
           "./configure --allow-fetch && \
           make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=0"
       before_deploy:
@@ -112,5 +108,5 @@ matrix:
         user: "$BINTRAY_USER"
         key: "$BINTRAY_API_KEY"
         skip_cleanup: true # to upload artifacts created during the build
-        on: 
+        on:
           all_branches: true
