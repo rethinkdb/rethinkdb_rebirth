@@ -1,10 +1,9 @@
 import os
 import sys
 import uuid
-import threading
 import paramiko
 import digitalocean
-from time import sleep, time
+from time import sleep
 from datetime import datetime
 from subprocess import check_call
 
