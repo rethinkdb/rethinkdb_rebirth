@@ -86,8 +86,6 @@ matrix:
            make test -j $(($(nproc) + 1)) && \
            ./build/release/rebirthdb-unittest"
 
-     We use `travis_wait 30` in the script sections below because the commands may take long before giving output
-     That is, when building the binary packages
     - stage: Packaging and Deployment
       name: Trusty Packaging and Deployment
       env: DISTRIBUTION=trusty
