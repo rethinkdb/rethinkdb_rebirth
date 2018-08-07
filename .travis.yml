@@ -3,172 +3,172 @@ dist: trusty
 language: cpp
 env:
   global:
-    - EXTRA_CXX_FLAGS -fprofile-arcs -ftest-coverage
+  - EXTRA_CXX_FLAGS -fprofile-arcs -ftest-coverage
 notifications:
   email:
   - rebirthdb-dev@googlegroups.com
 
 matrix:
   include:
-     - stage: Building Base Images
-       name: Trusty Base Image (Docker)
-       env: DISTRIBUTION=trusty
-       install:
-         - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-         - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-         - sudo apt-get -qq update
-         - sudo apt-get -y install docker-ce build-essential
-       script:
-         - ./configure CXXFLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" --allow-fetch
-         - make dist
-         - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
-         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-         - cd docker/$DISTRIBUTION
-         - docker build -t rebirthdb-$DISTRIBUTION-base .
-         - docker images
-         - docker tag rebirthdb-$DISTRIBUTION-base $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
-         - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
+  - stage: Building Base Images
+    name: Trusty Base Image (Docker)
+    env: DISTRIBUTION=trusty
+    install:
+    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    - sudo apt-get -qq update
+    - sudo apt-get -y install docker-ce build-essential
+    script:
+    - ./configure CXXFLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" --allow-fetch
+    - make dist
+    - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - cd docker/$DISTRIBUTION
+    - docker build -t rebirthdb-$DISTRIBUTION-base .
+    - docker images
+    - docker tag rebirthdb-$DISTRIBUTION-base $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
+    - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
 
-     - name: Xenial Base Image (Docker)
-       env: DISTRIBUTION=xenial
-       install:
-         - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-         - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-         - sudo apt-get -qq update
-         - sudo apt-get -y install docker-ce build-essential
-       script:
-         - ./configure CXXFLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" --allow-fetch
-         - make dist
-         - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
-         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-         - cd docker/$DISTRIBUTION
-         - docker build -t rebirthdb-$DISTRIBUTION-base .
-         - docker images
-         - docker tag rebirthdb-$DISTRIBUTION-base $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
-         - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
+  - name: Xenial Base Image (Docker)
+    env: DISTRIBUTION=xenial
+    install:
+    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    - sudo apt-get -qq update
+    - sudo apt-get -y install docker-ce build-essential
+    script:
+    - ./configure CXXFLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" --allow-fetch
+    - make dist
+    - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - cd docker/$DISTRIBUTION
+    - docker build -t rebirthdb-$DISTRIBUTION-base .
+    - docker images
+    - docker tag rebirthdb-$DISTRIBUTION-base $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
+    - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
 
-     - stage: Unit Testing
-       # We use the tests on the Trusty VM as our baseline, and then to generate the coverage results.
-       name: Trusty Unit Tests (VM)
-       env: DISTRIBUTION=trusty
-       compiler: gcc
-       before_install:
-         - sudo apt-get -qq update
-         - sudo apt-get install mg
-         - sudo apt-get install build-essential protobuf-compiler python
-         - sudo apt-get install libprotobuf-dev libcurl4-openssl-dev libboost-all-dev
-         - sudo apt-get install libncurses5-dev libjemalloc-dev wget m4
-         - pip install --user cpp-coveralls
-         - export CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS"
-       install:
-         - ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch
-         - make -j $(($(nproc) + 1)) && make test -j $(($(nproc) + 1))
-       script:
-         - ./build/release/rebirthdb-unittest
-       after_success:
-         - coveralls --gcov-options '\-lp'
+  - stage: Unit Testing
+    # We use the tests on the Trusty VM as our baseline, and then to generate the coverage results.
+    name: Trusty Unit Tests (VM)
+    env: DISTRIBUTION=trusty
+    compiler: gcc
+    before_install:
+    - sudo apt-get -qq update
+    - sudo apt-get install mg
+    - sudo apt-get install build-essential protobuf-compiler python
+    - sudo apt-get install libprotobuf-dev libcurl4-openssl-dev libboost-all-dev
+    - sudo apt-get install libncurses5-dev libjemalloc-dev wget m4
+    - pip install --user cpp-coveralls
+    - export CXX_FLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS"
+    install:
+    - ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch
+    - make -j $(($(nproc) + 1)) && make test -j $(($(nproc) + 1))
+    script:
+    - ./build/release/rebirthdb-unittest
+    after_success:
+    - coveralls --gcov-options '\-lp'
 
-     - name: Trusty Unit Tests (Docker)
-       env: DISTRIBUTION=trusty
-       script:
-         - |
-           docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base /bin/bash -c \
-           "pwd && ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
-           make test -j $(($(nproc) + 1)) && \
-           ./build/release/rebirthdb-unittest"
+  - name: Trusty Unit Tests (Docker)
+    env: DISTRIBUTION=trusty
+    script:
+    - |
+      docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base /bin/bash -c \
+      "pwd && ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
+      make test -j $(($(nproc) + 1)) && \
+      ./build/release/rebirthdb-unittest"
 
-     - name: Xenial Unit Tests (Docker)
-       env: DISTRIBUTION=xenial
-       script:
-         - |
-           docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base /bin/bash -c \
-           "pwd && ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
-           make test -j $(($(nproc) + 1)) && \
-           ./build/release/rebirthdb-unittest"
+  - name: Xenial Unit Tests (Docker)
+    env: DISTRIBUTION=xenial
+    script:
+    - |
+      docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base /bin/bash -c \
+      "pwd && ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
+      make test -j $(($(nproc) + 1)) && \
+      ./build/release/rebirthdb-unittest"
 
-    - stage: Packaging and Deployment
-      name: Trusty Packaging and Deployment
-      env: DISTRIBUTION=trusty
-      before_script:
-        - sudo mkdir /rebirthdb_packages
-      script: 
-        - |
-          docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base \
-          /bin/bash -c "./configure --allow-fetch && \
-          make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER && \
-          cp build/packages/rebirthdb_*.deb /rebirthdb_packages"
-      before_deploy:
-        - curl -fL https://getcli.jfrog.io | sh
-        - sudo mv jfrog /usr/bin && jfrog --version
-      deploy:
-        - provider: script
-          script: |
-                  sudo jfrog bt upload \
-                    --user=$BINTRAY_USER \
-                    --key=$BINTRAY_API_KEY \
-                    --publish=true \
-                    --deb=$DISTRIBUTION/main/amd64 \
-                    "/rebirthdb_packages/rebirthdb_*.deb" \
-                    $BINTRAY_SUBJECT/apt/rebirthdb/$TRAVIS_TAG \
-                    pool/r/rebirthdb/
-          on:
-            branch: next
-            tags: true
-          skip_cleanup: true
-        - provider: script
-          script: |
-                  sudo jfrog bt upload \
-                    --user=$BINTRAY_USER \
-                    --key=$BINTRAY_API_KEY \
-                    --publish=true \
-                    --deb=$DISTRIBUTION/main/amd64 \
-                    "/rebirthdb_packages/rebirthdb_*.deb" \
-                    $BINTRAY_SUBJECT/apt/rebirthdb-dev/$TRAVIS_TAG \
-                    pool/r/rebirthdb-dev/
-          on:
-            all_branches: true
-          skip_cleanup: true
+  - stage: Packaging and Deployment
+    name: Trusty Packaging and Deployment
+    env: DISTRIBUTION=trusty
+    before_script:
+    - sudo mkdir /rebirthdb_packages
+    script:
+    - |
+      docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base \
+      /bin/bash -c "./configure --allow-fetch && \
+      make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER && \
+      cp build/packages/rebirthdb_*.deb /rebirthdb_packages"
+    before_deploy:
+    - curl -fL https://getcli.jfrog.io | sh
+    - sudo mv jfrog /usr/bin && jfrog --version
+    deploy:
+    - provider: script
+      script: |
+        sudo jfrog bt upload \
+          --user=$BINTRAY_USER \
+          --key=$BINTRAY_API_KEY \
+          --publish=true \
+          --deb=$DISTRIBUTION/main/amd64 \
+          "/rebirthdb_packages/rebirthdb_*.deb" \
+          $BINTRAY_SUBJECT/apt/rebirthdb/$TRAVIS_TAG \
+          pool/r/rebirthdb/
+      on:
+        branch: next
+        tags: true
+      skip_cleanup: true
+    - provider: script
+      script: |
+        sudo jfrog bt upload \
+          --user=$BINTRAY_USER \
+          --key=$BINTRAY_API_KEY \
+          --publish=true \
+          --deb=$DISTRIBUTION/main/amd64 \
+          "/rebirthdb_packages/rebirthdb_*.deb" \
+          $BINTRAY_SUBJECT/apt/rebirthdb-dev/$TRAVIS_TAG \
+          pool/r/rebirthdb-dev/
+      on:
+        all_branches: true
+      skip_cleanup: true
 
 
-      
-    - name: Xenial Packaging and Deployment
-      env: DISTRIBUTION=xenial
-      before_script:
-      - sudo mkdir /rebirthdb_packages
-      script:
-      - |
-        docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base \
-        /bin/bash -c "./configure --allow-fetch && \
-        make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER && \
-        cp build/packages/rebirthdb_*.deb /rebirthdb_packages"
-      before_deploy:
-        - curl -fL https://getcli.jfrog.io | sh
-        - sudo mv jfrog /usr/bin && jfrog --version
-      deploy:
-        - provider: script
-          script: |
-                  sudo jfrog bt upload \
-                    --user=$BINTRAY_USER \
-                    --key=$BINTRAY_API_KEY \
-                    --publish=true \
-                    --deb=$DISTRIBUTION/main/amd64 \
-                    "/rebirthdb_packages/rebirthdb_*.deb" \
-                    $BINTRAY_SUBJECT/apt/rebirthdb/$TRAVIS_TAG \
-                    pool/r/rebirthdb/
-          on:
-            branch: next
-            tags: true
-          skip_cleanup: true
-        - provider: script
-          script: |
-                  sudo jfrog bt upload \
-                    --user=$BINTRAY_USER \
-                    --key=$BINTRAY_API_KEY \
-                    --publish=true \
-                    --deb=$DISTRIBUTION/main/amd64 \
-                    "/rebirthdb_packages/rebirthdb_*.deb" \
-                    $BINTRAY_SUBJECT/apt/rebirthdb-dev/$TRAVIS_TAG \
-                    pool/r/rebirthdb-dev/
-          on:
-            all_branches: true
-          skip_cleanup: true
+
+  - name: Xenial Packaging and Deployment
+    env: DISTRIBUTION=xenial
+    before_script:
+    - sudo mkdir /rebirthdb_packages
+    script:
+    - |
+      docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base \
+      /bin/bash -c "./configure --allow-fetch && \
+      make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER && \
+      cp build/packages/rebirthdb_*.deb /rebirthdb_packages"
+    before_deploy:
+    - curl -fL https://getcli.jfrog.io | sh
+    - sudo mv jfrog /usr/bin && jfrog --version
+    deploy:
+    - provider: script
+      script: |
+        sudo jfrog bt upload \
+          --user=$BINTRAY_USER \
+          --key=$BINTRAY_API_KEY \
+          --publish=true \
+          --deb=$DISTRIBUTION/main/amd64 \
+          "/rebirthdb_packages/rebirthdb_*.deb" \
+          $BINTRAY_SUBJECT/apt/rebirthdb/$TRAVIS_TAG \
+          pool/r/rebirthdb/
+      on:
+        branch: next
+        tags: true
+      skip_cleanup: true
+    - provider: script
+      script: |
+        sudo jfrog bt upload \
+          --user=$BINTRAY_USER \
+          --key=$BINTRAY_API_KEY \
+          --publish=true \
+          --deb=$DISTRIBUTION/main/amd64 \
+          "/rebirthdb_packages/rebirthdb_*.deb" \
+          $BINTRAY_SUBJECT/apt/rebirthdb-dev/$TRAVIS_TAG \
+          pool/r/rebirthdb-dev/
+      on:
+        all_branches: true
+      skip_cleanup: true
