@@ -50,7 +50,7 @@ install:
 
 build:
 	./configure
-	$(MAKE) DEBUG=$(DEBUG) PVERSION=$(PVERSION) VERBOSE=1 SYMBOLS=1 -j`nproc`
+	$(MAKE) DEBUG=$(DEBUG) PVERSION=$(PVERSION) VERBOSE=0 SYMBOLS=1 -j`nproc`
 	touch build
 
 binary-indep: install
