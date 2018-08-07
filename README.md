@@ -1,13 +1,12 @@
 <img style="width:100%;" src="images/github-banner.jpeg">
 
-RebirthDB
-=========
+# RebirthDB
+
 
 [![Build Status](https://travis-ci.org/RebirthDB/rebirthdb.svg?branch=next)](https://travis-ci.org/RebirthDB/rebirthdb)
 [![Coverage Status](https://coveralls.io/repos/github/RebirthDB/rebirthdb/badge.svg?branch=next)](https://coveralls.io/github/RebirthDB/rebirthdb?branch=next)
 
-What is RebirthDB?
-------------------
+## What is RebirthDB?
 
 * **Open-source** database for building realtime web applications
 * **NoSQL** database that stores schemaless JSON documents
@@ -19,30 +18,74 @@ open-source scalable database built for realtime applications. It exposes a new 
 polling for changes, the developer can tell the database to continuously push updated query results to applications 
 in realtime. RebirthDB allows developers to build scalable realtime apps in a fraction of the time with less effort.
 
-To learn more, check out [rethinkdb.com](https://rethinkdb.com).
 
-Not sure what types of projects RethinkDB and now RebirthDB can help you build? Here are a few examples:
+## Quick start
 
-* Build a [realtime liveblog](https://rethinkdb.com/blog/rethinkdb-pubnub/) with RethinkDB and PubNub
-* Create a [collaborative photo sharing whiteboard](https://www.youtube.com/watch?v=pdPRp3UxL_s)
-* Build an [IRC bot in Go](https://rethinkdb.com/blog/go-irc-bot/) with RethinkDB changefeeds
-* Look at [cats on Instagram in realtime](https://rethinkdb.com/blog/cats-of-instagram/)
-* Watch [how Platzi uses RethinkDB](https://www.youtube.com/watch?v=Nb_UzRYDB40) to educate
+### 1. Install the server
 
+To install RebirthDB on your `Ubuntu Trusty` or `Ubuntu Xenial` machine (Support for more Linux distributions and
+versions is coming soon.), run the following:
 
-Quickstart
-----------
+```bash
+$ source /etc/lsb-release && echo "deb https://dl.bintray.com/rebirthdb/apt $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rebirthdb.list
 
-For a thirty-second RethinkDB quickstart (which can easily be applied to RebirthDB), check out  [rethinkdb.com/docs/quickstart](https://www.rethinkdb.com/docs/quickstart).
+$ wget -qO- https://dl.bintray.com/rebirthdb/keys/pubkey.gpg | sudo apt-key add -
 
-Or, get started right away with the RethinkDB ten-minute guide in these languages:
+$ sudo apt-get update
 
-* [**JavaScript**](https://rethinkdb.com/docs/guide/javascript/)
-* [**Python**](https://rethinkdb.com/docs/guide/python/)
-* [**Ruby**](https://rethinkdb.com/docs/guide/ruby/)
-* [**Java**](https://rethinkdb.com/docs/guide/java/)
+$ sudo apt-get install rebirthdb
+```
 
-Here are RebirthDB's drivers:
+### 2. Start the server
+Run the following command from your terminal:
+```bash
+$ rebirthdb
+...
+Listening for intracluster connections on port 29015
+Listening for client driver connections on port 28015
+Listening for administrative HTTP connections on port 8080
+Listening on cluster addresses: 127.0.0.1, ::1
+Listening on driver addresses: 127.0.0.1, ::1
+Listening on http addresses: 127.0.0.1, ::1
+...
+Server ready ...
+```
+
+Point your browser to localhost:8080. You’ll see an administrative UI where you can control the cluster 
+(which so far consists of one server), and play with the query language.
+
+### 3. Run some queries
+
+Click on the Data Explorer tab in the browser. You can manipulate data using JavaScript straight from your browser.
+By default, RebirthDB creates a database named `test`. Let’s create a table:
+
+```javascript
+r.db('test').tableCreate('tv_shows')
+```
+
+Use the “Run” button or Shift+Enter to run the query. Now, let’s insert some JSON documents into the table:
+
+```javascript
+r.table('tv_shows').insert([{ name: 'Star Trek TNG', episodes: 178 },
+                            { name: 'Battlestar Galactica', episodes: 75 }])
+```
+
+We’ve just inserted two rows into the tv_shows table. Let’s verify the number of rows inserted:
+
+```javascript
+r.table('tv_shows').count()
+```
+
+Finally, let’s do a slightly more sophisticated query. Let’s find all shows with more than 100 episodes.
+
+```javascript
+r.table('tv_shows').filter(r.row('episodes').gt(100))
+```
+As a result, we of course get the best science fiction show in existence.
+
+### Next steps
+
+Congratulations on your progress! Now check out the documentation of any of our drivers below to dive deeper.
 
 * **Elixir** - [rebirthdb-elixir](https://github.com/RebirthDB/rebirthdb-elixir)
 * **Go** - [rebirthdb-go](https://github.com/RebirthDB/rebirthdb-go)
@@ -56,10 +99,9 @@ Here are RebirthDB's drivers:
 * **Rust** - [rebirthdb-rs](https://github.com/RebirthDB/rebirthdb-rs)
 * **TypeScript** - [rebirthdb-ts](https://github.com/RebirthDB/rebirthdb-ts)
 
-Looking to explore what else RethinkDB offers or the specifics of ReQL? Check out [the RethinkDB docs](https://rethinkdb.com/docs/) and [ReQL API](https://rethinkdb.com/api/).
+More detailed and updated documentation is coming soon!
 
-Building
---------
+## Building
 
 First install some dependencies.  For example, on Ubuntu or Debian:
 
@@ -91,27 +133,25 @@ Then, to build:
     # or run ./build/debug_clang/rebirthdb
 
 
-Need help?
-----------
+## Need help?
 
 Find us at [Spectrum](https://spectrum.chat/rebirthdb) and on [Twitter](https://twitter.com/rebirthdb). You can also
 [report an issue](https://github.com/rebirthdb/rebirthdb/issues).
 
-Contributing
-------------
 
-RethinkDB was built by a dedicated team, but it wouldn't have been possible without the support and contributions of 
-hundreds of people from all over the world. 
+## Contributing
  
-RebirthDB is currently being developed by a growing and dedicated community. We could use your help too!
+RebirthDB is currently being developed by a growing and passionate community. We could use your help too!
 Check out our [contributing guidelines](CONTRIBUTING.md) to get started.
 
-Where's the changelog?
-----------------------
+
+## Where's the changelog?
+
 We keep [a list of changes and feature explanations here](NOTES.md).
 
-Donors
-------
+
+## Donors
+
 * The development of data compression and RebirthDB's new art is sponsored by [AIDAX](http://www.aidaxbi.com/):<br>
 [![AIDAX](images/sponsors/AIDAX_logo_whole.png)](http://www.aidaxbi.com/)
 
