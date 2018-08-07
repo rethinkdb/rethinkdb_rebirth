@@ -50,6 +50,12 @@ install:
 
 build:
 	./configure
+	# VERBOSE was previously set to 1. Set it to 0 so the build process
+	# would print the logs during the binary build of rebirthdb. Failure
+	# to do this caused travis to terminate the packaging process.thinking
+	# it had become unresponsive.
+	#
+	# The displayed COUNTDOWN_TOTAL is wrong. Unable to figure out why, just yet.
 	$(MAKE) DEBUG=$(DEBUG) PVERSION=$(PVERSION) VERBOSE=0 SYMBOLS=1 -j`nproc`
 	touch build
 

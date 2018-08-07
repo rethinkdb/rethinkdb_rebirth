@@ -87,6 +87,8 @@ matrix:
       ./build/release/rebirthdb-unittest"
 
   - stage: Packaging and Deployment
+    # We don't sign the package (SIGN_PACKAGE=0) while building it on travis because bintray will do that
+    # automatically once we upload the package.
     name: Trusty Packaging and Deployment
     env: DISTRIBUTION=trusty
     before_script:
@@ -95,41 +97,42 @@ matrix:
     - |
       docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base \
       /bin/bash -c "./configure --allow-fetch && \
-      make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER && \
+      make build-deb -j $(($(nproc) + 1)) \
+        UBUNTU_RELEASE=$DISTRIBUTION
+        PACKAGE_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER
+        SIGN_PACKAGE=0 && \
       cp build/packages/rebirthdb_*.deb /rebirthdb_packages"
     before_deploy:
     - curl -fL https://getcli.jfrog.io | sh
     - sudo mv jfrog /usr/bin && jfrog --version
     deploy:
     - provider: script
-      script: |
-        sudo jfrog bt upload \
-          --user=$BINTRAY_USER \
-          --key=$BINTRAY_API_KEY \
-          --publish=true \
-          --deb=$DISTRIBUTION/main/amd64 \
-          "/rebirthdb_packages/rebirthdb_*.deb" \
-          $BINTRAY_SUBJECT/apt/rebirthdb/$TRAVIS_TAG \
+      script: >
+        sudo jfrog bt upload
+          --user=$BINTRAY_USER
+          --key=$BINTRAY_API_KEY
+          --publish=true
+          --deb=$DISTRIBUTION/main/amd64
+          "/rebirthdb_packages/rebirthdb_*.deb"
+          $BINTRAY_SUBJECT/apt/rebirthdb/$TRAVIS_TAG
           pool/r/rebirthdb/
       on:
         branch: next
         tags: true
       skip_cleanup: true
     - provider: script
-      script: |
-        sudo jfrog bt upload \
-          --user=$BINTRAY_USER \
-          --key=$BINTRAY_API_KEY \
-          --publish=true \
-          --deb=$DISTRIBUTION/main/amd64 \
-          "/rebirthdb_packages/rebirthdb_*.deb" \
-          $BINTRAY_SUBJECT/apt/rebirthdb-dev/$TRAVIS_TAG \
+      script: >
+        sudo jfrog bt upload
+          --user=$BINTRAY_USER
+          --key=$BINTRAY_API_KEY
+          --publish=true
+          --deb=$DISTRIBUTION/main/amd64
+          "/rebirthdb_packages/rebirthdb_*.deb"
+          $BINTRAY_SUBJECT/apt/rebirthdb-dev/$TRAVIS_TAG
           pool/r/rebirthdb-dev/
       on:
         all_branches: true
       skip_cleanup: true
-
-
 
   - name: Xenial Packaging and Deployment
     env: DISTRIBUTION=xenial
@@ -139,35 +142,38 @@ matrix:
     - |
       docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base \
       /bin/bash -c "./configure --allow-fetch && \
-      make build-deb -j $(($(nproc) + 1)) UBUNTU_RELEASE=$DISTRIBUTION PACKAGE_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER && \
+      make build-deb -j $(($(nproc) + 1)) \
+        UBUNTU_RELEASE=$DISTRIBUTION
+        PACKAGE_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER
+        SIGN_PACKAGE=0 && \
       cp build/packages/rebirthdb_*.deb /rebirthdb_packages"
     before_deploy:
     - curl -fL https://getcli.jfrog.io | sh
     - sudo mv jfrog /usr/bin && jfrog --version
     deploy:
     - provider: script
-      script: |
-        sudo jfrog bt upload \
-          --user=$BINTRAY_USER \
-          --key=$BINTRAY_API_KEY \
-          --publish=true \
-          --deb=$DISTRIBUTION/main/amd64 \
-          "/rebirthdb_packages/rebirthdb_*.deb" \
-          $BINTRAY_SUBJECT/apt/rebirthdb/$TRAVIS_TAG \
+      script: >
+        sudo jfrog bt upload
+          --user=$BINTRAY_USER
+          --key=$BINTRAY_API_KEY
+          --publish=true
+          --deb=$DISTRIBUTION/main/amd64
+          "/rebirthdb_packages/rebirthdb_*.deb"
+          $BINTRAY_SUBJECT/apt/rebirthdb/$TRAVIS_TAG
           pool/r/rebirthdb/
       on:
         branch: next
         tags: true
       skip_cleanup: true
     - provider: script
-      script: |
-        sudo jfrog bt upload \
-          --user=$BINTRAY_USER \
-          --key=$BINTRAY_API_KEY \
-          --publish=true \
-          --deb=$DISTRIBUTION/main/amd64 \
-          "/rebirthdb_packages/rebirthdb_*.deb" \
-          $BINTRAY_SUBJECT/apt/rebirthdb-dev/$TRAVIS_TAG \
+      script: >
+        sudo jfrog bt upload
+          --user=$BINTRAY_USER
+          --key=$BINTRAY_API_KEY
+          --publish=true
+          --deb=$DISTRIBUTION/main/amd64
+          "/rebirthdb_packages/rebirthdb_*.deb"
+          $BINTRAY_SUBJECT/apt/rebirthdb-dev/$TRAVIS_TAG
           pool/r/rebirthdb-dev/
       on:
         all_branches: true
