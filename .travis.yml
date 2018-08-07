@@ -1,15 +1,34 @@
+# The build flows as follows:
+# 1. Stage 1 (Building Base Images) builds and pushes the base docker images which
+#    contain all the build and packaging dependencies.
+# 2. Stage 2 (Unit Testing) runs the unittests on the `Trusty` VM, and also in docker
+#    containers run off the base images from stage 1.
+# 3. Stage 3 (Packaging and Deployment) packages rebirthdb and deploys the packages to
+#    to bintray, executing the steps in containers run off the base images from stage 1.
+
+# The following environment variables are set on travis:
+# 1. DOCKER_USERNAME : The account whose password is used to authenticate requests to docker.
+# 2. DOCKER_PASSWORD : The password for the docker account with the above username.
+# 3. DOCKERCLOUD_NAMESPACE : The namespace under which docker images are pushed to / pulled from.
+# 4. BINTRAY_USER : This is the bintray account whose API key is used to authenticate requests.
+# 5. BINTRAY_API_KEY : The bintray account's API key used for authentication
+# 6. BINTRAY_SUBJECT : The bintray account to whose repositories, the packages are deployed.
+
+# We make use of YAML's block scalar styles to write the multi-line commands.
+# For a good explanation of their use, see this StackOverflow answer at:
+# https://stackoverflow.com/a/21699210/6163906
+
 sudo: true
 dist: trusty
 language: cpp
 env:
   global:
   - EXTRA_CXX_FLAGS -fprofile-arcs -ftest-coverage
+
 notifications:
   email:
   - rebirthdb-dev@googlegroups.com
-# I make use of YAML's block scalar styles to write the multi-line commands.
-# For a good explanation of their use, see this StackOverflow answer at:
-# https://stackoverflow.com/a/21699210/6163906
+
 matrix:
   include:
   - stage: Building Base Images
@@ -28,8 +47,8 @@ matrix:
     - cd docker/$DISTRIBUTION
     - docker build -t rebirthdb-$DISTRIBUTION-base .
     - docker images
-    - docker tag rebirthdb-$DISTRIBUTION-base $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
-    - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
+    - docker tag rebirthdb-$DISTRIBUTION-base $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh)
+    - docker push $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh)
 
   - name: Xenial Base Image (Docker)
     env: DISTRIBUTION=xenial
@@ -46,8 +65,8 @@ matrix:
     - cd docker/$DISTRIBUTION
     - docker build -t rebirthdb-$DISTRIBUTION-base .
     - docker images
-    - docker tag rebirthdb-$DISTRIBUTION-base $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
-    - docker push $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base
+    - docker tag rebirthdb-$DISTRIBUTION-base $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh)
+    - docker push $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh)
 
   - stage: Unit Testing
     # We use the tests on the Trusty VM as our baseline, and then to generate the coverage results.
@@ -74,7 +93,7 @@ matrix:
     env: DISTRIBUTION=trusty
     script:
     - |
-      docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base /bin/bash -c \
+      docker run $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh) /bin/bash -c \
       "pwd && ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
       make test -j $(($(nproc) + 1)) && \
       ./build/release/rebirthdb-unittest"
@@ -83,7 +102,7 @@ matrix:
     env: DISTRIBUTION=xenial
     script:
     - |
-      docker run $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base /bin/bash -c \
+      docker run $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh) /bin/bash -c \
       "pwd && ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
       make test -j $(($(nproc) + 1)) && \
       ./build/release/rebirthdb-unittest"
@@ -97,7 +116,7 @@ matrix:
     - sudo mkdir /rebirthdb_packages
     script:
     - |
-      docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base \
+      docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh) \
       /bin/bash -c "./configure --allow-fetch && \
       make build-deb -j $(($(nproc) + 1)) \
         UBUNTU_RELEASE=$DISTRIBUTION
@@ -146,7 +165,7 @@ matrix:
     - sudo mkdir /rebirthdb_packages
     script:
     - |
-      docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKER_USERNAME/rebirthdb-$DISTRIBUTION-base \
+      docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh) \
       /bin/bash -c "./configure --allow-fetch && \
       make build-deb -j $(($(nproc) + 1)) \
         UBUNTU_RELEASE=$DISTRIBUTION
