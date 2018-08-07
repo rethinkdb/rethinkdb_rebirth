@@ -7,7 +7,9 @@ env:
 notifications:
   email:
   - rebirthdb-dev@googlegroups.com
-
+# I make use of YAML's block scalar styles to write the multi-line commands.
+# For a good explanation of their use, see this StackOverflow answer at:
+# https://stackoverflow.com/a/21699210/6163906
 matrix:
   include:
   - stage: Building Base Images
@@ -107,30 +109,32 @@ matrix:
     - sudo mv jfrog /usr/bin && jfrog --version
     deploy:
     - provider: script
-      script: >
+      script: >-
         JFROG_CLI_OFFER_CONFIG=false
         sudo jfrog bt upload
         --user=$BINTRAY_USER
         --key=$BINTRAY_API_KEY
         --publish=true
         --deb=$DISTRIBUTION/main/amd64
+        --override=true
         "/rebirthdb_packages/rebirthdb_*.deb"
-        $BINTRAY_SUBJECT/apt/rebirthdb/$TRAVIS_TAG
+        $BINTRAY_SUBJECT/apt/rebirthdb/$(./scripts/gen-version.sh)
         pool/r/rebirthdb/
       on:
         branch: next
         tags: true
       skip_cleanup: true
     - provider: script
-      script: >
+      script: >-
         JFROG_CLI_OFFER_CONFIG=false
         sudo jfrog bt upload
         --user=$BINTRAY_USER
         --key=$BINTRAY_API_KEY
         --publish=true
         --deb=$DISTRIBUTION/main/amd64
+        --override=true
         "/rebirthdb_packages/rebirthdb_*.deb"
-        $BINTRAY_SUBJECT/apt/rebirthdb-dev/$TRAVIS_TAG
+        $BINTRAY_SUBJECT/apt/rebirthdb-dev/$(./scripts/gen-version.sh)
         pool/r/rebirthdb-dev/
       on:
         all_branches: true
@@ -154,30 +158,32 @@ matrix:
     - sudo mv jfrog /usr/bin && jfrog --version
     deploy:
     - provider: script
-      script: >
+      script: >-
         JFROG_CLI_OFFER_CONFIG=false
         sudo jfrog bt upload
         --user=$BINTRAY_USER
         --key=$BINTRAY_API_KEY
         --publish=true
         --deb=$DISTRIBUTION/main/amd64
+        --override=true
         "/rebirthdb_packages/rebirthdb_*.deb"
-        $BINTRAY_SUBJECT/apt/rebirthdb/$TRAVIS_TAG
+        $BINTRAY_SUBJECT/apt/rebirthdb/$(./scripts/gen-version.sh)
         pool/r/rebirthdb/
       on:
         branch: next
         tags: true
       skip_cleanup: true
     - provider: script
-      script: >
+      script: >-
         JFROG_CLI_OFFER_CONFIG=false
         sudo jfrog bt upload
         --user=$BINTRAY_USER
         --key=$BINTRAY_API_KEY
         --publish=true
         --deb=$DISTRIBUTION/main/amd64
+        --override=true
         "/rebirthdb_packages/rebirthdb_*.deb"
-        $BINTRAY_SUBJECT/apt/rebirthdb-dev/$TRAVIS_TAG
+        $BINTRAY_SUBJECT/apt/rebirthdb-dev/$(./scripts/gen-version.sh)
         pool/r/rebirthdb-dev/
       on:
         all_branches: true
