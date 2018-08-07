@@ -109,13 +109,13 @@ matrix:
     - provider: script
       script: >
         sudo jfrog bt upload
-          --user=$BINTRAY_USER
-          --key=$BINTRAY_API_KEY
-          --publish=true
-          --deb=$DISTRIBUTION/main/amd64
-          "/rebirthdb_packages/rebirthdb_*.deb"
-          $BINTRAY_SUBJECT/apt/rebirthdb/$TRAVIS_TAG
-          pool/r/rebirthdb/
+        --user=$BINTRAY_USER
+        --key=$BINTRAY_API_KEY
+        --publish=true
+        --deb=$DISTRIBUTION/main/amd64
+        "/rebirthdb_packages/rebirthdb_*.deb"
+        $BINTRAY_SUBJECT/apt/rebirthdb/$TRAVIS_TAG
+        pool/r/rebirthdb/
       on:
         branch: next
         tags: true
@@ -123,13 +123,13 @@ matrix:
     - provider: script
       script: >
         sudo jfrog bt upload
-          --user=$BINTRAY_USER
-          --key=$BINTRAY_API_KEY
-          --publish=true
-          --deb=$DISTRIBUTION/main/amd64
-          "/rebirthdb_packages/rebirthdb_*.deb"
-          $BINTRAY_SUBJECT/apt/rebirthdb-dev/$TRAVIS_TAG
-          pool/r/rebirthdb-dev/
+        --user=$BINTRAY_USER
+        --key=$BINTRAY_API_KEY
+        --publish=true
+        --deb=$DISTRIBUTION/main/amd64
+        "/rebirthdb_packages/rebirthdb_*.deb"
+        $BINTRAY_SUBJECT/apt/rebirthdb-dev/$TRAVIS_TAG
+        pool/r/rebirthdb-dev/
       on:
         all_branches: true
       skip_cleanup: true
@@ -154,13 +154,13 @@ matrix:
     - provider: script
       script: >
         sudo jfrog bt upload
-          --user=$BINTRAY_USER
-          --key=$BINTRAY_API_KEY
-          --publish=true
-          --deb=$DISTRIBUTION/main/amd64
-          "/rebirthdb_packages/rebirthdb_*.deb"
-          $BINTRAY_SUBJECT/apt/rebirthdb/$TRAVIS_TAG
-          pool/r/rebirthdb/
+        --user=$BINTRAY_USER
+        --key=$BINTRAY_API_KEY
+        --publish=true
+        --deb=$DISTRIBUTION/main/amd64
+        "/rebirthdb_packages/rebirthdb_*.deb"
+        $BINTRAY_SUBJECT/apt/rebirthdb/$TRAVIS_TAG
+        pool/r/rebirthdb/
       on:
         branch: next
         tags: true
@@ -168,13 +168,13 @@ matrix:
     - provider: script
       script: >
         sudo jfrog bt upload
-          --user=$BINTRAY_USER
-          --key=$BINTRAY_API_KEY
-          --publish=true
-          --deb=$DISTRIBUTION/main/amd64
-          "/rebirthdb_packages/rebirthdb_*.deb"
-          $BINTRAY_SUBJECT/apt/rebirthdb-dev/$TRAVIS_TAG
-          pool/r/rebirthdb-dev/
+        --user=$BINTRAY_USER
+        --key=$BINTRAY_API_KEY
+        --publish=true
+        --deb=$DISTRIBUTION/main/amd64
+        "/rebirthdb_packages/rebirthdb_*.deb"
+        $BINTRAY_SUBJECT/apt/rebirthdb-dev/$TRAVIS_TAG
+        pool/r/rebirthdb-dev/
       on:
         all_branches: true
       skip_cleanup: true
