@@ -1,4 +1,34 @@
-// Copyright 2010-2014 RethinkDB, all rights reserved.
+// Copyright 2018-present RebirthDB
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+// this file except in compliance with the License. You may obtain a copy of the
+// License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software distributed
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations under the License.
+//
+// This file incorporates work covered by the following copyright:
+//
+//     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+//     others and used with permission or subject to their respective license
+//     agreements.
+//
+//     Licensed under the Apache License, Version 2.0 (the "License");
+//     you may not use this file except in compliance with the License.
+//     You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+//     Unless required by applicable law or agreed to in writing, software
+//     distributed under the License is distributed on an "AS IS" BASIS,
+//     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//     See the License for the specific language governing permissions and
+//     limitations under the License.
+
 #include "clustering/administration/main/version_check.hpp"
 
 #include <math.h>
@@ -52,12 +82,12 @@ void version_checker_t::do_check(bool is_initial, auto_drainer_t::lock_t keepali
     opts.result_format = http_result_format_t::JSON;
     if (is_initial) {
         opts.url = strprintf("https://update.rethinkdb.com/update_for/%s",
-                             RETHINKDB_VERSION);
+                             REBIRTHDB_VERSION);
     } else {
         opts.method = http_method_t::POST;
         opts.url = "https://update.rethinkdb.com/checkin";
         opts.header.push_back("Content-Type: application/x-www-form-urlencoded");
-        opts.form_data["Version"] = RETHINKDB_VERSION;
+        opts.form_data["Version"] = REBIRTHDB_VERSION;
         opts.form_data["Uname"] = uname;
         opts.form_data["Number-Of-Servers"] = strprintf("%zu", count_servers());
         opts.form_data["Cooked-Number-Of-Tables"] =
@@ -72,8 +102,8 @@ void version_checker_t::do_check(bool is_initial, auto_drainer_t::lock_t keepali
     try {
         dispatch_http(&env, opts, &runner, &result, nullptr);
     } catch (const ql::base_exc_t &ex) {
-        logWRN("Problem when checking for new versions of RethinkDB: HTTP request to "
-            "update.rethinkdb.com failed.");
+        logWRN("Problem when checking for new versions of %s: HTTP request to "
+            "update.rethinkdb.com failed.", PRODUCT_NAME);
         logDBG("%s", ex.what());
         return;
     }
@@ -81,8 +111,8 @@ void version_checker_t::do_check(bool is_initial, auto_drainer_t::lock_t keepali
     try {
         process_result(result);
     } catch (const ql::base_exc_t &ex) {
-        logWRN("Problem when checking for new versions of RethinkDB: "
-            "update.rethinkdb.com returned an invalid result.");
+        logWRN("Problem when checking for new versions of %s: "
+            "update.rethinkdb.com returned an invalid result.", PRODUCT_NAME);
         logDBG("Result body: %s\nHeaders: %s\nError message: %s",
             result.body.trunc_print().c_str(), result.header.trunc_print().c_str(),
             ex.what());
@@ -122,8 +152,8 @@ void version_checker_t::process_result(const http_result_t &result) {
     ql::datum_t status = result.body.get_field("status", ql::THROW);
     const datum_string_t &str = status.as_str();
     if (str == "ok") {
-        logDBG("Finished checking for newer versions of RethinkDB. We are already "
-            "running the most up-to-date version.");
+        logDBG("Finished checking for newer versions of %s. We are already "
+            "running the most up-to-date version.", PRODUCT_NAME);
     } else if (str == "error") {
         ql::datum_t reason = result.body.get_field("error", ql::THROW);
         rfail_datum(ql::base_exc_t::LOGIC,
@@ -138,14 +168,14 @@ void version_checker_t::process_result(const http_result_t &result) {
                 changelog_msg = strprintf(" You can read the changelog at <%s>.",
                     changelog.as_str().to_std().c_str());
             }
-            logNTC("A newer version of the RethinkDB server is available: %s.%s",
-                new_version.to_std().c_str(), changelog_msg.c_str());
+            logNTC("A newer version of the %s server is available: %s.%s",
+                PRODUCT_NAME, new_version.to_std().c_str(), changelog_msg.c_str());
             seen_version = new_version;
         } else {
             // already logged an update for that version, so no point
             // in spamming them.
-            logDBG("Finished checking for newer versions of RethinkDB. No new versions "
-                "are available since we last checked.");
+            logDBG("Finished checking for newer versions of %s. No new versions "
+                "are available since we last checked.", PRODUCT_NAME);
         }
     } else {
         rfail_datum(ql::base_exc_t::LOGIC, "unexpected status code");

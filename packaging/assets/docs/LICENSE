@@ -1,13 +1,42 @@
-Copyright (c)  2011 Hexagram 49, Inc. All rights reserved.
+# Copyright 2018-present RebirthDB
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+# this file except in compliance with the License. You may obtain a copy of the
+# License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed
+# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+# CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+#
+# This file incorporates work covered by the following copyright:
+#
+#     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+#     others and used with permission or subject to their respective license
+#     agreements.
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
 
-This package is licensed under RethinkDB License Agreement, reproduced below.
+This package is licensed under RebirthDB License Agreement, reproduced below.
 
 This package is not part of the Debian GNU/Linux distribution.
 
 -------------------------------------------------------------------------------
-RethinkDB License Agreement
+RebirthDB License Agreement
 
-By intalling or using this software, you are agreeing to be bound by and are
+By installing or using this software, you are agreeing to be bound by and are
 becoming a party to this license agreement ("Agreement"). If you do not agree
 to all of the terms of this agreement, do not click the "Agree" checkbox or
 proceed with download or installation. These terms are considered an offer,
@@ -119,7 +148,7 @@ agreements between California residents entered into and to be performed within
 California.
 
 -------------------------------------------------------------------------------
-SuperFastHash routines used in RethinkDB
+SuperFastHash routines used in RebirthDB
 
 Copyright (c) 2010, Paul Hsieh
 All rights reserved.
@@ -149,7 +178,7 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -------------------------------------------------------------------------------
-http-parser routines used in RethinkDB
+http-parser routines used in RebirthDB
 
 http_parser.c is based on src/http/ngx_http_parse.c from NGINX copyright
 Igor Sysoev.

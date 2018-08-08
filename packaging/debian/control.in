@@ -1,9 +1,9 @@
 Source: VERSIONED_QUALIFIED_PACKAGE_NAME
 Section: database
 Priority: optional
-Maintainer: RethinkDB <packaging@rethinkdb.com>
+Maintainer: RebirthDB <rebirthdb-infra@googlegroups.com>
 Build-Depends: DEB_BUILD_DEPENDS
-Homepage: http://www.rethinkdb.com
+Homepage: http://www.rebirthdb.com
 
 Package: VERSIONED_QUALIFIED_PACKAGE_NAME
 Architecture: any
@@ -13,7 +13,7 @@ Breaks: PACKAGE_NAME (<< PACKAGE_VERSION)
 Conflicts: PACKAGE_NAME (<< PACKAGE_VERSION)
 Provides: PACKAGE_NAME
 Description:
-  RethinkDB is built to store JSON documents, and scale to multiple
+  RebirthDB is built to store JSON documents, and scale to multiple
   servers with very little effort. It has a pleasant query language
   that supports really useful queries like table joins and group by,
   and is easy to setup and learn.
@@ -25,9 +25,9 @@ Breaks: PACKAGE_NAME (<< PACKAGE_VERSION)
 Conflicts: PACKAGE_NAME (<< PACKAGE_VERSION)
 Provides: PACKAGE_NAME-dbg
 Description:
-  RethinkDB is built to store JSON documents, and scale to multiple
+  RebirthDB is built to store JSON documents, and scale to multiple
   servers with very little effort. It has a pleasant query language
   that supports really useful queries like table joins and group by,
   and is easy to setup and learn.
   .
-  This package contains the debugging symbols for RethinkDB.
+  This package contains the debugging symbols for RebirthDB.
