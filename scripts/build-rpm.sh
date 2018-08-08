@@ -1,6 +1,37 @@
 #!/bin/bash
 
-# This script is used to build RethinkDB RPM on CentOS 6.4 and 7
+# Copyright 2018-present RebirthDB
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+# this file except in compliance with the License. You may obtain a copy of the
+# License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed
+# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+# CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+#
+# This file incorporates work covered by the following copyright:
+#
+#     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+#     others and used with permission or subject to their respective license
+#     agreements.
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
+
+# This script is used to build RebirthDB RPM on CentOS 6.4 and 7
 #
 # It requires:
 # * The build dependencies: https://www.rethinkdb.com/docs/install/centos/
@@ -14,18 +45,18 @@ main () {
     ARCH=`gcc -dumpmachine | cut -f 1 -d -`
     RPM_ROOT=build/packages/rpm
     VERSION=`./scripts/gen-version.sh | sed -e s/-/_/g`
-    RPM_PACKAGE=build/packages/rethinkdb-$VERSION.$ARCH.rpm
-    SYMBOLS_FILE_IN=build/release/rethinkdb.debug
+    RPM_PACKAGE=build/packages/rebirthdb-$VERSION.$ARCH.rpm
+    SYMBOLS_FILE_IN=build/release/rebirthdb.debug
     SYMBOLS_FILE_OUT=$RPM_PACKAGE.debug.bz2
-    DESCRIPTION='RethinkDB is built to store JSON documents, and scale to multiple servers with very little effort. It has a pleasant query language that supports really useful queries like table joins and group by.'
+    DESCRIPTION='RebirthDB is built to store JSON documents, and scale to multiple servers with very little effort. It has a pleasant query language that supports really useful queries like table joins and group by.'
     tmpfile BEFORE_INSTALL <<EOF
-getent group rethinkdb >/dev/null || groupadd -r rethinkdb
-getent passwd rethinkdb >/dev/null || \
-    useradd --system --no-create-home --gid rethinkdb --shell /sbin/nologin \
-    --comment "RethinkDB Daemon" rethinkdb
+getent group rebirthdb >/dev/null || groupadd -r rebirthdb
+getent passwd rebirthdb >/dev/null || \
+    useradd --system --no-create-home --gid rebirthdb --shell /sbin/nologin \
+    --comment "RebirthDB Daemon" rebirthdb
 EOF
 
-    test -n "${NOCONFIGURE:-}" || ./configure --static all --fetch all --prefix=/usr --sysconfdir=/etc --localstatedir=/var
+    test -n "${NOCONFIGURE:-}" || ./configure --allow-fetch --prefix=/usr --sysconfdir=/etc --localstatedir=/var
 
     `make command-line` install DESTDIR=$RPM_ROOT BUILD_PORTABLE=1 SPLIT_SYMBOLS=1
 
@@ -36,16 +67,16 @@ EOF
     command=fpm
     ... -t rpm                  # Build an RPM package
     ... --package $RPM_PACKAGE
-    ... --name rethinkdb
+    ... --name rebirthdb
     ... --license 'ASL 2.0'
-    ... --vendor RethinkDB
+    ... --vendor RebirthDB
     ... --category Database
     ... --version "$VERSION"
     ... --iteration "`./scripts/gen-version.sh -r`"
     ... --depends "glibc >= $GLIBC_VERSION"
-    ... --conflicts 'rethinkdb'
+    ... --conflicts 'rebirthdb'
     ... --architecture "$ARCH"
-    ... --maintainer 'RethinkDB <devops@rethinkdb.com>'
+    ... --maintainer 'RebirthDB <rebirthdb-infra@googlegroups.com>'
     ... --description "$DESCRIPTION"
     ... --url 'http://www.rethinkdb.com/'
     ... --before-install "$BEFORE_INSTALL"

@@ -55,6 +55,6 @@ last_tested_versions
 /RethinkDB.vcxproj.xml
 *.xml
 *.iml
-/**/.vscode
+/.vscode
 
 *.log

@@ -365,7 +365,7 @@ gtest:Google Test'
 # Output of --help
 show_help () {
     cat <<EOF
-Configure a RethinkDB build from source
+Configure a RebirthDB build from source
 
 Usage: $0 [arguments]
 
@@ -570,7 +570,7 @@ boolvar () {
     fi
 }
 
-# Find a C++ compiler that rethinkdb supports
+# Find a C++ compiler that rebirthdb supports
 check_cxx () {
     require "C++ Compiler"
     local force_CXX
@@ -1151,7 +1151,7 @@ EOF
           -std=c++11 -o "$tmpfile.out" 1>"$tmpfile.log" 2>&1;
         $tmpfile.out)
     then
-       error "You seem to be using a version of Clang with a bug that may affect Rethink DB. Please upgrade Clang or specify a different compiler."
+       error "You seem to be using a version of Clang with a bug that may affect Rebirth DB. Please upgrade Clang or specify a different compiler."
     fi
 }
 

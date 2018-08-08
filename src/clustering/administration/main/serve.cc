@@ -1,4 +1,34 @@
-// Copyright 2010-2015 RethinkDB, all rights reserved.
+// Copyright 2018-present RebirthDB
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+// this file except in compliance with the License. You may obtain a copy of the
+// License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software distributed
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations under the License.
+//
+// This file incorporates work covered by the following copyright:
+//
+//     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+//     others and used with permission or subject to their respective license
+//     agreements.
+//
+//     Licensed under the Apache License, Version 2.0 (the "License");
+//     you may not use this file except in compliance with the License.
+//     You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+//     Unless required by applicable law or agreed to in writing, software
+//     distributed under the License is distributed on an "AS IS" BASIS,
+//     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//     See the License for the specific language governing permissions and
+//     limitations under the License.
+
 #include "clustering/administration/main/serve.hpp"
 
 #include <stdio.h>
@@ -442,7 +472,7 @@ bool do_serve(io_backender_t *io_backender,
             }
 
             proc_directory_metadata_t initial_proc_directory {
-                RETHINKDB_VERSION_STR,
+                REBIRTHDB_VERSION_STR,
                 current_microtime(),
                 getpid(),
                 str_gethostname(),
@@ -631,13 +661,13 @@ bool do_serve(io_backender_t *io_backender,
 
                     if (!service_address_ports_t::is_bind_all(serve_info.ports.local_addresses)) {
                         if(serve_info.config_file) {
-                            logNTC("To fully expose RethinkDB on the network, bind to "
+                            logNTC("To fully expose %s on the network, bind to "
                                    "all addresses by adding `bind=all' to the config "
-                                   "file (%s).", (*serve_info.config_file).c_str());
+                                   "file (%s).", PRODUCT_NAME, (*serve_info.config_file).c_str());
                         } else {
-                            logNTC("To fully expose RethinkDB on the network, bind to "
-                                   "all addresses by running rethinkdb with the `--bind "
-                                   "all` command line option.");
+                            logNTC("To fully expose %s on the network, bind to "
+                                   "all addresses by running %s with the `--bind "
+                                   "all` command line option.", PRODUCT_NAME, SERVER_EXEC_NAME);
                         }
                     }
 

@@ -1,4 +1,34 @@
-// Copyright 2010-2012 RethinkDB, all rights reserved.
+// Copyright 2018-present RebirthDB
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+// this file except in compliance with the License. You may obtain a copy of the
+// License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software distributed
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations under the License.
+//
+// This file incorporates work covered by the following copyright:
+//
+//     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+//     others and used with permission or subject to their respective license
+//     agreements.
+//
+//     Licensed under the Apache License, Version 2.0 (the "License");
+//     you may not use this file except in compliance with the License.
+//     You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+//     Unless required by applicable law or agreed to in writing, software
+//     distributed under the License is distributed on an "AS IS" BASIS,
+//     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//     See the License for the specific language governing permissions and
+//     limitations under the License.
+
 #include "errors.hpp"
 
 #ifndef _MSC_VER
@@ -31,14 +61,14 @@ NOINLINE void set_errno(int new_errno) {
 }
 
 NORETURN void crash_oom() {
-    const char *message = "rethinkdb: Memory allocation failed. This usually means "
+    const char *message = "rebirthdb: Memory allocation failed. This usually means "
                           "that we have run out of RAM. Aborting.\n";
     UNUSED size_t res = fwrite(message, 1, strlen(message), stderr);
     abort();
 }
 
 void report_user_error(const char *msg, ...) {
-    fprintf(stderr, "Version: %s\n", RETHINKDB_VERSION_STR);
+    fprintf(stderr, "Version: %s\n", REBIRTHDB_VERSION_STR);
     if (TLS_get_crashed()) {
         va_list args;
         va_start(args, msg);
@@ -59,7 +89,7 @@ void report_user_error(const char *msg, ...) {
 }
 
 void report_fatal_error(const char *file, int line, const char *msg, ...) {
-    fprintf(stderr, "Version: %s\n", RETHINKDB_VERSION_STR);
+    fprintf(stderr, "Version: %s\n", REBIRTHDB_VERSION_STR);
     if (TLS_get_crashed()) {
         va_list args;
         va_start(args, msg);

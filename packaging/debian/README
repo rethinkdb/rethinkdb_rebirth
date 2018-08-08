@@ -1,6 +1,6 @@
-The Debian Package rethinkdb
+The Debian Package rebirthdb
 ----------------------------
 
-This package contains the RethinkDB server, an init script, and documentation. The client drivers are available from the package managers for the client languages.
+This package contains the RebirthDB server, an init script, and documentation. The client drivers are available from the package managers for the client languages.
 
- -- RethinkDB Packaging <packaging@rethinkdb.com>  Mon, 05 Nov 2012 13:21:07 -0800
+ -- RebirthDB <rebirthdb-infra@googlegroups.com>  Tue, 31 Jul 2018 19:32:29 +0300

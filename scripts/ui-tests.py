@@ -1,5 +1,36 @@
 #!/usr/bin/env python
-# Copyright 2010-2012 RethinkDB, all rights reserved.
+
+# Copyright 2018-present RebirthDB
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+# this file except in compliance with the License. You may obtain a copy of the
+# License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed
+# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+# CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+#
+# This file incorporates work covered by the following copyright:
+#
+#     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+#     others and used with permission or subject to their respective license
+#     agreements.
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
+
 import os, sys, subprocess, argparse
 from termcolor import colored, cprint
 import time
@@ -17,7 +48,7 @@ cwd = os.getcwd()
 # Define and parse command-line arguments
 parser = argparse.ArgumentParser(description='Run a set of UI tests using CasperJS / PhantomJS.')
 parser.add_argument('tests', nargs='*', help='List of tests to run. Specify \'all\' to run all tests.')
-parser.add_argument('-p','--rdb-port', nargs='?', dest='rdb_port', default='6001', help='Port of the RethinkDB server to connect to (default is 6001).')
+parser.add_argument('-p','--rdb-port', nargs='?', dest='rdb_port', default='6001', help='Port of the RebirthDB server to connect to (default is 6001).')
 parser.add_argument('-i','--output-images', nargs='?', dest='image_output_directory', const='./casper-results', help='Include if images should be scraped and saved. Optionally specify the output directory (default is ./casper-results/).')
 parser.add_argument('-l','--list-tests', action='store_true', help='List available tests to run.')
 parser.add_argument('-r','--output-results', nargs='?', dest='result_output_directory', const='./casper-results', help='Include if test results should be saved. Optionally specify the output directory (default is ./casper-results/).')
