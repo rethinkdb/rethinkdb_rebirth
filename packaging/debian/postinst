@@ -1,28 +1,60 @@
 #!/bin/sh
+
+# Copyright 2018-present RebirthDB
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+# this file except in compliance with the License. You may obtain a copy of the
+# License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed
+# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+# CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+#
+# This file incorporates work covered by the following copyright:
+#
+#     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+#     others and used with permission or subject to their respective license
+#     agreements.
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
+
 set -e
 
-create_rethinkdb_user () {
-    adduser --system --quiet --group --no-create-home rethinkdb || true
+create_rebirthdb_user () {
+    adduser --system --quiet --group --no-create-home rebirthdb || true
 }
 
-rethinkdb_enable_init () {
-    update-rc.d rethinkdb defaults
-    invoke-rc.d rethinkdb start
-    if [ "`find /etc/rethinkdb/instances.d -maxdepth 1 -type f -name '*.conf'`" = "" ]; then
-        echo The RethinkDB startup service is installed but disabled. To enable it,
+rebirthdb_enable_init () {
+    update-rc.d rebirthdb defaults
+    invoke-rc.d rebirthdb start
+    if [ "`find /etc/rebirthdb/instances.d -maxdepth 1 -type f -name '*.conf'`" = "" ]; then
+        echo The RebirthDB startup service is installed but disabled. To enable it,
         echo follow the instructions in the guide located at http://www.rethinkdb.com/docs/guides/startup/
     fi
 }
 
 case "$1" in
     configure)
-        create_rethinkdb_user
-        rethinkdb_enable_init ;;
+        create_rebirthdb_user
+        rebirthdb_enable_init ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
-        rethinkdb_enable_init ;;
+        rebirthdb_enable_init ;;
 
     *)
-        echo "Warning: RethinkDB postinst script called with unknown set of arguments: $*" >&2 ;;
+        echo "Warning: RebirthDB postinst script called with unknown set of arguments: $*" >&2 ;;
 esac
 

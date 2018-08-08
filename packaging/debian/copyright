@@ -1,10 +1,10 @@
-This package comes from the sources in the RethinkDB git tree, located at
-https://github.com/rethinkdb/rethinkdb.git 
+This package comes from the sources in the RebirthDB git tree, located at
+https://github.com/rebirthdb/rebirthdb.git
 .
 
 Files: *
 Copyright:
-       2010-present, The Linux Foundation, portions copyright Google and others and used with permission or subject to their respective license agreements.
+       2018-present, RebirthDB, 2010-2018, The Linux Foundation, portions copyright Google and others and used with permission or subject to their respective license agreements.
 License: Apache-2.0
                                  Apache License
                            Version 2.0, January 2004

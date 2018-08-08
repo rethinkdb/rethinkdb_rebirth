@@ -1,39 +1,70 @@
+# Copyright 2018-present RebirthDB
 #
-# RethinkDB instance configuration sample
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+# this file except in compliance with the License. You may obtain a copy of the
+# License at
 #
-# - Give this file the extension .conf and put it in /etc/rethinkdb/instances.d in order to enable it.
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed
+# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+# CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+#
+# This file incorporates work covered by the following copyright:
+#
+#     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+#     others and used with permission or subject to their respective license
+#     agreements.
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
+
+#
+# RebirthDB instance configuration sample
+#
+# - Give this file the extension .conf and put it in /etc/rebirthdb/instances.d in order to enable it.
 # - See http://www.rethinkdb.com/docs/guides/startup/ for the complete documentation
 # - Uncomment an option to change its value.
 #
 
 ###############################
-## RethinkDB configuration
+## RebirthDB configuration
 ###############################
 
 ### Process options
 
-## User and group used to run rethinkdb
+## User and group used to run rebirthdb
 ## Command line default: do not change user or group
-## Init script default: rethinkdb user and group
-# runuser=rethinkdb
-# rungroup=rethinkdb
+## Init script default: rebirthdb user and group
+# runuser=rebirthdb
+# rungroup=rebirthdb
 
 ## Stash the pid in this file when the process is running
 ## Note for systemd users: Systemd uses its own internal mechanism. Do not set this parameter.
 ## Command line default: none
-## Init script default: /var/run/rethinkdb/<name>/pid_file (where <name> is the name of this config file without the extension)
-# pid-file=/var/run/rethinkdb/rethinkdb.pid
+## Init script default: /var/run/rebirthdb/<name>/pid_file (where <name> is the name of this config file without the extension)
+# pid-file=/var/run/rebirthdb/rebirthdb.pid
 
 ### File path options
 
 ## Directory to store data and metadata
-## Command line default: ./rethinkdb_data
-## Init script default: /var/lib/rethinkdb/<name>/ (where <name> is the name of this file without the extension)
-# directory=/var/lib/rethinkdb/default
+## Command line default: ./rebirthdb_data
+## Init script default: /var/lib/rebirthdb/<name>/ (where <name> is the name of this file without the extension)
+# directory=/var/lib/rebirthdb/default
 
 ## Log file options
 ## Default: <directory>/log_file
-# log-file=/var/log/rethinkdb
+# log-file=/var/log/rebirthdb
 
 ### Network options
 
@@ -42,11 +73,11 @@
 ## Default: all local addresses
 # bind=127.0.0.1
 
-## Address that other rethinkdb instances will use to connect to this server.
+## Address that other rebirthdb instances will use to connect to this server.
 ## It can be specified multiple times
 # canonical-address=
 
-## The port for rethinkdb protocol for client drivers
+## The port for rebirthdb protocol for client drivers
 ## Default: 28015 + port-offset
 # driver-port=28015
 
@@ -54,7 +85,7 @@
 ## Default: 29015 + port-offset
 # cluster-port=29015
 
-## The host:port of a node that rethinkdb will connect to
+## The host:port of a node that rebirthdb will connect to
 ## This option can be specified multiple times.
 ## Default: none
 # join=example.com:29015

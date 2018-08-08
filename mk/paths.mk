@@ -88,7 +88,7 @@ ifeq ($(BUILD_DIR),)
 endif
 BUILD_DIR_ABS = $(realpath $(BUILD_DIR))
 
-GDB_FUNCTIONS_NAME := rethinkdb-gdb.py
+GDB_FUNCTIONS_NAME := rebirthdb-gdb.py
 
 PACKAGE_NAME := $(VANILLA_PACKAGE_NAME)
 SERVER_UNIT_TEST_NAME := $(SERVER_EXEC_NAME)-unittest

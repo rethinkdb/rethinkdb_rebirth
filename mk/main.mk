@@ -29,7 +29,7 @@
 #     See the License for the specific language governing permissions and
 #     limitations under the License.
 
-# This is the main file that controls the rethinkdb build process.
+# This is the main file that controls the rebirthdb build process.
 # It is run by the top-level Makefile
 #
 # The actual build rules are located in mk/*.mk and **/build.mk
@@ -66,7 +66,7 @@ include $(TOP)/mk/windows.mk
 
 else # Windows
 
-# Building the rethinkdb executable
+# Building the rebirthdb executable
 include $(TOP)/src/build.mk
 
 # Packaging for deb, osx, ...
@@ -92,6 +92,6 @@ endif
 generate: generate-headers
 
 .PHONY: test
-test: $(BUILD_DIR)/rethinkdb $(BUILD_DIR)/rethinkdb-unittest
+test: $(BUILD_DIR)/rebirthdb $(BUILD_DIR)/rebirthdb-unittest
 	$P RUN-TESTS
 	# MAKEFLAGS= $(TOP)/test/run -b $(BUILD_DIR)
