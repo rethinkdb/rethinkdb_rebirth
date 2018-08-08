@@ -43,7 +43,7 @@ matrix:
     - ./configure CXXFLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" --allow-fetch
     - make dist
     - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
     - cd docker/$DISTRIBUTION
     - docker build -t rebirthdb-$DISTRIBUTION-base .
     - docker images
@@ -61,7 +61,7 @@ matrix:
     - ./configure CXXFLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" --allow-fetch
     - make dist
     - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
     - cd docker/$DISTRIBUTION
     - docker build -t rebirthdb-$DISTRIBUTION-base .
     - docker images
