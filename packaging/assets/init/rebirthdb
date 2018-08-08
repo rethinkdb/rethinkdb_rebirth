@@ -1,17 +1,48 @@
 #!/bin/sh
-# Copyright 2014 RethinkDB.
-# Portions from Frank Trampe and Novell used with permission.
+# Copyright 2018-present RebirthDB
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+# this file except in compliance with the License. You may obtain a copy of the
+# License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed
+# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+# CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+#
+# This file incorporates work covered by the following copyright:
+#
+#     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+#     others and used with permission or subject to their respective license
+#     agreements.
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
+#
+#
+#     Portions from Frank Trampe and Novell used with permission.
 
 # This file targets Ubuntu and is not in line with the Linux specification. Move runlevel 2 from Default-Start to Default-Stop for compliance.
 
 ### BEGIN INIT INFO
-# Provides:          rethinkdb
+# Provides:          rebirthdb
 # Required-Start: $remote_fs
 # Required-Stop: $remote_fs
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: This starts a set of rethinkdb server instances.
-# Description:       This looks in /etc/rethinkdb/instances.d for rethinkdb config files and launches, stops, or examines each instance described there.
+# Short-Description: This starts a set of rebirthdb server instances.
+# Description:       This looks in /etc/rebirthdb/instances.d for rebirthdb config files and launches, stops, or examines each instance described there.
 ### END INIT INFO
 
 set -e -u
@@ -23,8 +54,8 @@ ulimit -Sn 1000000
 
 itask="${1:-}"
 
-rtdbbin=/usr/bin/rethinkdb ;
-rtdbconfigdir=/etc/rethinkdb ;
+rtdbbin=/usr/bin/rebirthdb ;
+rtdbconfigdir=/etc/rebirthdb ;
 
 # parse a line from the config file
 conf_read_line () {
@@ -92,7 +123,7 @@ is_running () {
 }
 
 usage_fail () {
-    echo "Usage: /etc/init.d/rethinkdb [start|stop|restart|force-restart|status]"
+    echo "Usage: /etc/init.d/rebirthdb [start|stop|restart|force-restart|status]"
     exit 1
 }
 
@@ -111,8 +142,8 @@ esac
 
 # We check for active configurations .
 if ! ls "$rtdbconfigdir"/instances.d/*.conf >/dev/null 2>/dev/null ; then
-    echo "rethinkdb: No instances defined in $rtdbconfigdir/instances.d/"
-    echo "rethinkdb: See http://www.rethinkdb.com/docs/guides/startup/ for more information" ;
+    echo "rebirthdb: No instances defined in $rtdbconfigdir/instances.d/"
+    echo "rebirthdb: See http://www.rethinkdb.com/docs/guides/startup/ for more information" ;
     exit
 fi
 
@@ -124,22 +155,22 @@ do
 
     instance_name=`basename "$rtdbconffile" .conf`
 
-    # $@ will contain the options we pass to rethinkdb
+    # $@ will contain the options we pass to rebirthdb
     set --
     set -- --config-file "$rtdbconffile"
 
     if ! get "$conf" runuser; then
-        runuser=rethinkdb
+        runuser=rebirthdb
         set -- "$@" --runuser "$runuser"
     fi
     if ! get "$conf" rungroup; then
-        rungroup=rethinkdb
+        rungroup=rebirthdb
         set -- "$@" --rungroup "$rungroup"
     fi
 
     # If no pid file is specified, assign one and make sure the parent folder has the correct permissions
     if ! get "$conf" pid-file rtdbpidfile; then
-        rtdbpidfile="/var/run/rethinkdb/$instance_name/pid_file"
+        rtdbpidfile="/var/run/rebirthdb/$instance_name/pid_file"
     fi
     if [ -d /var/run -a "${rtdbpidfile#/var/run/}" != "$rtdbpidfile" ]; then
         parent_directory="`dirname "$rtdbpidfile"`"
@@ -155,8 +186,8 @@ do
 
     # If no data directory is specified, assign one and make sure it has the correct permissions
     if ! get "$conf" directory rtdb_directory; then
-        rtdb_directory="/var/lib/rethinkdb/$instance_name/data"
-        parent_directory="/var/lib/rethinkdb/$instance_name"
+        rtdb_directory="/var/lib/rebirthdb/$instance_name/data"
+        parent_directory="/var/lib/rebirthdb/$instance_name"
         if [ ! -e "$parent_directory" ]; then
             if mkdir -p "$parent_directory"; then
                 test -n "${runuser:-}"  && chown -- "$runuser"  "$parent_directory"
@@ -178,19 +209,19 @@ do
         if $default_ports_available; then
             default_ports_available=false
         else
-            echo "rethinkdb: $instance_name: error: the default ports are already used by another instance"
-            echo "rethinkdb: $instance_name: error: please use non-default values for driver-port, cluster-port and http-port in $rtdbconffile"
+            echo "rebirthdb: $instance_name: error: the default ports are already used by another instance"
+            echo "rebirthdb: $instance_name: error: please use non-default values for driver-port, cluster-port and http-port in $rtdbconffile"
             continue
         fi
     fi
 
     if [ "$itask" = "stop" -o "$itask" = "restart" -o "$itask" = "force-restart" ] ; then
-        # stop rethinkdb
+        # stop rebirthdb
 
         if [ ! -e "$rtdbpidfile" ] ; then
-            echo "rethinkdb: $instance_name: The instance is not running (there is no pid file)"
+            echo "rebirthdb: $instance_name: The instance is not running (there is no pid file)"
         elif is_running "`cat "$rtdbpidfile"`" ; then
-            echo -n "rethinkdb: $instance_name: Waiting for instance to stop (pid `cat "$rtdbpidfile"`) ..."
+            echo -n "rebirthdb: $instance_name: Waiting for instance to stop (pid `cat "$rtdbpidfile"`) ..."
             instance_pid=`cat "$rtdbpidfile"`
             kill -INT "$instance_pid"
             while is_running "$instance_pid"; do
@@ -204,15 +235,15 @@ do
     fi
 
     if [ "$itask" = "start" -o "$itask" = "restart" -o "$itask" = "force-restart" ] ; then
-        # start rethinkdb
+        # start rebirthdb
 
         if ! get "$conf" bind x; then
-            echo "rethinkdb: $instance_name: will only listen on local network interfaces."
-            echo "rethinkdb: $instance_name: To expose rethinkdb on the network, add the 'bind=all' option to $rtdbconffile"
+            echo "rebirthdb: $instance_name: will only listen on local network interfaces."
+            echo "rebirthdb: $instance_name: To expose rebirthdb on the network, add the 'bind=all' option to $rtdbconffile"
         fi
 
         if [ -e "$rtdbpidfile" ] && is_running "$(cat "$rtdbpidfile")"; then
-            echo "rethinkdb: $instance_name: The instance has already started"
+            echo "rebirthdb: $instance_name: The instance has already started"
         else
             if [ -e "$rtdbpidfile" ] ; then
                 rm "$rtdbpidfile"
@@ -220,22 +251,22 @@ do
             if ! get "$conf" log-file rtdblogfile; then
                 rtdblogfile=$rtdb_directory/log_file
             fi
-            echo "rethinkdb: $instance_name: Starting instance. (logging to \`$rtdblogfile')"
+            echo "rebirthdb: $instance_name: Starting instance. (logging to \`$rtdblogfile')"
             "$rtdbbin" --daemon "$@"
         fi
     fi
 
     if [ "$itask" = "status" ] ; then
-        # show the rethinkdb status
+        # show the rebirthdb status
 
         if [ -e "$rtdbpidfile" ] ; then
             if ! is_running "$(cat "$rtdbpidfile")"; then
-                echo "rethinkdb: $instance_name: stop/crashed"
+                echo "rebirthdb: $instance_name: stop/crashed"
             else
-                echo "rethinkdb: $instance_name: start/running, pid `cat "$rtdbpidfile"`"
+                echo "rebirthdb: $instance_name: start/running, pid `cat "$rtdbpidfile"`"
             fi
         else
-            echo "rethinkdb: $instance_name: stop/waiting"
+            echo "rebirthdb: $instance_name: stop/waiting"
         fi
     fi
 done

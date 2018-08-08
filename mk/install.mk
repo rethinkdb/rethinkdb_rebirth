@@ -1,30 +1,62 @@
+# Copyright 2018-present RebirthDB
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+# this file except in compliance with the License. You may obtain a copy of the
+# License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed
+# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+# CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+#
+# This file incorporates work covered by the following copyright:
+#
+#     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+#     others and used with permission or subject to their respective license
+#     agreements.
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
+
+
 ##### Installing
 
 # TODO: uninstall
 
-PRODUCT_NAME := RethinkDB
+PRODUCT_NAME := RebirthDB
 
 ifneq ($(PVERSION),)
-  RETHINKDB_VERSION := $(PVERSION)
-  RETHINKDB_CODE_VERSION ?= $(shell $(TOP)/scripts/gen-version.sh)
+  REBIRTHDB_VERSION := $(PVERSION)
+  REBIRTHDB_CODE_VERSION ?= $(shell $(TOP)/scripts/gen-version.sh)
   PACKAGING_ALTERNATIVES_PRIORITY := 0
 else
-  RETHINKDB_VERSION := $(shell $(TOP)/scripts/gen-version.sh)
-  RETHINKDB_CODE_VERSION ?= $(RETHINKDB_VERSION)
+  REBIRTHDB_VERSION := $(shell $(TOP)/scripts/gen-version.sh)
+  REBIRTHDB_CODE_VERSION ?= $(REBIRTHDB_VERSION)
   PACKAGING_ALTERNATIVES_PRIORITY = $(shell expr $$($(TOP)/scripts/gen-version.sh -r) / 100)
 endif
 
-RETHINKDB_SHORT_VERSION := $(shell echo $(RETHINKDB_VERSION) | sed -e 's/\([^.]\+\.[^.]\+\).*$$/\1/')
+REBIRTHDB_SHORT_VERSION := $(shell echo $(REBIRTHDB_VERSION) | sed -e 's/\([^.]\+\.[^.]\+\).*$$/\1/')
 
 ifeq ($(NAMEVERSIONED),1)
-  SERVER_EXEC_NAME_VERSIONED := $(SERVER_EXEC_NAME)-$(RETHINKDB_SHORT_VERSION)
+  SERVER_EXEC_NAME_VERSIONED := $(SERVER_EXEC_NAME)-$(REBIRTHDB_SHORT_VERSION)
 else
   SERVER_EXEC_NAME_VERSIONED := $(SERVER_EXEC_NAME)
 endif
 
 ifeq ($(NAMEVERSIONED),1)
-  VERSIONED_QUALIFIED_PACKAGE_NAME := $(PACKAGE_NAME)-$(RETHINKDB_SHORT_VERSION)
-  VERSIONED_PACKAGE_NAME := $(PACKAGE_NAME)-$(RETHINKDB_SHORT_VERSION)
+  VERSIONED_QUALIFIED_PACKAGE_NAME := $(PACKAGE_NAME)-$(REBIRTHDB_SHORT_VERSION)
+  VERSIONED_PACKAGE_NAME := $(PACKAGE_NAME)-$(REBIRTHDB_SHORT_VERSION)
   VERSIONED_PRODUCT_SHARE_DIR := /usr/share/$(VERSIONED_PACKAGE_NAME)
 else
   VERSIONED_QUALIFIED_PACKAGE_NAME := $(PACKAGE_NAME)
@@ -42,17 +74,17 @@ man1_dir := $(man_dir)/man1
 share_dir := $(prefix)/share/$(VERSIONED_PACKAGE_NAME)
 scripts_dir := $(share_dir)/scripts
 init_dir := $(etc_dir)/init.d
-conf_dir := $(etc_dir)/rethinkdb
+conf_dir := $(etc_dir)/rebirthdb
 conf_instance_dir := $(conf_dir)/instances.d
-lib_dir := $(prefix)/lib/rethinkdb
-pidfile_dir := $(var_dir)/run/rethinkdb
-data_dir := $(var_dir)/lib/rethinkdb
+lib_dir := $(prefix)/lib/rebirthdb
+pidfile_dir := $(var_dir)/run/rebirthdb
+data_dir := $(var_dir)/lib/rebirthdb
 language_drivers_dir := $(share_dir)/drivers
 
 FULL_SERVER_EXEC_NAME := $(bin_dir)/$(SERVER_EXEC_NAME)
 FULL_SERVER_EXEC_NAME_VERSIONED := $(bin_dir)/$(SERVER_EXEC_NAME_VERSIONED)
 ASSETS_DIR:=$(PACKAGING_DIR)/assets
-INIT_SCRIPTS:=$(ASSETS_DIR)/init/rethinkdb
+INIT_SCRIPTS:=$(ASSETS_DIR)/init/rebirthdb
 
 ##### Install
 
@@ -72,9 +104,9 @@ ifeq ($(STRIP_ON_INSTALL),1)
 	$(STRIP_UNNEEDED) $(DESTDIR)$(FULL_SERVER_EXEC_NAME_VERSIONED)
 endif
 
-$(BUILD_DIR)/assets/rethinkdb.1: $(ASSETS_DIR)/man/rethinkdb.1 | $(BUILD_DIR)/assets/.
+$(BUILD_DIR)/assets/rebirthdb.1: $(ASSETS_DIR)/man/rebirthdb.1 | $(BUILD_DIR)/assets/.
 	$P M4
-	m4 -D "SHORT_VERSION=$(RETHINKDB_SHORT_VERSION)" \
+	m4 -D "SHORT_VERSION=$(REBIRTHDB_SHORT_VERSION)" \
 	   -D "CURRENT_DATE=$(shell date +%F)" \
 	   < $< > $@
 
@@ -83,7 +115,7 @@ $(BUILD_DIR)/assets/rethinkdb.1: $(ASSETS_DIR)/man/rethinkdb.1 | $(BUILD_DIR)/as
 	gzip -9 < $< > $@
 
 .PHONY: install-manpages
-install-manpages: $(BUILD_DIR)/assets/rethinkdb.1.gz
+install-manpages: $(BUILD_DIR)/assets/rebirthdb.1.gz
 	$P INSTALL $^ $(DESTDIR)$(man1_dir)
 	umask 022 && install -m755 -d $(DESTDIR)$(man1_dir)
 	install -m644 $< $(DESTDIR)$(man1_dir)/$(VERSIONED_PACKAGE_NAME).1.gz

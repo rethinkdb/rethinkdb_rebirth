@@ -31,8 +31,8 @@
 
 ##### Packaging
 
-DIST_DIR := $(PACKAGES_DIR)/$(PACKAGE_NAME)-$(RETHINKDB_VERSION)
-DIST_PACKAGE_TGZ := $(PACKAGES_DIR)/$(PACKAGE_NAME)-$(RETHINKDB_VERSION).tgz
+DIST_DIR := $(PACKAGES_DIR)/$(PACKAGE_NAME)-$(REBIRTHDB_VERSION)
+DIST_PACKAGE_TGZ := $(PACKAGES_DIR)/$(PACKAGE_NAME)-$(REBIRTHDB_VERSION).tgz
 
 DSC_PACKAGE_DIR := $(PACKAGES_DIR)/dsc
 DEB_PACKAGE_DIR := $(PACKAGES_DIR)/deb
@@ -47,7 +47,7 @@ DIST_FILE_LIST_REL += configure COPYRIGHT Makefile NOTES.md README.md
 
 DIST_FILE_LIST := $(foreach x,$(DIST_FILE_LIST_REL),$(TOP)/$x)
 
-RETHINKDB_VERSION_DEB := $(subst -,+,$(RETHINKDB_VERSION))~$(PACKAGE_BUILD_NUMBER)$(UBUNTU_RELEASE)$(DEB_RELEASE)
+REBIRTHDB_VERSION_DEB := $(subst -,+,$(REBIRTHDB_VERSION))~$(PACKAGE_BUILD_NUMBER)$(UBUNTU_RELEASE)$(DEB_RELEASE)
 
 .PHONY: prepare_deb_package_dirs
 prepare_deb_package_dirs:
@@ -77,11 +77,11 @@ DEB_BUILD_DEPENDS += , fakeroot, python, libncurses5-dev, libcurl4-openssl-dev
 
 ifneq ($(UBUNTU_RELEASE),)
   ifneq ($(filter $(UBUNTU_RELEASE), trusty xenial),)
-    # RethinkDB fails to compile with GCC 6 (#5757)
+    # RebirthDB fails to compile with GCC 6 (#5757)
     DEB_BUILD_DEPENDS += , g++-5, libssl-dev
     DSC_CONFIGURE_DEFAULT += CXX=g++-5
   else
-    # RethinkDB fails to compile with GCC 6 (#5757) -- and there is
+    # RebirthDB fails to compile with GCC 6 (#5757) -- and there is
     # no GCC 5 in later Ubuntus.  We need to use libssl1.0-dev on
     # zesty to be compatible with libcurl when linking.
     ifneq ($(filter $(UBUNTU_RELEASE), zesty),)
@@ -136,15 +136,15 @@ deb-src-dir: dist-dir
 	$P CP $(PACKAGING_DIR)/debian $(DSC_PACKAGE_DIR)/debian
 	cp -pRP $(PACKAGING_DIR)/debian $(DSC_PACKAGE_DIR)/debian
 	env PRODUCT_NAME=$(VERSIONED_QUALIFIED_PACKAGE_NAME) \
-	    PRODUCT_VERSION=$(RETHINKDB_VERSION_DEB) \
+	    PRODUCT_VERSION=$(REBIRTHDB_VERSION_DEB) \
 	    OS_RELEASE=$(OS_RELEASE) \
 	  $(TOP)/scripts/gen-changelog.sh \
 	  > $(DSC_PACKAGE_DIR)/debian/changelog
-	$P ECHO $(DSC_PACKAGE_DIR)/debian/rethinkdb.version
-	echo $(RETHINKDB_VERSION_DEB) > $(DSC_PACKAGE_DIR)/debian/rethinkdb.version
+	$P ECHO $(DSC_PACKAGE_DIR)/debian/rebirthdb.version
+	echo $(REBIRTHDB_VERSION_DEB) > $(DSC_PACKAGE_DIR)/debian/rebirthdb.version
 	$P M4 $(DSC_PACKAGE_DIR)/debian/control
 	m4 -D "PACKAGE_NAME=$(PACKAGE_NAME)" \
-	   -D "PACKAGE_VERSION=$(RETHINKDB_VERSION_DEB)" \
+	   -D "PACKAGE_VERSION=$(REBIRTHDB_VERSION_DEB)" \
 	   -D "DEB_BUILD_DEPENDS=$(DEB_BUILD_DEPENDS)" \
 	   -D "VERSIONED_QUALIFIED_PACKAGE_NAME=$(VERSIONED_QUALIFIED_PACKAGE_NAME)" \
 	  $(DSC_PACKAGE_DIR)/debian/control.in \
@@ -162,11 +162,11 @@ install-osx: install-binaries
 ifneq (Darwin,$(OS))
   OSX_DMG_BUILD = $(error MacOS package can only be built on that OS)
 else ifneq ("","$(findstring $(OSX_SIGNATURE_NAME),$(shell /usr/bin/security find-identity -p macappstore -v | /usr/bin/awk '/[:blank:]+[:digit:]+[:graph:][:blank:]/'))")
-  OSX_DMG_BUILD = $(TOP)/packaging/osx/create_dmg.py --server-root "$(OSX_PACKAGE_DIR)/pkg/$(bin_dir)" --install-path "$(bin_dir)" --ouptut-location "$(OSX_PACKAGE_DIR)/rethinkdb.dmg" --signing-name "$(OSX_SIGNATURE_NAME)"
+  OSX_DMG_BUILD = $(TOP)/packaging/osx/create_dmg.py --server-root "$(OSX_PACKAGE_DIR)/pkg/$(bin_dir)" --install-path "$(bin_dir)" --ouptut-location "$(OSX_PACKAGE_DIR)/rebirthdb.dmg" --signing-name "$(OSX_SIGNATURE_NAME)"
 else ifeq ($(REQUIRE_SIGNED),1)
   OSX_DMG_BUILD = $(error Certificate not found: $(OSX_SIGNATURE_NAME))
 else
-  OSX_DMG_BUILD = $(TOP)/packaging/osx/create_dmg.py --server-root "$(OSX_PACKAGE_DIR)/pkg/$(bin_dir)" --install-path "$(bin_dir)" --ouptut-location "$(OSX_PACKAGE_DIR)/rethinkdb.dmg"
+  OSX_DMG_BUILD = $(TOP)/packaging/osx/create_dmg.py --server-root "$(OSX_PACKAGE_DIR)/pkg/$(bin_dir)" --install-path "$(bin_dir)" --ouptut-location "$(OSX_PACKAGE_DIR)/rebirthdb.dmg"
 endif
 
 .PHONY: build-osx
@@ -176,11 +176,11 @@ build-osx: install-osx
 	set -e; /usr/bin/otool -L $(OSX_PACKAGE_DIR)/pkg/$(FULL_SERVER_EXEC_NAME) | \
 		awk '/^\t/ { sub(/ \(.+\)/, ""); print }' | while read LINE; do \
 			case "$$LINE" in $(BUILD_DIR_ABS)/*) \
-				echo '***' rethinkdb binary links to non-system dylib: $$LINE; \
+				echo '***' rebirthdb binary links to non-system dylib: $$LINE; \
 				exit 1;; \
 			esac \
 		done
-	$P CREATE $(OSX_PACKAGE_DIR)/rethinkdb.dmg
+	$P CREATE $(OSX_PACKAGE_DIR)/rebirthdb.dmg
 	$(OSX_DMG_BUILD)
 
 ##### Source distribution
@@ -215,7 +215,7 @@ $(DIST_DIR)/precompiled/%: $(BUILD_ROOT_DIR)/% | reset-dist-dir
 
 $(DIST_DIR)/VERSION.OVERRIDE: FORCE | reset-dist-dir
 	$P ECHO "> $@"
-	echo -n $(RETHINKDB_CODE_VERSION) > $@
+	echo -n $(REBIRTHDB_CODE_VERSION) > $@
 
 PRECOMPILED_ASSETS := $(DIST_DIR)/precompiled/proto/rdb_protocol/ql2.pb.h
 PRECOMPILED_ASSETS += $(DIST_DIR)/precompiled/proto/rdb_protocol/ql2.pb.cc

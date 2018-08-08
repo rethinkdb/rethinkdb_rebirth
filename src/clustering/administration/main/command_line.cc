@@ -1,4 +1,34 @@
-// Copyright 2010-2016 RethinkDB, all rights reserved.
+// Copyright 2018-present RebirthDB
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+// this file except in compliance with the License. You may obtain a copy of the
+// License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software distributed
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations under the License.
+//
+// This file incorporates work covered by the following copyright:
+//
+//     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+//     others and used with permission or subject to their respective license
+//     agreements.
+//
+//     Licensed under the Apache License, Version 2.0 (the "License");
+//     you may not use this file except in compliance with the License.
+//     You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+//     Unless required by applicable law or agreed to in writing, software
+//     distributed under the License is distributed on an "AS IS" BASIS,
+//     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//     See the License for the specific language governing permissions and
+//     limitations under the License.
+
 #include "clustering/administration/main/command_line.hpp"
 
 #include <signal.h>
@@ -26,7 +56,7 @@
 #include <Shellapi.h>
 #endif
 
-// Needed for determining rethinkdb binary path below
+// Needed for determining rebirthdb binary path below
 #if defined(__MACH__)
 #include <mach-o/dyld.h>
 #elif defined(__FreeBSD_version)
@@ -65,12 +95,14 @@
 #include "crypto/random.hpp"
 #include "logger.hpp"
 
-#define RETHINKDB_EXPORT_SCRIPT "rethinkdb-export"
-#define RETHINKDB_IMPORT_SCRIPT "rethinkdb-import"
-#define RETHINKDB_DUMP_SCRIPT "rethinkdb-dump"
-#define RETHINKDB_RESTORE_SCRIPT "rethinkdb-restore"
-#define RETHINKDB_INDEX_REBUILD_SCRIPT "rethinkdb-index-rebuild"
-#define RETHINKDB_REPL_SCRIPT "rethinkdb-repl"
+// The python driver was renamed
+// See https://github.com/RebirthDB/rebirthdb-python/commit/3427c4814aa8844d40dc579e935952e177e4c4e1
+#define REBIRTHDB_EXPORT_SCRIPT "rebirthdb-export"
+#define REBIRTHDB_IMPORT_SCRIPT "rebirthdb-import"
+#define REBIRTHDB_DUMP_SCRIPT "rebirthdb-dump"
+#define REBIRTHDB_RESTORE_SCRIPT "rebirthdb-restore"
+#define REBIRTHDB_INDEX_REBUILD_SCRIPT "rebirthdb-index-rebuild"
+#define REBIRTHDB_REPL_SCRIPT "rebirthdb-repl"
 
 namespace cluster_defaults {
 const int reconnect_timeout = (24 * 60 * 60);    // 24 hours (in secs)
@@ -383,7 +415,7 @@ bool exists_option(const std::map<std::string, options::values_t> &opts, const s
 }
 
 void print_version_message() {
-    printf("%s\n", RETHINKDB_VERSION_STR);
+    printf("%s\n", REBIRTHDB_VERSION_STR);
 }
 
 bool handle_help_or_version_option(const std::map<std::string, options::values_t> &opts,
@@ -1085,7 +1117,7 @@ void run_rethinkdb_create(const base_path_t &base_path,
         logINF("Created directory '%s' and a metadata file inside it.\n", base_path.path().c_str());
         *result_out = true;
     } catch (const file_in_use_exc_t &ex) {
-        logNTC("Directory '%s' is in use by another rethinkdb process.\n", base_path.path().c_str());
+        logNTC("Directory '%s' is in use by another %s process.\n", base_path.path().c_str(), SERVER_EXEC_NAME);
         *result_out = false;
     }
 }
@@ -1146,7 +1178,7 @@ void run_rethinkdb_serve(const base_path_t &base_path,
                          const cluster_semilattice_metadata_t *cluster_metadata,
                          directory_lock_t *data_directory_lock,
                          bool *const result_out) {
-    logNTC("Running %s...\n", RETHINKDB_VERSION_STR);
+    logNTC("Running %s...\n", REBIRTHDB_VERSION_STR);
 #ifdef _WIN32
     logNTC("Running on %s", windows_version_string().c_str());
 #else
@@ -1182,7 +1214,7 @@ void run_rethinkdb_serve(const base_path_t &base_path,
                         heartbeat_semilattice_metadata_t(), interruptor);
                 },
                 &non_interruptor));
-            guarantee(!static_cast<bool>(total_cache_size), "rethinkdb porcelain should "
+            guarantee(!static_cast<bool>(total_cache_size), "rebirthdb porcelain should "
                 "have already set up total_cache_size");
         } else {
             metadata_file.init(new metadata_file_t(
@@ -1270,7 +1302,7 @@ void run_rethinkdb_serve(const base_path_t &base_path,
                             &sigint_cond);
 
     } catch (const file_in_use_exc_t &ex) {
-        logNTC("Directory '%s' is in use by another rethinkdb process.\n", base_path.path().c_str());
+        logNTC("Directory '%s' is in use by another %s process.\n", base_path.path().c_str(), SERVER_EXEC_NAME);
         *result_out = false;
     } catch (const host_lookup_exc_t &ex) {
         logERR("%s\n", ex.what());
@@ -1302,9 +1334,9 @@ void run_rethinkdb_porcelain(const base_path_t &base_path,
 
         cluster_semilattice_metadata_t cluster_metadata;
         if (serve_info->joins.empty()) {
-            logINF("Creating a default database for your convenience. (This is because you ran 'rethinkdb' "
+            logINF("Creating a default database for your convenience. (This is because you ran '%s' "
                    "without 'create', 'serve', or '--join', and the directory '%s' did not already exist or is empty.)\n",
-                   base_path.path().c_str());
+                   SERVER_EXEC_NAME, base_path.path().c_str());
 
             /* Create a test database. */
             database_id_t database_id = generate_uuid();
@@ -1400,7 +1432,7 @@ options::help_section_t get_file_options(std::vector<options::option_t> *options
     options::help_section_t help("File path options");
     options_out->push_back(options::option_t(options::names_t("--directory", "-d"),
                                              options::OPTIONAL,
-                                             "rethinkdb_data"));
+                                             "rebirthdb_data"));
     help.add("-d [ --directory ] path", "specify directory to store data and metadata");
     options_out->push_back(options::option_t(options::names_t("--io-threads"),
                                              options::OPTIONAL,
@@ -1592,7 +1624,7 @@ options::help_section_t get_network_options(const bool join_required, std::vecto
     options_out->push_back(options::option_t(options::names_t("--driver-port"),
                                              options::OPTIONAL,
                                              strprintf("%d", port_defaults::reql_port)));
-    help.add("--driver-port port", "port for rethinkdb protocol client drivers");
+    help.add("--driver-port port", "port for rebirthdb protocol client drivers");
 
     options_out->push_back(options::option_t(options::names_t("--port-offset", "-o"),
                                              options::OPTIONAL,
@@ -1601,7 +1633,7 @@ options::help_section_t get_network_options(const bool join_required, std::vecto
 
     options_out->push_back(options::option_t(options::names_t("--join", "-j"),
                                              join_required ? options::MANDATORY_REPEAT : options::OPTIONAL_REPEAT));
-    help.add("-j [ --join ] host[:port]", "host and port of a rethinkdb server to connect to");
+    help.add("-j [ --join ] host[:port]", "host and port of a rebirthdb server to connect to");
 
     options_out->push_back(options::option_t(options::names_t("--reql-http-proxy"),
                                              options::OPTIONAL));
@@ -1609,7 +1641,7 @@ options::help_section_t get_network_options(const bool join_required, std::vecto
 
     options_out->push_back(options::option_t(options::names_t("--canonical-address"),
                                              options::OPTIONAL_REPEAT));
-    help.add("--canonical-address host[:port]", "address that other rethinkdb instances will use to connect to us, can be specified multiple times");
+    help.add("--canonical-address host[:port]", "address that other rebirthdb instances will use to connect to us, can be specified multiple times");
 
     options_out->push_back(options::option_t(options::names_t("--join-delay"),
                                              options::OPTIONAL));
@@ -1654,7 +1686,7 @@ options::help_section_t get_service_options(std::vector<options::option_t> *opti
     help.add("--pid-file path", "a file in which to write the process id when the process is running");
     options_out->push_back(options::option_t(options::names_t("--daemon"),
                                              options::OPTIONAL_NO_PARAMETER));
-    help.add("--daemon", "daemonize this rethinkdb process");
+    help.add("--daemon", "daemonize this rebirthdb process");
     return help;
 }
 
@@ -1756,7 +1788,7 @@ options::help_section_t get_help_options(std::vector<options::option_t> *options
     options_out->push_back(options::option_t(options::names_t("--version", "-v"),
                                              options::OPTIONAL_NO_PARAMETER));
     help.add("-h [ --help ]", "print this help");
-    help.add("-v [ --version ]", "print the version number of rethinkdb");
+    help.add("-v [ --version ]", "print the version number of rebirthdb");
     return help;
 }
 
@@ -1969,10 +2001,10 @@ int main_rethinkdb_create(int argc, char *argv[]) {
         }
     } catch (const options::named_error_t &ex) {
         output_named_error(ex, help);
-        fprintf(stderr, "Run 'rethinkdb help create' for help on the command\n");
+        fprintf(stderr, "Run '%s help create' for help on the command\n", SERVER_EXEC_NAME);
     } catch (const options::option_error_t &ex) {
         output_sourced_error(ex);
-        fprintf(stderr, "Run 'rethinkdb help create' for help on the command\n");
+        fprintf(stderr, "Run '%s help create' for help on the command\n", SERVER_EXEC_NAME);
     } catch (const std::exception &ex) {
         fprintf(stderr, "%s\n", ex.what());
     }
@@ -2128,10 +2160,10 @@ int main_rethinkdb_serve(int argc, char *argv[]) {
         return result ? EXIT_SUCCESS : EXIT_FAILURE;
     } catch (const options::named_error_t &ex) {
         output_named_error(ex, help);
-        fprintf(stderr, "Run 'rethinkdb help serve' for help on the command\n");
+        fprintf(stderr, "Run '%s help serve' for help on the command\n", SERVER_EXEC_NAME);
     } catch (const options::option_error_t &ex) {
         output_sourced_error(ex);
-        fprintf(stderr, "Run 'rethinkdb help serve' for help on the command\n");
+        fprintf(stderr, "Run '%s help serve' for help on the command\n", SERVER_EXEC_NAME);
     } catch (const std::exception& ex) {
         fprintf(stderr, "%s\n", ex.what());
     }
@@ -2160,7 +2192,7 @@ int main_rethinkdb_proxy(int argc, char *argv[]) {
 
         if (joins.empty()) {
             fprintf(stderr, "No --join option(s) given. A proxy needs to connect to something!\n"
-                    "Run 'rethinkdb help proxy' for more information.\n");
+                    "Run '%s help proxy' for more information.\n", SERVER_EXEC_NAME);
             return EXIT_FAILURE;
         }
 
@@ -2219,10 +2251,10 @@ int main_rethinkdb_proxy(int argc, char *argv[]) {
         return result ? EXIT_SUCCESS : EXIT_FAILURE;
     } catch (const options::named_error_t &ex) {
         output_named_error(ex, help);
-        fprintf(stderr, "Run 'rethinkdb help proxy' for help on the command\n");
+        fprintf(stderr, "Run '%s help proxy' for help on the command\n", SERVER_EXEC_NAME);
     } catch (const options::option_error_t &ex) {
         output_sourced_error(ex);
-        fprintf(stderr, "Run 'rethinkdb help proxy' for help on the command\n");
+        fprintf(stderr, "Run '%s help proxy' for help on the command\n", SERVER_EXEC_NAME);
     } catch (const std::exception& ex) {
         fprintf(stderr, "%s\n", ex.what());
     }
@@ -2252,43 +2284,43 @@ void run_backup_script(const std::string& script_name, char * const arguments[])
 
         fprintf(stderr, "Error when launching '%s': %s\n",
                 script_name.c_str(), errno_string(get_errno()).c_str());
-        fprintf(stderr, "The %s command depends on the RethinkDB Python driver, which must be installed.\n",
-                script_name.c_str());
+        fprintf(stderr, "The %s command depends on the %s Python driver, which must be installed.\n",
+                script_name.c_str(), PRODUCT_NAME);
         fprintf(stderr, "If the Python driver is already installed, make sure that the PATH environment variable\n"
                 "includes the location of the backup scripts, and that the current user has permission to\n"
                 "access and run the scripts.\n"
-                "Instructions for installing the RethinkDB Python driver are available here:\n"
-                "http://www.rethinkdb.com/docs/install-drivers/python/\n");
+                "Instructions for installing the %s Python driver are available here:\n"
+                "https://github.com/RebirthDB/rebirthdb-python#installation\n", PRODUCT_NAME);
     }
 }
 
 int main_rethinkdb_export(int, char *argv[]) {
-    run_backup_script(RETHINKDB_EXPORT_SCRIPT, argv + 1);
+    run_backup_script(REBIRTHDB_EXPORT_SCRIPT, argv + 1);
     return EXIT_FAILURE;
 }
 
 int main_rethinkdb_import(int, char *argv[]) {
-    run_backup_script(RETHINKDB_IMPORT_SCRIPT, argv + 1);
+    run_backup_script(REBIRTHDB_IMPORT_SCRIPT, argv + 1);
     return EXIT_FAILURE;
 }
 
 int main_rethinkdb_dump(int, char *argv[]) {
-    run_backup_script(RETHINKDB_DUMP_SCRIPT, argv + 1);
+    run_backup_script(REBIRTHDB_DUMP_SCRIPT, argv + 1);
     return EXIT_FAILURE;
 }
 
 int main_rethinkdb_restore(int, char *argv[]) {
-    run_backup_script(RETHINKDB_RESTORE_SCRIPT, argv + 1);
+    run_backup_script(REBIRTHDB_RESTORE_SCRIPT, argv + 1);
     return EXIT_FAILURE;
 }
 
 int main_rethinkdb_index_rebuild(int, char *argv[]) {
-    run_backup_script(RETHINKDB_INDEX_REBUILD_SCRIPT, argv + 1);
+    run_backup_script(REBIRTHDB_INDEX_REBUILD_SCRIPT, argv + 1);
     return EXIT_FAILURE;
 }
 
 int main_rethinkdb_repl(int, char *argv[]) {
-    run_backup_script(RETHINKDB_REPL_SCRIPT, argv + 1);
+    run_backup_script(REBIRTHDB_REPL_SCRIPT, argv + 1);
     return EXIT_FAILURE;
 }
 
@@ -2422,10 +2454,10 @@ int main_rethinkdb_porcelain(int argc, char *argv[]) {
         return result ? EXIT_SUCCESS : EXIT_FAILURE;
     } catch (const options::named_error_t &ex) {
         output_named_error(ex, help);
-        fprintf(stderr, "Run 'rethinkdb help' for help on the command\n");
+        fprintf(stderr, "Run '%s help' for help on the command\n", SERVER_EXEC_NAME);
     } catch (const options::option_error_t &ex) {
         output_sourced_error(ex);
-        fprintf(stderr, "Run 'rethinkdb help' for help on the command\n");
+        fprintf(stderr, "Run '%s help' for help on the command\n", SERVER_EXEC_NAME);
     } catch (const std::exception& ex) {
         fprintf(stderr, "%s\n", ex.what());
     }
@@ -2440,26 +2472,26 @@ void help_rethinkdb_porcelain() {
         get_rethinkdb_porcelain_options(&help_sections, &options);
     }
 
-    printf("Running 'rethinkdb' will create a new data directory or use an existing one,\n");
-    printf("  and serve as a RethinkDB server.\n");
+    printf("Running '%s' will create a new data directory or use an existing one,\n", SERVER_EXEC_NAME);
+    printf("  and serve as a %s server.\n", PRODUCT_NAME);
     printf("%s", format_help(help_sections).c_str());
     printf("\n");
     printf("There are a number of subcommands for more specific tasks:\n");
-    printf("    'rethinkdb create': prepare files on disk for a new server instance\n");
-    printf("    'rethinkdb serve': use an existing data directory to host data and serve queries\n");
-    printf("    'rethinkdb proxy': serve queries from an existing cluster but don't host data\n");
-    printf("    'rethinkdb export': export data from an existing cluster into a file or directory\n");
-    printf("    'rethinkdb import': import data from from a file or directory into an existing cluster\n");
-    printf("    'rethinkdb dump': export and compress data from an existing cluster\n");
-    printf("    'rethinkdb restore': import compressed data into an existing cluster\n");
-    printf("    'rethinkdb index-rebuild': rebuild outdated secondary indexes\n");
-    printf("    'rethinkdb repl': start a Python REPL with the RethinkDB driver\n");
+    printf("    '%s create': prepare files on disk for a new server instance\n", SERVER_EXEC_NAME);
+    printf("    '%s serve': use an existing data directory to host data and serve queries\n", SERVER_EXEC_NAME);
+    printf("    '%s proxy': serve queries from an existing cluster but don't host data\n", SERVER_EXEC_NAME);
+    printf("    '%s export': export data from an existing cluster into a file or directory\n", SERVER_EXEC_NAME);
+    printf("    '%s import': import data from from a file or directory into an existing cluster\n", SERVER_EXEC_NAME);
+    printf("    '%s dump': export and compress data from an existing cluster\n", SERVER_EXEC_NAME);
+    printf("    '%s restore': import compressed data into an existing cluster\n", SERVER_EXEC_NAME);
+    printf("    '%s index-rebuild': rebuild outdated secondary indexes\n", SERVER_EXEC_NAME);
+    printf("    '%s repl': start a Python REPL with the %s driver\n", SERVER_EXEC_NAME, PRODUCT_NAME);
 #ifdef _WIN32
     printf("    'rethinkdb install-service': install RethinkDB as a Windows service\n");
     printf("    'rethinkdb remove-service': remove a previously installed Windows service\n");
 #endif
     printf("\n");
-    printf("For more information, run 'rethinkdb help [subcommand]'.\n");
+    printf("For more information, run '%s help [subcommand]'.\n", SERVER_EXEC_NAME);
 }
 
 void help_rethinkdb_create() {
@@ -2469,8 +2501,8 @@ void help_rethinkdb_create() {
         get_rethinkdb_create_options(&help_sections, &options);
     }
 
-    printf("'rethinkdb create' is used to prepare a directory to act"
-                " as the storage location for a RethinkDB server.\n");
+    printf("'%s create' is used to prepare a directory to act"
+                " as the storage location for a %s server.\n", SERVER_EXEC_NAME, PRODUCT_NAME);
     printf("%s", format_help(help_sections).c_str());
 }
 
@@ -2481,7 +2513,7 @@ void help_rethinkdb_serve() {
         get_rethinkdb_serve_options(&help_sections, &options);
     }
 
-    printf("'rethinkdb serve' is the actual process for a RethinkDB server.\n");
+    printf("'%s serve' is the actual process for a %s server.\n", SERVER_EXEC_NAME, PRODUCT_NAME);
     printf("%s", format_help(help_sections).c_str());
 }
 
@@ -2492,50 +2524,50 @@ void help_rethinkdb_proxy() {
         get_rethinkdb_proxy_options(&help_sections, &options);
     }
 
-    printf("'rethinkdb proxy' serves as a proxy to an existing RethinkDB cluster.\n");
+    printf("'%s proxy' serves as a proxy to an existing %s cluster.\n", SERVER_EXEC_NAME, PRODUCT_NAME);
     printf("%s", format_help(help_sections).c_str());
 }
 
 void help_rethinkdb_export() {
     char help_arg[] = "--help";
-    char dummy_arg[] = RETHINKDB_EXPORT_SCRIPT;
+    char dummy_arg[] = REBIRTHDB_EXPORT_SCRIPT;
     char* args[3] = { dummy_arg, help_arg, nullptr };
-    run_backup_script(RETHINKDB_EXPORT_SCRIPT, args);
+    run_backup_script(REBIRTHDB_EXPORT_SCRIPT, args);
 }
 
 void help_rethinkdb_import() {
     char help_arg[] = "--help";
-    char dummy_arg[] = RETHINKDB_IMPORT_SCRIPT;
+    char dummy_arg[] = REBIRTHDB_IMPORT_SCRIPT;
     char* args[3] = { dummy_arg, help_arg, nullptr };
-    run_backup_script(RETHINKDB_IMPORT_SCRIPT, args);
+    run_backup_script(REBIRTHDB_IMPORT_SCRIPT, args);
 }
 
 void help_rethinkdb_dump() {
     char help_arg[] = "--help";
-    char dummy_arg[] = RETHINKDB_DUMP_SCRIPT;
+    char dummy_arg[] = REBIRTHDB_DUMP_SCRIPT;
     char* args[3] = { dummy_arg, help_arg, nullptr };
-    run_backup_script(RETHINKDB_DUMP_SCRIPT, args);
+    run_backup_script(REBIRTHDB_DUMP_SCRIPT, args);
 }
 
 void help_rethinkdb_restore() {
     char help_arg[] = "--help";
-    char dummy_arg[] = RETHINKDB_RESTORE_SCRIPT;
+    char dummy_arg[] = REBIRTHDB_RESTORE_SCRIPT;
     char* args[3] = { dummy_arg, help_arg, nullptr };
-    run_backup_script(RETHINKDB_RESTORE_SCRIPT, args);
+    run_backup_script(REBIRTHDB_RESTORE_SCRIPT, args);
 }
 
 void help_rethinkdb_index_rebuild() {
     char help_arg[] = "--help";
-    char dummy_arg[] = RETHINKDB_INDEX_REBUILD_SCRIPT;
+    char dummy_arg[] = REBIRTHDB_INDEX_REBUILD_SCRIPT;
     char* args[3] = { dummy_arg, help_arg, nullptr };
-    run_backup_script(RETHINKDB_INDEX_REBUILD_SCRIPT, args);
+    run_backup_script(REBIRTHDB_INDEX_REBUILD_SCRIPT, args);
 }
 
 void help_rethinkdb_repl() {
     char help_arg[] = "--help";
-    char dummy_arg[] = RETHINKDB_REPL_SCRIPT;
+    char dummy_arg[] = REBIRTHDB_REPL_SCRIPT;
     char* args[3] = { dummy_arg, help_arg, nullptr };
-    run_backup_script(RETHINKDB_REPL_SCRIPT, args);
+    run_backup_script(REBIRTHDB_REPL_SCRIPT, args);
 }
 
 #ifdef _WIN32
@@ -2739,10 +2771,10 @@ int main_rethinkdb_install_service(int argc, char *argv[]) {
         const optional<std::string> config_file_name_arg =
             get_optional_option(opts, "--config-file");
         if (!config_file_name_arg) {
-            fprintf(stderr, "rethinkdb install-service requires the `--config-file` option.\n");
+            fprintf(stderr, "%s install-service requires the `--config-file` option.\n", SERVER_EXEC_NAME);
             fprintf(stderr,
                 "You can find a template for the configuration file at "
-                "<https://github.com/rethinkdb/rethinkdb/blob/next/packaging/assets/config/default.conf.sample>.\n");
+                "<https://github.com/rebirthdb/rebirthdb/blob/next/packaging/assets/config/default.conf.sample>.\n");
             return EXIT_FAILURE;
         }
         // Make the config file name absolute

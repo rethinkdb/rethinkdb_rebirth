@@ -1,6 +1,35 @@
-# Copyright 2010-2013 RethinkDB, all rights reserved.
+# Copyright 2018-present RebirthDB
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+# this file except in compliance with the License. You may obtain a copy of the
+# License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed
+# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+# CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+#
+# This file incorporates work covered by the following copyright:
+#
+#     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+#     others and used with permission or subject to their respective license
+#     agreements.
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
 
-# Build instructions for rethinkdb are available on the rethinkdb website:
+# Build instructions for rebirthdb are available on the rethinkdb website:
 # http://www.rethinkdb.com/docs/build/
 
 # There is additional information about the build system in the mk/README file
@@ -11,7 +40,7 @@ ifeq (,$(filter else-if,$(.FEATURES)))
 	$(error GNU Make >= 3.8.1 is required)
 endif
 
-# $(TOP) is the root of the rethinkdb source tree
+# $(TOP) is the root of the rebirthdb source tree
 TOP ?= .
 
 ifeq (/,$(firstword $(subst /,/ ,$(TOP))))

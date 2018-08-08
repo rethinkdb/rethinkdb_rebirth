@@ -1,4 +1,34 @@
-// Copyright 2010-2015 RethinkDB, all rights reserved.
+// Copyright 2018-present RebirthDB
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+// this file except in compliance with the License. You may obtain a copy of the
+// License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software distributed
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations under the License.
+//
+// This file incorporates work covered by the following copyright:
+//
+//     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+//     others and used with permission or subject to their respective license
+//     agreements.
+//
+//     Licensed under the Apache License, Version 2.0 (the "License");
+//     you may not use this file except in compliance with the License.
+//     You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+//     Unless required by applicable law or agreed to in writing, software
+//     distributed under the License is distributed on an "AS IS" BASIS,
+//     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//     See the License for the specific language governing permissions and
+//     limitations under the License.
+
 #include "utils.hpp"
 
 #include <limits.h>
@@ -362,9 +392,9 @@ std::string errno_string(int errsv) {
 // GCC and CLANG are smart enough to optimize out strlen(""), so this works.
 // This is the simplist thing I could find that gave warning in all of these
 // cases:
-// * RETHINKDB_VERSION=
-// * RETHINKDB_VERSION=""
-// * RETHINKDB_VERSION=1.2
-// (the correct case is something like RETHINKDB_VERSION="1.2")
+// * REBIRTHDB_VERSION=
+// * REBIRTHDB_VERSION=""
+// * REBIRTHDB_VERSION=1.2
+// (the correct case is something like REBIRTHDB_VERSION="1.2")
 
-UNUSED static const char _assert_RETHINKDB_VERSION_nonempty = 1/(!!strlen(RETHINKDB_VERSION));
+UNUSED static const char _assert_REBIRTHDB_VERSION_nonempty = 1/(!!strlen(REBIRTHDB_VERSION));

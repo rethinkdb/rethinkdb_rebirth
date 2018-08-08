@@ -1,4 +1,33 @@
-# Copyright 2010-2013 RethinkDB, all rights reserved.
+# Copyright 2018-present RebirthDB
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+# this file except in compliance with the License. You may obtain a copy of the
+# License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed
+# under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+# CONDITIONS OF ANY KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations under the License.
+#
+# This file incorporates work covered by the following copyright:
+#
+#     Copyright 2010-present, The Linux Foundation, portions copyright Google and
+#     others and used with permission or subject to their respective license
+#     agreements.
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
 
 # This file contains the default values of all the variables that can affect the build that
 # are not set by the configure script. All these variables should be listed and documented here.
@@ -26,10 +55,10 @@ VERBOSE ?= 0
 STATIC ?= 0
 
 # Package name without modfiers
-VANILLA_PACKAGE_NAME ?= rethinkdb
+VANILLA_PACKAGE_NAME ?= rebirthdb
 
-# Name of the rethinkdb executable
-SERVER_EXEC_NAME ?= rethinkdb
+# Name of the rebirthdb executable
+SERVER_EXEC_NAME ?= rebirthdb
 
 # Set SYMBOLS to 1 to enable symbols, even in release mode
 SYMBOLS ?= 1
@@ -61,11 +90,11 @@ COVERAGE ?= 0
 # Strip the executable when installing
 STRIP_ON_INSTALL ?= 0
 
-# If not empty, $(PVERSION) is used as the rethinkdb version number
+# If not empty, $(PVERSION) is used as the rebirthdb version number
 # for example, PVERSION ?= 1.3.2
 PVERSION ?=
 
-# Include the rethinkdb version number in the executable name and package name
+# Include the rebirthdb version number in the executable name and package name
 NAMEVERSIONED ?= 0
 
 # When packaging, build a package for this ubuntu or debian release name
@@ -78,7 +107,7 @@ SHOW_BUILD_REASON ?= 0
 # Enable backtraces for RQL errors
 RQL_ERROR_BT ?= 0
 
-# Always collect full perfmon stats. This makes RethinkDB slower
+# Always collect full perfmon stats. This makes RebirthDB slower
 # but can be useful for analyzing performance issues.
 FULL_PERFMON ?= 0
 
@@ -88,7 +117,7 @@ CORO_PROFILING ?= 0
 # Sign the DSC file
 SIGN_PACKAGE ?= 1
 
-# When rebuilding the package for an already published version of RethinkDB, this
+# When rebuilding the package for an already published version of RebirthDB, this
 # variable should be incremented.
 PACKAGE_BUILD_NUMBER ?= 0
 
