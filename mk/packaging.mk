@@ -94,7 +94,7 @@ ifneq ($(UBUNTU_RELEASE),)
 
   endif
 else ifneq ($(DEB_RELEASE),)
-  ifneq ($(filter $(DEB_RELEASE), wheezy, jessie, stretch),)
+  ifneq ($(filter $(DEB_RELEASE), jessie, stretch),)
     DEB_BUILD_DEPENDS += , g++, libssl-dev
   else
     # As with Ubuntus.
