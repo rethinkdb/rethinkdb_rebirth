@@ -88,7 +88,7 @@ matrix:
     name: Trusty Unit Tests (VM)
     env:
       - DISTRIBUTION=trusty
-      - EXTRA_CXX_FLAGS=-fprofile-arcs -ftest-coverage
+      - EXTRA_CXX_FLAGS="-fprofile-arcs -ftest-coverage"
     compiler: gcc
     before_install:
     - sudo apt-get -qq update
