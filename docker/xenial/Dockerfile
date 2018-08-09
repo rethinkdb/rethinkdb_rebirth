@@ -13,7 +13,7 @@ RUN apt-get -qq update && \
     apt-get -y --no-install-recommends install software-properties-common mg build-essential protobuf-compiler && \
     apt-get -y --no-install-recommends install python libprotobuf-dev libcurl4-openssl-dev && \
     apt-get -y --no-install-recommends install libboost-all-dev libncurses5-dev libjemalloc-dev && \
-    apt-get -y --no-install-recommends install wget m4 git debhelper libssl-dev curl tzdata && \
+    apt-get -y --no-install-recommends install wget m4 git debhelper fakeroot libssl-dev tzdata && \
     add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
     apt-get update && \
     apt-get install -y --no-install-recommends gcc-5 g++-5 && \

@@ -21,9 +21,6 @@
 sudo: true
 dist: trusty
 language: cpp
-env:
-  global:
-  - EXTRA_CXX_FLAGS -fprofile-arcs -ftest-coverage
 
 notifications:
   email:
@@ -40,7 +37,7 @@ matrix:
     - sudo apt-get -qq update
     - sudo apt-get -y install docker-ce build-essential
     script:
-    - ./configure CXXFLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" --allow-fetch
+    - ./configure --allow-fetch
     - make dist
     - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
     - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
@@ -58,7 +55,25 @@ matrix:
     - sudo apt-get -qq update
     - sudo apt-get -y install docker-ce build-essential
     script:
-    - ./configure CXXFLAGS="$CXX_FLAGS $EXTRA_CXX_FLAGS" --allow-fetch
+    - ./configure --allow-fetch
+    - make dist
+    - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
+    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+    - cd docker/$DISTRIBUTION
+    - docker build -t rebirthdb-$DISTRIBUTION-base .
+    - docker images
+    - docker tag rebirthdb-$DISTRIBUTION-base $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh)
+    - docker push $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh)
+
+  - name: Jessie Base Image (Docker)
+    env: DISTRIBUTION=jessie
+    install:
+    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    - sudo apt-get -qq update
+    - sudo apt-get -y install docker-ce build-essential
+    script:
+    - ./configure --allow-fetch
     - make dist
     - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
     - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
@@ -71,7 +86,9 @@ matrix:
   - stage: Unit Testing
     # We use the tests on the Trusty VM as our baseline, and then to generate the coverage results.
     name: Trusty Unit Tests (VM)
-    env: DISTRIBUTION=trusty
+    env:
+      - DISTRIBUTION=trusty
+      - EXTRA_CXX_FLAGS=-fprofile-arcs -ftest-coverage
     compiler: gcc
     before_install:
     - sudo apt-get -qq update
@@ -94,7 +111,7 @@ matrix:
     script:
     - |
       docker run $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh) /bin/bash -c \
-      "pwd && ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
+      "pwd && ./configure --allow-fetch && \
       make test -j $(($(nproc) + 1)) && \
       ./build/release/rebirthdb-unittest"
 
@@ -103,7 +120,16 @@ matrix:
     script:
     - |
       docker run $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh) /bin/bash -c \
-      "pwd && ./configure CXXFLAGS="$CXX_FLAGS" --allow-fetch && \
+      "pwd && ./configure --allow-fetch && \
+      make test -j $(($(nproc) + 1)) && \
+      ./build/release/rebirthdb-unittest"
+
+  - name: Jessie Unit Tests (Docker)
+    env: DISTRIBUTION=jessie
+    script:
+    - |
+      docker run $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh) /bin/sh -c \
+      "pwd && ./configure --allow-fetch && \
       make test -j $(($(nproc) + 1)) && \
       ./build/release/rebirthdb-unittest"
 
@@ -169,6 +195,55 @@ matrix:
       /bin/bash -c "./configure --allow-fetch && \
       make build-deb -j $(($(nproc) + 1)) \
         UBUNTU_RELEASE=$DISTRIBUTION
+        PACKAGE_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER
+        SIGN_PACKAGE=0 && \
+      cp build/packages/rebirthdb_*.deb /rebirthdb_packages"
+    before_deploy:
+    - curl -fL https://getcli.jfrog.io | sh
+    - sudo mv jfrog /usr/bin && jfrog --version
+    deploy:
+    - provider: script
+      script: >-
+        JFROG_CLI_OFFER_CONFIG=false
+        sudo jfrog bt upload
+        --user=$BINTRAY_USER
+        --key=$BINTRAY_API_KEY
+        --publish=true
+        --deb=$DISTRIBUTION/main/amd64
+        --override=true
+        "/rebirthdb_packages/rebirthdb_*.deb"
+        $BINTRAY_SUBJECT/apt/rebirthdb/$(./scripts/gen-version.sh)
+        pool/r/rebirthdb/
+      on:
+        branch: next
+        tags: true
+      skip_cleanup: true
+    - provider: script
+      script: >-
+        JFROG_CLI_OFFER_CONFIG=false
+        sudo jfrog bt upload
+        --user=$BINTRAY_USER
+        --key=$BINTRAY_API_KEY
+        --publish=true
+        --deb=$DISTRIBUTION/main/amd64
+        --override=true
+        "/rebirthdb_packages/rebirthdb_*.deb"
+        $BINTRAY_SUBJECT/apt/rebirthdb-dev/$(./scripts/gen-version.sh)
+        pool/r/rebirthdb-dev/
+      on:
+        all_branches: true
+      skip_cleanup: true
+
+  - name: Jessie Packaging and Deployment
+    env: DISTRIBUTION=jessie
+    before_script:
+    - sudo mkdir /rebirthdb_packages
+    script:
+    - |
+      docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh) \
+      /bin/bash -c "./configure --allow-fetch && \
+      make build-deb -j $(($(nproc) + 1)) \
+        DEB_RELEASE=$DISTRIBUTION
         PACKAGE_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER
         SIGN_PACKAGE=0 && \
       cp build/packages/rebirthdb_*.deb /rebirthdb_packages"
