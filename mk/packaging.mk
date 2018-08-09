@@ -85,12 +85,13 @@ ifneq ($(UBUNTU_RELEASE),)
     # no GCC 5 in later Ubuntus.  We need to use libssl1.0-dev on
     # zesty to be compatible with libcurl when linking.
     ifneq ($(filter $(UBUNTU_RELEASE), zesty),)
-      DEB_BUILD_DEPENDS += , libssl1.0-dev
-    else
+      DEB_BUILD_DEPENDS += , libssl1.0-dev, clang
+      DSC_CONFIGURE_DEFAULT += CXX=clang++
+    else ifneq ($(filter $(UBUNTU_RELEASE), bionic),)
       DEB_BUILD_DEPENDS += , libssl-dev
+      DSC_CONFIGURE_DEFAULT += CXX=g++-7
     endif
-    DEB_BUILD_DEPENDS += , clang
-    DSC_CONFIGURE_DEFAULT += CXX=clang++
+
   endif
 else ifneq ($(DEB_RELEASE),)
   ifneq ($(filter $(DEB_RELEASE), jessie),)
