@@ -23,8 +23,9 @@ in realtime. RebirthDB allows developers to build scalable realtime apps in a fr
 
 ### 1. Install the server
 
-To install RebirthDB on your `Ubuntu Trusty` or `Ubuntu Xenial` machine (Support for more Linux distributions and
-versions is coming soon.), run the following:
+To install RebirthDB on your machine (only the `amd64` / `x86_64` architecture is currently supported), run the following:
+
+#### **Ubuntu** `Trusty`, `Xenial`, `Bionic` and **Debian** `Jessie`, `Stretch` versions
 
 ```bash
 $ source /etc/lsb-release && echo "deb https://dl.bintray.com/rebirthdb/apt $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rebirthdb.list
@@ -34,6 +35,20 @@ $ wget -qO- https://dl.bintray.com/rebirthdb/keys/pubkey.gpg | sudo apt-key add 
 $ sudo apt-get update
 
 $ sudo apt-get install rebirthdb
+```
+
+#### **Centos 6**
+```bash
+sudo wget https://bintray.com/rebirthdb/rpm/rpm/centos/6/x86_64/rebirthdb.repo \
+    -O /etc/yum.repos.d/rebirthdb.repo
+sudo yum install rebirthdb 
+```
+
+#### **Centos 7**
+```bash
+sudo wget https://bintray.com/rebirthdb/rpm/rpm/centos/7/x86_64/rebirthdb.repo \
+    -O /etc/yum.repos.d/rebirthdb.repo
+sudo yum install rebirthdb 
 ```
 
 ### 2. Start the server

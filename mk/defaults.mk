@@ -87,6 +87,9 @@ MAKE_VARIABLE_CHECK ?= 1
 # Enable code coverage
 COVERAGE ?= 0
 
+# Enable generation of the HTML report
+GENHTML ?= 0
+
 # Strip the executable when installing
 STRIP_ON_INSTALL ?= 0
 

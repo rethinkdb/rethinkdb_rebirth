@@ -69,14 +69,17 @@ ifeq (1,$(COVERAGE))
   .PHONY: coverage
   coverage: $(BUILD_DIR)/$(SERVER_UNIT_TEST_NAME)
 	$P RUN $<
-	$(BUILD_DIR)/$(SERVER_UNIT_TEST_NAME) --gtest_filter=$(UNIT_TEST_FILTER)
+	$(BUILD_DIR)/$(SERVER_UNIT_TEST_NAME)
 	$P LCOV $(BUILD_DIR)/coverage.full.info
 	lcov --directory $(OBJ_DIR) --base-directory "`pwd`" --capture --output-file $(BUILD_DIR)/coverage.full.info
-	$P LCOV $(BUILD_DIR)/converage.info
-	lcov --remove $(BUILD_DIR)/coverage.full.info /usr/\* -o $(BUILD_DIR)/coverage.info
+	$P LCOV $(BUILD_DIR)/coverage.info
+	lcov --remove $(BUILD_DIR)/coverage.full.info /usr/\* build/\* -o $(BUILD_DIR)/coverage.info
+
+  ifeq (1, $(GENHTML))
 	$P GENHTML $(BUILD_DIR)/coverage
 	genhtml --demangle-cpp --no-branch-coverage --no-prefix -o $(BUILD_DIR)/coverage $(BUILD_DIR)/coverage.info
 	echo "Wrote unit tests coverage report to $(BUILD_DIR)/coverage"
+  endif
 endif
 
 ##### Code information

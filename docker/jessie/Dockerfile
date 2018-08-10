@@ -28,4 +28,4 @@ WORKDIR /rebirthdb
 VOLUME [ "/rebirthdb", "/tmp" ]
 
 # Define the default command
-CMD [ "/bin/sh" ]
+CMD [ "/bin/bash" ]

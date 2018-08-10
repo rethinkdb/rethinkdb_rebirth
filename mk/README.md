@@ -67,6 +67,15 @@ Test
 
 * `make test`: Invokes `./test/run`
 
+Coverage
+---
+
+* `make coverage COVERAGE=1`: Builds and runs `rebirthdb-unittest` with 
+  coverage flags enabled.
+  
+* `make coverage COVERAGE=1 GENHTML=1`: In addition to the above command,
+  it also generates a HTML report.
+
 Dependencies
 ---
 
