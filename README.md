@@ -37,16 +37,9 @@ $ sudo apt-get update
 $ sudo apt-get install rebirthdb
 ```
 
-#### **Centos 6**
-```bash
-sudo wget https://bintray.com/rebirthdb/rpm/rpm/centos/6/x86_64/rebirthdb.repo \
-    -O /etc/yum.repos.d/rebirthdb.repo
-sudo yum install rebirthdb 
-```
-
 #### **Centos 7**
 ```bash
-sudo wget https://bintray.com/rebirthdb/rpm/rpm/centos/7/x86_64/rebirthdb.repo \
+sudo wget https://dl.bintray.com/rebirthdb/rpm/centos/7/x86_64/rebirthdb.repo \
     -O /etc/yum.repos.d/rebirthdb.repo
 sudo yum install rebirthdb 
 ```

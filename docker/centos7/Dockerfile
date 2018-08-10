@@ -5,14 +5,14 @@ LABEL maintainer="RebirthDB <rebirthdb-infra@googlegroups.com>"
 # Install.
 # These include the build and packaging dependencies
 RUN yum install -y openssl-devel libcurl-devel wget tar m4 git-core \
-                     boost-static m4 gcc-c++ npm ncurses-devel which \
+                     boost-static m4 gcc-c++ ncurses-devel which \
                      make ncurses-static zlib-devel zlib-static \
                      epel-release protobuf-devel protobuf-static \
                      jemalloc-devel bzip2 patch && \
     yum install -y ruby-devel rpm-build rubygems && \
-    yum clean all && \
-    gem install --no-ri --no-rdoc fpm &&
-    fpm --version
+    gem install --no-ri --no-rdoc fpm && \
+    fpm --version && \
+    yum clean all
 
 # Copy files.
 COPY . /rebirthdb

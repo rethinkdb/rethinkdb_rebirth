@@ -119,41 +119,23 @@ matrix:
     - docker tag rebirthdb-$DISTRIBUTION-base $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh)
     - docker push $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh)
 
-  - name: Centos 6 Base Image (Docker)
-      env: DISTRIBUTION=centos6
-      install:
-      - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-      - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-      - sudo apt-get -qq update
-      - sudo apt-get -y install docker-ce build-essential
-      script:
-      - ./configure --allow-fetch
-      - make dist
-      - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
-      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      - cd docker/$DISTRIBUTION
-      - docker build -t rebirthdb-$DISTRIBUTION-base .
-      - docker images
-      - docker tag rebirthdb-$DISTRIBUTION-base $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh)
-      - docker push $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh)
-
   - name: Centos 7 Base Image (Docker)
-      env: DISTRIBUTION=centos7
-      install:
-      - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-      - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-      - sudo apt-get -qq update
-      - sudo apt-get -y install docker-ce build-essential
-      script:
-      - ./configure --allow-fetch
-      - make dist
-      - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
-      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      - cd docker/$DISTRIBUTION
-      - docker build -t rebirthdb-$DISTRIBUTION-base .
-      - docker images
-      - docker tag rebirthdb-$DISTRIBUTION-base $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh)
-      - docker push $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh)
+    env: DISTRIBUTION=centos7
+    install:
+    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    - sudo apt-get -qq update
+    - sudo apt-get -y install docker-ce build-essential
+    script:
+    - ./configure --allow-fetch
+    - make dist
+    - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
+    - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+    - cd docker/$DISTRIBUTION
+    - docker build -t rebirthdb-$DISTRIBUTION-base .
+    - docker images
+    - docker tag rebirthdb-$DISTRIBUTION-base $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh)
+    - docker push $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh)
 
   - stage: Unit Testing
     # We use the tests on the Trusty VM as our baseline, and then to generate the coverage results.
@@ -219,15 +201,6 @@ matrix:
 
   - name: Stretch Unit Tests (Docker)
     env: DISTRIBUTION=stretch
-    script:
-    - |
-      docker run $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh) /bin/bash -c \
-      "pwd && ./configure --allow-fetch && \
-      make test -j $(($(nproc) + 1)) && \
-      ./build/release/rebirthdb-unittest"
-
-  - name: Centos 6 Unit Tests (Docker)
-    env: DISTRIBUTION=centos6
     script:
     - |
       docker run $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh) /bin/bash -c \
@@ -495,88 +468,45 @@ matrix:
         all_branches: true
       skip_cleanup: true
 
-  - name: Centos 6 Packaging and Deployment
-      env: DISTRIBUTION=centos6
-      before_script:
-      - sudo mkdir /rebirthdb_packages
-      script:
-      - |
-        docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh) \
-        /bin/bash -c "./scripts/build-rpm.sh && \
-        cp build/packages/rebirthdb*.rpm /rebirthdb_packages"
-      before_deploy:
-      - curl -fL https://getcli.jfrog.io | sh
-      - sudo mv jfrog /usr/bin && jfrog --version
-      deploy:
-      - provider: script
-        script: >-
-          JFROG_CLI_OFFER_CONFIG=false
-          sudo jfrog bt upload
-          --user=$BINTRAY_USER
-          --key=$BINTRAY_API_KEY
-          --publish=true
-          --override=true
-          "/rebirthdb_packages/rebirthdb*.rpm"
-          $BINTRAY_SUBJECT/rpm/rebirthdb/$(./scripts/gen-version.sh)
-          centos/7/x86_64/
-        on:
-          branch: next
-          tags: true
-        skip_cleanup: true
-      - provider: script
-        script: >-
-          JFROG_CLI_OFFER_CONFIG=false
-          sudo jfrog bt upload
-          --user=$BINTRAY_USER
-          --key=$BINTRAY_API_KEY
-          --publish=true
-          --override=true
-          "/rebirthdb_packages/rebirthdb*.rpm"
-          $BINTRAY_SUBJECT/rpm/rebirthdb-dev/$(./scripts/gen-version.sh)
-          centos/7/x86_64/
-        on:
-          all_branches: true
-        skip_cleanup: true
-
   - name: Centos 7 Packaging and Deployment
-      env: DISTRIBUTION=centos7
-      before_script:
-      - sudo mkdir /rebirthdb_packages
-      script:
-      - |
-        docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh) \
-        /bin/bash -c "./scripts/build-rpm.sh && \
-        cp build/packages/rebirthdb*.rpm /rebirthdb_packages"
-      before_deploy:
-      - curl -fL https://getcli.jfrog.io | sh
-      - sudo mv jfrog /usr/bin && jfrog --version
-      deploy:
-      - provider: script
-        script: >-
-          JFROG_CLI_OFFER_CONFIG=false
-          sudo jfrog bt upload
-          --user=$BINTRAY_USER
-          --key=$BINTRAY_API_KEY
-          --publish=true
-          --override=true
-          "/rebirthdb_packages/rebirthdb*.rpm"
-          $BINTRAY_SUBJECT/rpm/rebirthdb/$(./scripts/gen-version.sh)
-          centos/7/x86_64/
-        on:
-          branch: next
-          tags: true
-        skip_cleanup: true
-      - provider: script
-        script: >-
-          JFROG_CLI_OFFER_CONFIG=false
-          sudo jfrog bt upload
-          --user=$BINTRAY_USER
-          --key=$BINTRAY_API_KEY
-          --publish=true
-          --override=true
-          "/rebirthdb_packages/rebirthdb*.rpm"
-          $BINTRAY_SUBJECT/rpm/rebirthdb-dev/$(./scripts/gen-version.sh)
-          centos/7/x86_64/
-        on:
-          all_branches: true
-        skip_cleanup: true
+    env: DISTRIBUTION=centos7
+    before_script:
+    - sudo mkdir /rebirthdb_packages
+    script:
+    - |
+      docker run -v /rebirthdb_packages:/rebirthdb_packages $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh) \
+      /bin/bash -c "./scripts/build-rpm.sh && \
+      cp build/packages/rebirthdb*.rpm /rebirthdb_packages"
+    before_deploy:
+    - curl -fL https://getcli.jfrog.io | sh
+    - sudo mv jfrog /usr/bin && jfrog --version
+    deploy:
+    - provider: script
+      script: >-
+        JFROG_CLI_OFFER_CONFIG=false
+        sudo jfrog bt upload
+        --user=$BINTRAY_USER
+        --key=$BINTRAY_API_KEY
+        --publish=true
+        --override=true
+        "/rebirthdb_packages/rebirthdb*.rpm"
+        $BINTRAY_SUBJECT/rpm/rebirthdb/$(./scripts/gen-version.sh)
+        centos/7/x86_64/
+      on:
+        branch: next
+        tags: true
+      skip_cleanup: true
+    - provider: script
+      script: >-
+        JFROG_CLI_OFFER_CONFIG=false
+        sudo jfrog bt upload
+        --user=$BINTRAY_USER
+        --key=$BINTRAY_API_KEY
+        --publish=true
+        --override=true
+        "/rebirthdb_packages/rebirthdb*.rpm"
+        $BINTRAY_SUBJECT/rpm/rebirthdb-dev/$(./scripts/gen-version.sh)
+        centos/7/x86_64/
+      on:
+        all_branches: true
+      skip_cleanup: true
