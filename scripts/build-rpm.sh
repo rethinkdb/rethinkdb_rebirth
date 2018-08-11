@@ -40,7 +40,7 @@
 set -eu
 
 main () {
-    MAKEFLAGS=${MAKEFLAGS:- -j 8}
+    MAKEFLAGS=${MAKEFLAGS:- -j `echo $(($(nproc) + 1))`}
     export MAKEFLAGS
     ARCH=`gcc -dumpmachine | cut -f 1 -d -`
     RPM_ROOT=build/packages/rpm
