@@ -73,7 +73,7 @@ ifeq (1,$(COVERAGE))
 	$P LCOV $(BUILD_DIR)/coverage.full.info
 	lcov --directory $(OBJ_DIR) --base-directory "`pwd`" --capture --output-file $(BUILD_DIR)/coverage.full.info
 	$P LCOV $(BUILD_DIR)/coverage.info
-	lcov --remove $(BUILD_DIR)/coverage.full.info /usr/\* build/\* -o $(BUILD_DIR)/coverage.info
+	lcov --remove $(BUILD_DIR)/coverage.full.info /usr/\* build/external/\* build/proto/\* -o $(BUILD_DIR)/coverage.info
 
   ifeq (1, $(GENHTML))
 	$P GENHTML $(BUILD_DIR)/coverage

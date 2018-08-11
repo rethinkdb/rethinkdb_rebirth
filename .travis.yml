@@ -127,7 +127,7 @@ matrix:
     - sudo apt-get -qq update
     - sudo apt-get -y install docker-ce build-essential
     script:
-    - ./configure --allow-fetch
+    - ./configure --allow-fetch --dynamic jemalloc
     - make dist
     - tar xvzf build/packages/rebirthdb-$(./scripts/gen-version.sh).tgz -C docker/$DISTRIBUTION --strip-components=1
     - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
@@ -213,7 +213,7 @@ matrix:
     script:
     - |
       docker run $DOCKERCLOUD_NAMESPACE/rebirthdb-$DISTRIBUTION-base:$(./scripts/gen-version.sh) /bin/bash -c \
-      "pwd && ./configure --allow-fetch && \
+      "pwd && ./configure --allow-fetch --dynamic jemalloc && \
       make test -j $(($(nproc) + 1)) && \
       ./build/release/rebirthdb-unittest"
 
