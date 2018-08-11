@@ -417,12 +417,8 @@ check-syntax:
 VENDORED_COMMIT := 7034f82bfe5e084f164f1ab08c4e9485c7f61b95
 VENDORED_REMOTE_REPO := https://github.com/RebirthDB/rebirthdb-vendored.git
 
-# Manually cd into and out of vendored, as the default git (in centos 7) does
-# not support the -C option
 vendored:
 	$P GIT clone vendored
 	git clone --quiet $(VENDORED_REMOTE_REPO) vendored || true
-	cd vendored
-	git checkout --quiet $(VENDORED_COMMIT) || \
-	  ( git fetch --quiet && git -C vendored checkout --quiet $(VENDORED_COMMIT) )
-	cd ..
+	git -C vendored checkout --quiet $(VENDORED_COMMIT) || \
+	  ( git -C vendored fetch --quiet && git -C vendored checkout --quiet $(VENDORED_COMMIT) )

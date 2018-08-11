@@ -4,7 +4,9 @@ LABEL maintainer="RebirthDB <rebirthdb-infra@googlegroups.com>"
 
 # Install.
 # These include the build and packaging dependencies
-RUN yum install -y openssl-devel libcurl-devel wget tar m4 git-core \
+# Make sure to install the latest git.
+RUN yum install http://opensource.wandisco.com/centos/7/git/x86_64/wandisco-git-release-7-2.noarch.rpm && \
+    yum install -y openssl-devel libcurl-devel wget tar m4 git \
                      boost-static m4 gcc-c++ ncurses-devel which \
                      make ncurses-static zlib-devel zlib-static \
                      epel-release protobuf-devel protobuf-static \
