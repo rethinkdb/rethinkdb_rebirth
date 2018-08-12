@@ -71,7 +71,9 @@ binary-arch: install
 	dh_shlibdeps -a
 	dh_gencontrol -a
 	dh_md5sums -a
-	dh_builddeb -a
+	# Force dpkg-deb to use gzip compression so that bintray won't complain about the
+	# Ubuntu Bionic debian package being malformed.
+	dh_builddeb -a -- -Zgzip
 
 binary: binary-indep binary-arch
 
