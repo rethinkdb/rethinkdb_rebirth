@@ -11,7 +11,7 @@ RUN apt-get -qq update && \
     apt-get -y --no-install-recommends install software-properties-common mg build-essential protobuf-compiler && \
     apt-get -y --no-install-recommends install python libprotobuf-dev libcurl4-openssl-dev && \
     apt-get -y --no-install-recommends install libboost-all-dev libncurses5-dev libjemalloc-dev && \
-    apt-get -y --no-install-recommends install wget m4 git debhelper fakeroot libssl-dev tzdata && \
+    apt-get -y --no-install-recommends install wget curl m4 git debhelper fakeroot libssl-dev tzdata && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy files.
