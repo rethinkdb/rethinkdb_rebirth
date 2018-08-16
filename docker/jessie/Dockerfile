@@ -1,10 +1,10 @@
-FROM ubuntu:14.04
+FROM debian:jessie
 
 LABEL maintainer="RebirthDB <rebirthdb-infra@googlegroups.com>"
 
 ENV DEBIAN_FRONTEND noninteractive
 
-# Install.
+# Install requisite packages
 # These include the build and packaging dependencies
 RUN apt-get -qq update && \
     apt-get -y upgrade && \
@@ -12,10 +12,6 @@ RUN apt-get -qq update && \
     apt-get -y --no-install-recommends install python libprotobuf-dev libcurl4-openssl-dev && \
     apt-get -y --no-install-recommends install libboost-all-dev libncurses5-dev libjemalloc-dev && \
     apt-get -y --no-install-recommends install wget curl m4 git debhelper fakeroot libssl-dev && \
-    add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends gcc-5 g++-5 && \
-    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60 --slave /usr/bin/g++ g++ /usr/bin/g++-5 && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy files.
