@@ -854,10 +854,8 @@ void store_t::drop_sindex(uuid_u sindex_id) THROWS_NOTHING {
     if (!found) {
         // The index got dropped by someone else. That's ok, there's nothing left for us
         // to do.
-
         sindex_block.reset_buf_lock();
         txn->commit();
-
         return;
     }
 
