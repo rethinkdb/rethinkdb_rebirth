@@ -95,17 +95,17 @@ As a result, we of course get the best science fiction show in existence.
 
 Congratulations on your progress! Now check out the documentation of any of our drivers below to dive deeper.
 
-* **Elixir** - [rebirthdb-elixir](https://github.com/rethinkdb/rethinkdb-elixir)
-* **Go** - [rebirthdb-go](https://github.com/rethinkdb/rethinkdb-go)
-* **Haskell** - [rebirthdb-haskell](https://github.com/rethinkdb/rethinkdb-haskell)
-* **Java** - [rebirthdb-java](https://github.com/rethinkdb/rethinkdb-java)
-* **JavaScript** - [rebirthdb-js](https://github.com/rethinkdb/rethinkdb-js)
-* **Lua** - [rebirthdb-lua](https://github.com/rethinkdb/rethinkdb-lua)
-* **PHP** - [rebirthdb-php](https://github.com/rethinkdb/rethinkdb-php)
-* **Python** - [rebirthdb-python](https://github.com/rethinkdb/rethinkdb-python)
-* **Ruby** - [rebirthdb-ruby](https://github.com/rethinkdb/rethinkdb-ruby)
-* **Rust** - [rebirthdb-rs](https://github.com/rethinkdb/rethinkdb-rs)
-* **TypeScript** - [rebirthdb-ts](https://github.com/rethinkdb/rethinkdb-ts)
+* **Elixir** - [rethinkdb-elixir](https://github.com/rethinkdb/rethinkdb-elixir)
+* **Go** - [rethinkdb-go](https://github.com/rethinkdb/rethinkdb-go)
+* **Haskell** - [rethinkdb-haskell](https://github.com/rethinkdb/rethinkdb-haskell)
+* **Java** - [rethinkdb-java](https://github.com/rethinkdb/rethinkdb-java)
+* **JavaScript** - [rethinkdb-js](https://github.com/rethinkdb/rethinkdb-js)
+* **Lua** - [rethinkdb-lua](https://github.com/rethinkdb/rethinkdb-lua)
+* **PHP** - [rethinkdb-php](https://github.com/rethinkdb/rethinkdb-php)
+* **Python** - [rethinkdb-python](https://github.com/rethinkdb/rethinkdb-python)
+* **Ruby** - [rethinkdb-ruby](https://github.com/rethinkdb/rethinkdb-ruby)
+* **Rust** - [rethinkdb-rs](https://github.com/rethinkdb/rethinkdb-rs)
+* **TypeScript** - [rethinkdb-ts](https://github.com/rethinkdb/rethinkdb-ts)
 
 More detailed and updated documentation is coming soon!
 
