@@ -95,17 +95,17 @@ As a result, we of course get the best science fiction show in existence.
 
 Congratulations on your progress! Now check out the documentation of any of our drivers below to dive deeper.
 
-* **Elixir** - [rebirthdb-elixir](https://github.com/RebirthDB/rebirthdb-elixir)
-* **Go** - [rebirthdb-go](https://github.com/RebirthDB/rebirthdb-go)
-* **Haskell** - [rebirthdb-haskell](https://github.com/RebirthDB/rebirthdb-haskell)
-* **Java** - [rebirthdb-java](https://github.com/RebirthDB/rebirthdb-java)
-* **JavaScript** - [rebirthdb-js](https://github.com/RebirthDB/rebirthdb-js)
-* **Lua** - [rebirthdb-lua](https://github.com/RebirthDB/rebirthdb-lua)
-* **PHP** - [rebirthdb-php](https://github.com/RebirthDB/rebirthdb-php)
-* **Python** - [rebirthdb-python](https://github.com/RebirthDB/rebirthdb-python)
-* **Ruby** - [rebirthdb-ruby](https://github.com/RebirthDB/rebirthdb-ruby)
-* **Rust** - [rebirthdb-rs](https://github.com/RebirthDB/rebirthdb-rs)
-* **TypeScript** - [rebirthdb-ts](https://github.com/RebirthDB/rebirthdb-ts)
+* **Elixir** - [rethinkdb-elixir](https://github.com/rethinkdb/rethinkdb-elixir)
+* **Go** - [rethinkdb-go](https://github.com/rethinkdb/rethinkdb-go)
+* **Haskell** - [rethinkdb-haskell](https://github.com/rethinkdb/rethinkdb-haskell)
+* **Java** - [rethinkdb-java](https://github.com/rethinkdb/rethinkdb-java)
+* **JavaScript** - [rethinkdb-js](https://github.com/rethinkdb/rethinkdb-js)
+* **Lua** - [rethinkdb-lua](https://github.com/rethinkdb/rethinkdb-lua)
+* **PHP** - [rethinkdb-php](https://github.com/rethinkdb/rethinkdb-php)
+* **Python** - [rethinkdb-python](https://github.com/rethinkdb/rethinkdb-python)
+* **Ruby** - [rethinkdb-ruby](https://github.com/rethinkdb/rethinkdb-ruby)
+* **Rust** - [rethinkdb-rs](https://github.com/rethinkdb/rethinkdb-rs)
+* **TypeScript** - [rethinkdb-ts](https://github.com/rethinkdb/rethinkdb-ts)
 
 More detailed and updated documentation is coming soon!
 
@@ -143,8 +143,8 @@ Then, to build:
 
 ## Need help?
 
-Find us at [Spectrum](https://spectrum.chat/rebirthdb) and on [Twitter](https://twitter.com/rebirthdb). You can also
-[report an issue](https://github.com/rebirthdb/rebirthdb/issues).
+Find us at [Spectrum](https://spectrum.chat/rethinkdb) and on [Twitter](https://twitter.com/rebirthdb). You can also
+[report an issue](https://github.com/rethinkdb/rethinkdb/issues).
 
 
 ## Contributing
