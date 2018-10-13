@@ -22,7 +22,7 @@ in realtime. RebirthDB allows developers to build scalable realtime apps in a fr
 
 ### 1. Install the server
 
-To install RebirthDB on your machine (only the `amd64` / `x86_64` architecture is currently supported), run the following:
+To install RethinkDB on your machine (only the `amd64` / `x86_64` architecture is currently supported), run the following:
 
 #### **Ubuntu** `Trusty`, `Xenial`, `Bionic` and **Debian** `Jessie`, `Stretch` versions
 
@@ -33,20 +33,20 @@ $ wget -qO- https://dl.bintray.com/rebirthdb/keys/pubkey.gpg | sudo apt-key add 
 
 $ sudo apt-get update
 
-$ sudo apt-get install rebirthdb
+$ sudo apt-get install rethinkdb
 ```
 
 #### **Centos 7**
 ```bash
 sudo wget https://dl.bintray.com/rebirthdb/rpm/centos/7/x86_64/rebirthdb.repo \
     -O /etc/yum.repos.d/rebirthdb.repo
-sudo yum install rebirthdb 
+sudo yum install rethinkdb 
 ```
 
 ### 2. Start the server
 Run the following command from your terminal:
 ```bash
-$ rebirthdb
+$ rethinkdb
 ...
 Listening for intracluster connections on port 29015
 Listening for client driver connections on port 28015
