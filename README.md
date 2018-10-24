@@ -3,8 +3,8 @@
 # RethinkDB
 
 
-[![Build Status](https://travis-ci.org/RebirthDB/rebirthdb.svg?branch=next)](https://travis-ci.org/RebirthDB/rebirthdb)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e486b20dee3141c89dcb974fe1ae16de)](https://www.codacy.com/app/RebirthDB/rebirthdb?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=RebirthDB/rebirthdb&amp;utm_campaign=Badge_Grade) [![Coverage Status](https://coveralls.io/repos/github/RebirthDB/rebirthdb/badge.svg?branch=next)](https://coveralls.io/github/RebirthDB/rebirthdb?branch=next)
+[![Build Status](https://travis-ci.org/rethinkdb/rethinkdb.svg?branch=next)](https://travis-ci.org/rethinkdb/rethinkdb)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e486b20dee3141c89dcb974fe1ae16de)](https://www.codacy.com/app/rethinkdb/rethinkdb?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=rethinkdb/rethinkdb&amp;utm_campaign=Badge_Grade) [![Coverage Status](https://coveralls.io/repos/github/rethinkdb/rethinkdb/badge.svg?branch=next)](https://coveralls.io/github/rethinkdb/rethinkdb?branch=next)
 
 ## What is RethinkDB?
 
@@ -15,7 +15,7 @@
 
 RethinkDB is an open-source scalable database built for realtime applications. It exposes a new database access model -- instead of
 polling for changes, the developer can tell the database to continuously push updated query results to applications 
-in realtime. RebirthDB allows developers to build scalable realtime apps in a fraction of the time with less effort.
+in realtime. RethinkDB allows developers to build scalable realtime apps in a fraction of the time with less effort.
 
 
 ## Quick start
@@ -27,9 +27,9 @@ To install RethinkDB on your machine (only the `amd64` / `x86_64` architecture i
 #### **Ubuntu** `Trusty`, `Xenial`, `Bionic` and **Debian** `Jessie`, `Stretch` versions
 
 ```bash
-$ source /etc/lsb-release && echo "deb https://dl.bintray.com/rebirthdb/apt $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rebirthdb.list
+$ source /etc/lsb-release && echo "deb https://dl.bintray.com/rethinkdb/apt $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
 
-$ wget -qO- https://dl.bintray.com/rebirthdb/keys/pubkey.gpg | sudo apt-key add -
+$ wget -qO- https://dl.bintray.com/rethinkdb/keys/pubkey.gpg | sudo apt-key add -
 
 $ sudo apt-get update
 
@@ -38,8 +38,8 @@ $ sudo apt-get install rethinkdb
 
 #### **Centos 7**
 ```bash
-sudo wget https://dl.bintray.com/rebirthdb/rpm/centos/7/x86_64/rebirthdb.repo \
-    -O /etc/yum.repos.d/rebirthdb.repo
+sudo wget https://dl.bintray.com/rethinkdb/rpm/centos/7/x86_64/rethinkdb.repo \
+    -O /etc/yum.repos.d/rethinkdb.repo
 sudo yum install rethinkdb 
 ```
 
@@ -64,7 +64,7 @@ Point your browser to localhost:8080. You’ll see an administrative UI where yo
 ### 3. Run some queries
 
 Click on the Data Explorer tab in the browser. You can manipulate data using JavaScript straight from your browser.
-By default, RebirthDB creates a database named `test`. Let’s create a table:
+By default, RethinkDB creates a database named `test`. Let’s create a table:
 
 ```javascript
 r.db('test').tableCreate('tv_shows')
@@ -137,18 +137,18 @@ Then, to build:
     # or run make -j4 DEBUG=1
 
     sudo make install
-    # or run ./build/debug_clang/rebirthdb
+    # or run ./build/debug_clang/rethinkdb
 
 
 ## Need help?
 
-Find us at [Spectrum](https://spectrum.chat/rethinkdb) and on [Twitter](https://twitter.com/rebirthdb). You can also
+Find us at [Spectrum](https://spectrum.chat/rethinkdb) and on [Twitter](https://twitter.com/rethinkdb). You can also
 [report an issue](https://github.com/rethinkdb/rethinkdb/issues).
 
 
 ## Contributing
  
-RebirthDB is currently being developed by a growing and passionate community. We could use your help too!
+RethinkDB is currently being developed by a growing and passionate community. We could use your help too!
 Check out our [contributing guidelines](CONTRIBUTING.md) to get started.
 
 
@@ -159,7 +159,7 @@ We keep [a list of changes and feature explanations here](NOTES.md).
 
 ## Donors
 
-* The development of data compression and RebirthDB's new art is sponsored by [AIDAX](http://www.aidaxbi.com/):<br>
+* The development of data compression and RethinkDB's new art is sponsored by [AIDAX](http://www.aidaxbi.com/):<br>
 [![AIDAX](images/sponsors/AIDAX_logo_whole.png)](http://www.aidaxbi.com/)
 
 * Our test infrastructure is sponsored by [DigitalOcean](https://www.digitalocean.com/):<br>

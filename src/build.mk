@@ -415,7 +415,7 @@ check-syntax:
 	$(RT_CXX) $(RT_CXXFLAGS) -c -o /dev/null $(patsubst %,$(CWD)/%,$(CHK_SOURCES))
 
 VENDORED_COMMIT := 7034f82bfe5e084f164f1ab08c4e9485c7f61b95
-VENDORED_REMOTE_REPO := https://github.com/RebirthDB/rebirthdb-vendored.git
+VENDORED_REMOTE_REPO := https://github.com/rethinkdb/rethinkdb-vendored.git
 
 vendored:
 	$P GIT clone vendored
