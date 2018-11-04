@@ -3,7 +3,7 @@
 # RethinkDB
 
 
-[![Build Status](https://travis-ci.org/RebirthDB/rebirthdb.svg?branch=next)](https://travis-ci.org/RebirthDB/rebirthdb)
+[![Build Status](https://travis-ci.org/rethinkdb/rethinkdb.svg?branch=next)](https://travis-ci.org/RebirthDB/rebirthdb)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e486b20dee3141c89dcb974fe1ae16de)](https://www.codacy.com/app/RebirthDB/rebirthdb?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=RebirthDB/rebirthdb&amp;utm_campaign=Badge_Grade) [![Coverage Status](https://coveralls.io/repos/github/RebirthDB/rebirthdb/badge.svg?branch=next)](https://coveralls.io/github/RebirthDB/rebirthdb?branch=next)
 
 ## What is RethinkDB?
