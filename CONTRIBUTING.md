@@ -6,18 +6,18 @@ We're happy you want to contribute! You can help us in different ways:
 - Fork this repository and submit a pull request
 - Improve the [documentation][2] (separate repository)
 
-[1]: https://github.com/rebirthdb/rebirthdb/issues
-[2]: https://github.com/rebirthdb/docs
+[1]: https://github.com/rethinkdb/rethinkdb/issues
+[2]: https://github.com/rethinkdb/docs
 
 To submit a pull request, fork the [RebirthDB repository][3] and then clone your fork:
 
-    git clone git@github.com:<your-name>/rebirthdb.git
+    git clone git@github.com:<your-name>/rethinkdb.git
 
-[3]: https://github.com/rebirthdb/rebirthdb
+[3]: https://github.com/rethinkdb/rethinkdb
 
 Make your suggested changes, `git push` and then [submit a pull request][4]. Note that before we can accept your pull requests, you need to sign our [Contributor License Agreement][5].
 
-[4]: https://github.com/rebirthdb/rebirthdb/compare/
+[4]: https://github.com/rethinkdb/rethinkdb/compare/
 [5]: http://rethinkdb.com/community/cla/
 
 ## Resources

@@ -96,7 +96,7 @@
 #include "logger.hpp"
 
 // The python driver was renamed
-// See https://github.com/RebirthDB/rebirthdb-python/commit/3427c4814aa8844d40dc579e935952e177e4c4e1
+// See https://github.com/rethinkdb/rethinkdb-python/commit/3427c4814aa8844d40dc579e935952e177e4c4e1
 #define REBIRTHDB_EXPORT_SCRIPT "rebirthdb-export"
 #define REBIRTHDB_IMPORT_SCRIPT "rebirthdb-import"
 #define REBIRTHDB_DUMP_SCRIPT "rebirthdb-dump"
@@ -2290,7 +2290,7 @@ void run_backup_script(const std::string& script_name, char * const arguments[])
                 "includes the location of the backup scripts, and that the current user has permission to\n"
                 "access and run the scripts.\n"
                 "Instructions for installing the %s Python driver are available here:\n"
-                "https://github.com/RebirthDB/rebirthdb-python#installation\n", PRODUCT_NAME);
+                "https://github.com/rethinkdb/rethinkdb-python#installation\n", PRODUCT_NAME);
     }
 }
 
@@ -2774,7 +2774,7 @@ int main_rethinkdb_install_service(int argc, char *argv[]) {
             fprintf(stderr, "%s install-service requires the `--config-file` option.\n", SERVER_EXEC_NAME);
             fprintf(stderr,
                 "You can find a template for the configuration file at "
-                "<https://github.com/rebirthdb/rebirthdb/blob/next/packaging/assets/config/default.conf.sample>.\n");
+                "<https://github.com/rethinkdb/rethinkdb/blob/next/packaging/assets/config/default.conf.sample>.\n");
             return EXIT_FAILURE;
         }
         // Make the config file name absolute
