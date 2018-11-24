@@ -58,6 +58,8 @@ public:
     explicit js_job_t(
         const ql::configured_limits_t &limits);
 
+    ~js_job_t() noexcept;
+
     js_result_t eval(const std::string &source);
     js_result_t call(js_id_t id, const std::vector<ql::datum_t> &args);
     void release(js_id_t id);
@@ -70,6 +72,8 @@ private:
 
     rduk_env_t duk_env;
     ql::configured_limits_t limits;
+    void *rduk_root_ctx;
+    int heap_udata;
     DISABLE_COPYING(js_job_t);
 };
 

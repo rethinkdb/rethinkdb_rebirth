@@ -31,12 +31,6 @@
 
 #include "extproc/js_job.hpp"
 
-// TODO(grandquista)
-// static int rduk_exec_timeout_check(void *user_data);
-//
-// #define DUK_USE_EXEC_TIMEOUT_CHECK(user_data) rduk_exec_timeout_check(user_data)
-// #define DUK_USE_INTERRUPT_COUNTER
-
 #include <duktape.h>
 
 #include <stdint.h>
@@ -59,69 +53,83 @@ static ql::datum_t js_to_datum(duk_context *ctx,
                         const ql::configured_limits_t &limits,
                         std::string *err_out);
 
-duk_context *rduk_root_ctx = nullptr;
-
-void maybe_initialize_duk() {
-    if (rduk_root_ctx == nullptr) {
-        // HSI: Better fatal handler.
-        rduk_root_ctx = duk_create_heap(nullptr, nullptr, nullptr, nullptr,
-                                        nullptr);
-        guarantee(rduk_root_ctx != nullptr);
-    }
+static duk_context *initialize_duk(void *heap_udata) {
+    // HSI: Better fatal handler.
+    duk_context *rduk_root_ctx = duk_create_heap(
+        nullptr,
+        nullptr,
+        nullptr,
+        heap_udata,
+        nullptr);
+    guarantee(rduk_root_ctx != nullptr);
+    return rduk_root_ctx;
 }
 
 static js_id_t remember_value(rduk_env_t *env, duk_context *ctx);
-static js_result_t rduk_eval(rduk_env_t *env, const std::string &source,
+static js_result_t rduk_eval(duk_context *rduk_root_ctx, rduk_env_t *env, const std::string &source,
                       const ql::configured_limits_t &limits);
-static js_result_t rduk_call(js_id_t id, const std::vector<ql::datum_t> &args,
+static js_result_t rduk_call(duk_context *rduk_root_ctx, js_id_t id, const std::vector<ql::datum_t> &args,
                       const ql::configured_limits_t &limits);
-static void rduk_release(js_id_t id);
+
+static void rduk_release(duk_context *rduk_root_ctx, js_id_t id);
 
 static js_result_t run_eval(
+        duk_context *rduk_root_ctx,
         std::string source,
         ql::configured_limits_t limits,
         rduk_env_t *duk_env);
 static js_result_t run_call(
+        duk_context *rduk_root_ctx,
         js_id_t id,
         std::vector<ql::datum_t> args,
         ql::configured_limits_t limits);
-static void run_release(js_id_t id);
-static void run_exit();
+static void run_release(duk_context *rduk_root_ctx, js_id_t id);
+static void run_exit(duk_context *rduk_root_ctx);
 
-static void worker_fn();
+static std::string id_prop_name(js_id_t id);
+static void worker_fn(duk_context *rduk_root_ctx);
 
 // The job_t runs in the context of the main rethinkdb process
 js_job_t::js_job_t(const ql::configured_limits_t &_limits) :
-    limits(_limits) { }
+    limits(_limits) {
+
+    rduk_root_ctx = initialize_duk(&heap_udata);
+}
+
+js_job_t::~js_job_t() noexcept {
+    duk_destroy_heap((duk_context *)rduk_root_ctx);
+}
 
 js_result_t js_job_t::eval(const std::string &source) {
-    return run_eval(source, limits, &duk_env);
+    return run_eval((duk_context *)rduk_root_ctx, source, limits, &duk_env);
 }
 
 js_result_t js_job_t::call(js_id_t id, const std::vector<ql::datum_t> &args) {
-    return run_call(id, args, limits);
+    return run_call((duk_context *)rduk_root_ctx, id, args, limits);
 }
 
 void js_job_t::release(js_id_t id) {
-    run_release(id);
+    run_release((duk_context *)rduk_root_ctx, id);
 }
 
 void js_job_t::exit() {
-    run_exit();
+    run_exit((duk_context *)rduk_root_ctx);
 }
 
 void js_job_t::worker_error() {
+    heap_udata &= 1;
 }
 
 static js_result_t run_eval(
+        duk_context *rduk_root_ctx,
         std::string source,
         ql::configured_limits_t limits,
         rduk_env_t *duk_env) {
-    worker_fn();
+    worker_fn(rduk_root_ctx);
 
     js_result_t js_result;
     try {
-        js_result = rduk_eval(duk_env, source, limits);
+        js_result = rduk_eval(rduk_root_ctx, duk_env, source, limits);
     } catch (const std::exception &e) {
         js_result = e.what();
     } catch (...) {
@@ -132,14 +140,15 @@ static js_result_t run_eval(
 }
 
 static js_result_t run_call(
+        duk_context *rduk_root_ctx,
         js_id_t id,
         std::vector<ql::datum_t> args,
         ql::configured_limits_t limits) {
-    worker_fn();
+    worker_fn(rduk_root_ctx);
 
     js_result_t js_result;
     try {
-        js_result = rduk_call(id, args, limits);
+        js_result = rduk_call(rduk_root_ctx, id, args, limits);
     } catch (const std::exception &e) {
         js_result = e.what();
     } catch (...) {
@@ -149,19 +158,18 @@ static js_result_t run_call(
     return js_result;
 }
 
-static void run_release(js_id_t id) {
-    worker_fn();
+static void run_release(duk_context *rduk_root_ctx, js_id_t id) {
+    worker_fn(rduk_root_ctx);
 
-    rduk_release(id);
+    rduk_release(rduk_root_ctx, id);
 }
 
-static void run_exit() {
-    worker_fn();
+static void run_exit(duk_context *rduk_root_ctx) {
+    worker_fn(rduk_root_ctx);
 }
 
-static void worker_fn() {
+static void worker_fn(duk_context *rduk_root_ctx) {
     static uint64_t task_counter = 0;
-    maybe_initialize_duk();
 
     task_counter += 1;
 
@@ -190,10 +198,11 @@ struct rduk_pop_exit {
     DISABLE_COPYING(rduk_pop_exit);
 };
 
-
-
-static js_result_t rduk_eval(rduk_env_t *env, const std::string &source,
-                      const ql::configured_limits_t &limits) {
+static js_result_t rduk_eval(
+        duk_context *rduk_root_ctx,
+        rduk_env_t *env,
+        const std::string &source,
+        const ql::configured_limits_t &limits) {
     duk_require_stack(rduk_root_ctx, 1);
     duk_push_thread_new_globalenv(rduk_root_ctx);
     rduk_pop_exit pop_ctx(rduk_root_ctx);
@@ -224,7 +233,7 @@ static js_result_t rduk_eval(rduk_env_t *env, const std::string &source,
     return result;
 }
 
-std::string id_prop_name(js_id_t id) {
+static std::string id_prop_name(js_id_t id) {
     return std::to_string(id);
 }
 
@@ -335,7 +344,7 @@ static bool push_js_from_datum(duk_context *ctx,
     }
 }
 
-static js_result_t rduk_call(js_id_t id, const std::vector<ql::datum_t> &args,
+static js_result_t rduk_call(duk_context *rduk_root_ctx, js_id_t id, const std::vector<ql::datum_t> &args,
                       const ql::configured_limits_t &limits) {
     duk_require_stack(rduk_root_ctx, 1);
     duk_push_thread_new_globalenv(rduk_root_ctx);
@@ -384,7 +393,7 @@ static js_result_t rduk_call(js_id_t id, const std::vector<ql::datum_t> &args,
     return result;
 }
 
-static void rduk_release(js_id_t id) {
+static void rduk_release(duk_context *rduk_root_ctx, js_id_t id) {
     duk_push_heap_stash(rduk_root_ctx);
     rduk_pop_exit pop_stash(rduk_root_ctx);
 
@@ -529,4 +538,8 @@ static ql::datum_t js_to_datum(duk_context *ctx,
                         const ql::configured_limits_t &limits,
                         std::string *err_out) {
     return js_make_datum(ctx, TO_JSON_RECURSION_LIMIT, limits, err_out);
+}
+
+static int rduk_exec_timeout_check(void * /*user_data*/) {
+    return 0;
 }
